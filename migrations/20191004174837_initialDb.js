@@ -16,8 +16,10 @@ exports.up = function(knex) {
         })
         .createTable('link_assignments_students', (table) => {
             table.increments('id');
-            table.foreign('student').references('students.id');
-            table.foreign('assignment').references('assignment.id');
+            table.string('student').references('id').inTable('students');
+            // table.foreign('student')
+            table.string('assignment').references('id').inTable('assignments');
+            // table.foreign('assignment')
             table.json('answers');
             table.boolean('submitted');
             table.integer('grade');
