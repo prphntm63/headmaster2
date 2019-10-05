@@ -4,7 +4,7 @@ exports.seed = function(knex) {
   return knex('students').del()
     .then(function () {
       // Inserts seed entries
-      return knex('students').insert([
+      return knex('assignments').insert([
         {id: 1, title: 'JavaScript 101', instructions: 'Complete the exercises in the JS101 repository', 
           source: 'https://github.com'},
         {id: 2, title: 'JavaScript 102', instructions: 'Complete the exercises in the JS201 repository', 

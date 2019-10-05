@@ -4,17 +4,17 @@ exports.seed = function(knex) {
   return knex('students').del()
     .then(function () {
       // Inserts seed entries
-      return knex('students').insert([
-        {id: 1, firstName: 'Johanna', lastName: 'Merrill', github: 'https://github.com', cohort: '06-2019'},
-        {id: 2, firstName: 'Rheanna', lastName: 'Ellison', github: 'https://github.com', cohort: '06-2019'},
-        {id: 3, firstName: 'Aanya', lastName: 'Noble', github: 'https://github.com', cohort: '06-2019'},
-        {id: 4, firstName: 'Sheridan', lastName: 'Schaefer', github: 'https://github.com', cohort: '08-2019'},
-        {id: 5, firstName: 'Spencer', lastName: 'Mckenzie', github: 'https://github.com', cohort: '08-2019'},
-        {id: 6, firstName: 'Imogen', lastName: 'Frey', github: 'https://github.com', cohort: '08-2019'},
-        {id: 7, firstName: 'Franco', lastName: 'Ashley', github: 'https://github.com', cohort: '08-2019'},
-        {id: 8, firstName: 'Dania', lastName: 'Coffey', github: 'https://github.com', cohort: '10-2019'},
-        {id: 9, firstName: 'Shane', lastName: 'Horner', github: 'https://github.com', cohort: '10-2019'},
-        {id: 10, firstName: 'Walter', lastName: 'Dodson', github: 'https://github.com', cohort: '10-2019'},
+      return knex('link_assignments_students').insert([
+        {id: 1, student: '1', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 100},
+        {id: 2, student: '2', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 95},
+        {id: 3, student: '3', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 90},
+        {id: 4, student: '4', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 85},
+        {id: 5, student: '5', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 80},
+        {id: 6, student: '6', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 75},
+        {id: 7, student: '7', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 70},
+        {id: 8, student: '8', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 65},
+        {id: 9, student: '9', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 60},
+        {id: 10, student: '10', assignment: '1', answers: {"answers":"answers"}, submitted: false, grade: 55},
       ]);
     });
 };

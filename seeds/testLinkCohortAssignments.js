@@ -3,7 +3,7 @@ exports.seed = function(knex) {
   return knex('students').del()
     .then(function () {
       // Inserts seed entries
-      return knex('students').insert([
+      return knex('link_cohorts_assignments').insert([
         {cohort: '1', assignment: '1', dueDate: '01-07-2019'},
         {cohort: '1', assignment: '2', dueDate: '15-07-2019'},
         {cohort: '1', assignment: '3', dueDate: '01-08-2019'},
