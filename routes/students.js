@@ -17,6 +17,23 @@ router.get('/', (req, res) => {
     })
     .catch(err => {
         console.log(err)
+        res.status(500)
+    })
+})
+
+router.get('/:studentId', (req, res) => {
+    let studentId = req.params.studentId
+
+    knex.select('*')
+    .from('students')
+    .where({id : studentId})
+    .then(students => {
+        let student = students[0];
+        res.render('student', {student: student})
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(404)
     })
 })
 
