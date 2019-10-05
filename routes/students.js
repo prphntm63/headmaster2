@@ -10,8 +10,10 @@ const knex = require('knex')({
 router.get('/', (req, res) => {
     console.log('getting students')
 
-    knex.select('*')
+    knex
     .from('students')
+    .join('cohorts', 'students.cohort', '=', 'cohorts.id')
+    .select('*')
     .then(students => {
         res.render('students', {students:students})
     })
@@ -24,9 +26,12 @@ router.get('/', (req, res) => {
 router.get('/:studentId', (req, res) => {
     let studentId = req.params.studentId
 
-    knex.select('*')
+    knex
     .from('students')
-    .where({id : studentId})
+    .join('cohorts', 'students.cohort', '=', 'cohorts.id')
+    .join('link_assignments_students', 'students.id', '=', 'link_assignments_students.student')
+    .select('*')
+    .where({'students.id' : studentId})
     .then(students => {
         let student = students[0];
         res.render('student', {student: student})

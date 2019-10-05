@@ -1,0 +1,7 @@
+extends root
+
+block content
+    h1 #{cohort.cohort}
+    ul
+        each key in Object.keys(cohort)
+            li #{key}

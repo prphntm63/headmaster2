@@ -1,6 +1,31 @@
 extends root
 
 block content
-    ul
+    .list-group
+        .list-group-item.active.disabled
+            .row
+                .col-sm-1
+                .col-sm-6
+                    h5 Student
+                .col-sm-3
+                    h5 Cohort
+                .col-sm-2
+                    h5 Submissions
         each student in students
-            li #{student.firstName} #{student.lastName}
+            .list-group-item.list-group-item-action(onclick=`navigateTo("/students/${student.id}")`)
+                .row
+                    .col-sm-1
+                        a(href=student.github)
+                            img(src="./public/images/GitHub-Mark.png" style="height:30px")
+                    .col-sm-6 #{student.firstName} #{student.lastName}
+                    .col-sm-3 #{student.cohort}
+                    .col-sm-2
+    ul
+        each key in Object.keys(students[0])
+            li #{key}
+
+    script.
+        function navigateTo(url) {
+            console.log('clicked')
+            window.location.href = url
+        }

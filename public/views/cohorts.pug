@@ -1,6 +1,21 @@
 extends root
 
 block content
-    ul
+    .list-group
+        .list-group-item.active.disabled
+            .row
+                .col-sm-7 
+                    h5 Cohort
+                .col-sm-3 
+                    h5 Graduation Date
+                .col-sm-2 
+                    h5 Active Students
         each cohort in cohorts
-            li #{cohort.cohort}
+            a.list-group-item.list-group-item-action(href="/cohort/"+cohort.id)
+                .row
+                    .col-sm-7 #{cohort.cohort}
+                    .col-sm-3 #{cohort.graduated ? "Graduated" : cohort.startDate}
+                    .col-sm-2 #{cohort.numStudents}
+    ul
+        each key in Object.keys(cohorts[0])
+            li #{key}

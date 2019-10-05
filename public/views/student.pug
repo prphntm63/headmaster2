@@ -1,0 +1,7 @@
+extends root
+
+block content
+    h1 #{student.firstName} #{student.lastName}
+    ul
+        each key in Object.keys(student)
+            li #{key}
