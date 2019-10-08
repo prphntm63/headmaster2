@@ -40,18 +40,18 @@ router.get('/', (req, res) => {
 //     })
 // })
 
-router.get('/:studentId', (req, res) => {
-    let studentId = req.params.studentId
+router.get('/:cohortId', (req, res) => {
+    let cohortId = req.params.cohortId
 
     knex
-    .from('students')
-    .join('cohorts', 'students.cohort', '=', 'cohorts.id')
-    .join('link_assignments_students', 'students.id', '=', 'link_assignments_students.student')
+    .from('cohorts')
+    .join('students', 'cohorts.id', '=', 'students.cohort')
+    .join('link_cohorts_assignments', 'cohorts.id', '=', 'link_cohorts_assignments.cohortId')
     .select('*')
-    .where({'students.id' : studentId})
-    .then(students => {
-        let student = students[0];
-        res.render('student', {student: student})
+    .where({'cohorts.id' : cohortId})
+    .then(cohorts => {
+        let cohort = cohorts[0];
+        res.render('cohort', {cohort: cohort})
     })
     .catch(err => {
         console.log(err)

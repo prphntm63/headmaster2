@@ -20,12 +20,117 @@ block content
                     .col-sm-6 #{student.firstName} #{student.lastName}
                     .col-sm-3 #{student.cohort}
                     .col-sm-2
+    .container.my-3.d-flex.flex-row-reverse
+        //- button.btn.btn-primary.px-3(type='button' data-toggle="modal" data-target="#addStudentModal") Add Student
+        button.btn.btn-primary.px-3(type='button' onclick="getCohortsFromDb()") Add Student
+
+
+    #addStudentModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5.modal-title Add Student
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") &times;
+                .modal-body
+                    form(action="submit")
+                        .form-row.my-2
+                            .col
+                                label(for="firstName") First Name
+                                input.form-control(type="text" placeholder="First Name" name="firstName" id="firstName")
+                                .invalid-feedback Please Enter a First Name
+                            .col
+                                label(for="lastName") Last Name
+                                input.form-control(type="text" placeholder="Last Name" name="lastName" id="lastName")
+                                .invalid-feedback Please Enter a Last Name
+                        .form-row.my-2
+                            .col
+                                label(for="cohort") Cohort
+                                select.form-control(id="cohort" name="cohort")
+                                    option(selected value='') Select...
+                                    option(value="1") Fall 2019
+                                .invalid-feedback Please Select a Cohort
+                        .form-row.my-2
+                            .col
+                                label(for="github") Github Profile
+                                input.form-control(type="text" placeholder="Github Username" name="github" id="github")
+                                .invalid-feedback Please Add a Github Profile
+                            .col.pt-3
+                                p Just the username, not the whole URL
+
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                    button.btn.btn-primary(type="button" onclick="validateStudentForm()") Add Student
+                
+
     ul
         each key in Object.keys(students[0])
             li #{key}
 
     script.
         function navigateTo(url) {
-            console.log('clicked')
             window.location.href = url
+        }
+
+        function submitStudentForm(studentData) {
+            fetch('/students', {
+                method: 'POST',
+                body: JSON.stringify(studentData),
+                headers : {
+                    'Content-Type' : 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('success')
+                    return response.json()
+                } else throw response
+            })
+            .then(responseJson => {
+                console.log(responseJson)
+                window.alert('Student added!')
+            })
+            .catch(err => {
+                if (err.status === 400) {
+                    err.json()
+                    .then(responseJson => {
+                        console.log(responseJson)
+                        window.alert(`Student failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
+                    })
+                } else {
+                    console.log('you dun fucked up')
+                    window.alert('Server error')
+                }   
+
+            })
+        }
+
+        function getCohortsFromDb() {
+            $('#addStudentModal').modal('show')
+        }
+
+        function validateStudentForm() {
+            let valid = true;
+
+            let formData = {
+                firstName : $('#firstName').val(),
+                lastName : $('#lastName').val(),
+                cohort : $('#cohort').val(),
+                github : $('#github').val()
+            }
+
+            for (key in formData) {
+                $(`#${key}`).removeClass('is-invalid is-valid')
+
+                if ( !$(`#${key}`).val() ) {
+                    $(`#${key}`).addClass('is-invalid')
+                    valid = false;
+                } else (
+                    $(`#${key}`).addClass('is-valid')
+                )
+            }
+
+            if (valid) {
+                submitStudentForm(formData)
+            }
         }

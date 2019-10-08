@@ -21,16 +21,15 @@ exports.up = function(knex) {
             table.string('source', 255);
         })
         .createTable('link_assignments_students', (table) => {
-            table.increments('id');
-            table.string('student').references('id').inTable('students');
-            table.string('assignment').references('id').inTable('assignments');
+            table.string('studentId').references('id').inTable('students');
+            table.string('assignmentId').references('id').inTable('assignments');
             table.json('answers');
             table.boolean('submitted');
             table.integer('grade');
         })
         .createTable('link_cohorts_assignments', (table) => {
-            table.string('assignment').references('id').inTable('assignments')
-            table.string('cohort').references('id').inTable('cohorts')
+            table.string('assignmentId').references('id').inTable('assignments')
+            table.string('cohortId').references('id').inTable('cohorts')
             table.date('dueDate')
         })
     
