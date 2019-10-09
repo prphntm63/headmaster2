@@ -48,7 +48,6 @@ block content
                                 label(for="cohort") Cohort
                                 select.form-control(id="cohort" name="cohort")
                                     option(selected value='') Select...
-                                    option(value="1") Fall 2019
                                 .invalid-feedback Please Select a Cohort
                         .form-row.my-2
                             .col
@@ -89,6 +88,7 @@ block content
             .then(responseJson => {
                 console.log(responseJson)
                 window.alert('Student added!')
+                $('#addStudentModal').modal('hide')
             })
             .catch(err => {
                 if (err.status === 400) {
@@ -106,7 +106,16 @@ block content
         }
 
         function getCohortsFromDb() {
-            $('#addStudentModal').modal('show')
+            fetch('/api/cohorts')
+            .then(cohorts => {
+                return cohorts.json()
+            })
+            .then(cohortsJson => {
+                cohortsJson.forEach(cohortJson => {
+                    $('#cohort').append($('<option>', {"value":cohortJson.id, "text":cohortJson.cohort}))
+                })
+                $('#addStudentModal').modal('show')
+            })
         }
 
         function validateStudentForm() {

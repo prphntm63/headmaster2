@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const db = require('./db.js');
 
 const app = express()
 const port = 3000;
@@ -19,10 +20,12 @@ app.get('/', (req, res) => {
 let assignments = require('./routes/assignments')
 let students = require('./routes/students')
 let cohorts = require('./routes/cohorts')
+let api = require('./routes/api')
 
 app.use('/assignments', assignments)
 app.use('/cohorts', cohorts)
 app.use('/students', students)
+app.use('/api', api)
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)

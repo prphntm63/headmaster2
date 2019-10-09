@@ -1,19 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const knex = require('knex')({
-    client: 'sqlite3',
-    connection: {
-        filename: "./dev.sqlite3"
-    }
-});
+const db = require('./../db.js');
 
 router.get('/', (req, res) => {
     console.log('getting students')
 
-    knex
-    .from('students')
-    .join('cohorts', 'students.cohort', '=', 'cohorts.id')
-    .select('students.id as id', 'students.firstName', 'students.lastName', 'students.github', 'cohorts.cohort', 'cohorts.graduated')
+    // knex
+    // .from('students')
+    // .join('cohorts', 'students.cohort', '=', 'cohorts.id')
+    // .select('students.id as id', 'students.firstName', 'students.lastName', 'students.github', 'cohorts.cohort', 'cohorts.graduated')
+    db.getStudentList()
     .then(students => {
         res.render('students', {students:students})
     })
@@ -26,12 +22,13 @@ router.get('/', (req, res) => {
 router.get('/:studentId', (req, res) => {
     let studentId = req.params.studentId
 
-    knex
-    .from('students')
-    .join('cohorts', 'students.cohort', '=', 'cohorts.id')
-    .join('link_assignments_students', 'students.id', '=', 'link_assignments_students.studentId')
-    .select('*')
-    .where({'students.id' : studentId})
+    // knex
+    // .from('students')
+    // .join('cohorts', 'students.cohort', '=', 'cohorts.id')
+    // .join('link_assignments_students', 'students.id', '=', 'link_assignments_students.studentId')
+    // .select('*')
+    // .where({'students.id' : studentId})
+    db.getStudent(studentId)
     .then(students => {
         let student = students[0];
         res.render('student', {student: student})
@@ -62,7 +59,15 @@ router.post('/', (req,res) => {
             {"errors" : validationErrors}
         )
     } else {
-        res.status(200).send({"errors" : false})
+        db.addStudent(studentInfo)
+        .then(studentInfo => {
+            console.log(studentInfo)
+            res.status(200).send({"errors" : false})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+        })
     }
 })
 
