@@ -1,8 +1,7 @@
 exports.seed = function(knex) {
   console.log('Seeding 006-Cohorts-Assignments...')
 
-  return wait(1000)
-  .then(randomizeAssignmentsCohorts(knex) )
+  return randomizeAssignmentsCohorts(knex)
   .then(values => {
     return knex('link_cohorts_assignments')
     .insert( values)
@@ -63,14 +62,4 @@ function randomDate(start, end, startHour, endHour) {
   var hour = startHour + Math.random() * (endHour - startHour) | 0;
   date.setHours(hour);
   return date;
-}
-
-function wait(ms) {
-  let waitPromise = new Promise((resolve, reject) => {
-    setTimeout(()=>{
-      resolve(true)
-    }, ms)
-  })
-
-  return waitPromise
 }

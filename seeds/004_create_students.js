@@ -1,20 +1,17 @@
 exports.seed = function(knex) {
   console.log('Seeding 004-Students...')
 
-  return wait(1000)
+  return knex('students')
   .then(() => {
-    return knex('students')
-    .then(() => {
-      return knex.table('cohorts')
-      .pluck('id')
-    }) 
-    .then(cohortIds => {
-      // Inserts seed entries
-      return knex('students').insert( generateStudents(10, cohortIds) );
-    })
-    .catch(err => {
-      console.log('students error - ', err)
-    })
+    return knex.table('cohorts')
+    .pluck('id')
+  }) 
+  .then(cohortIds => {
+    // Inserts seed entries
+    return knex('students').insert( generateStudents(10, cohortIds) );
+  })
+  .catch(err => {
+    console.log('students error - ', err)
   })
 
   
@@ -122,8 +119,8 @@ function randomDate(start, end, startHour, endHour) {
   var date = new Date(+start + Math.random() * (end - start));
   var hour = startHour + Math.random() * (endHour - startHour) | 0;
   date.setHours(hour);
-  let dateString = date.toISOString()
-  return dateString
+  // let dateString = date.toISOString()
+  return date
 }
 
 function generateRandomNumberOfCommits(commit) {
@@ -134,16 +131,6 @@ function generateRandomNumberOfCommits(commit) {
   }
 
   return outputArray
-}
-
-function wait(ms) {
-  let waitPromise = new Promise((resolve, reject) => {
-    setTimeout(()=>{
-      resolve(true)
-    }, ms)
-  })
-
-  return waitPromise
 }
 
 function randomName() {

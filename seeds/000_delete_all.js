@@ -14,6 +14,16 @@ const deleteAllQuery = `
 exports.seed = function(knex) {
   console.log('Seeding 000-Delete All')
   // Deletes ALL existing entries
-  return knex.raw(deleteAllQuery)
+  // return knex.raw(deleteAllQuery)
+
+  return knex.select('*').from('link_assignments_students').del()
+  .then(() => {return knex.select('*').from('link_cohorts_assignments').del()})
+  .then(() => {return knex.select('*').from('link_cohorts_instructors').del()})
+  .then(() => {return knex.select('*').from('students').del()})
+  .then(() => {return knex.select('*').from('assignments').del()})
+  .then(() => {return knex.select('*').from('instructors').del()})
+  .then(() => {return knex.select('*').from('cohorts').del()})
+
+
 
 };
