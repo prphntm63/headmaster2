@@ -1,5 +1,6 @@
 
 exports.seed = function(knex) {
+  console.log('Seeding 001-Assignments...')
   return knex('assignments').insert([
     {title: 'JavaScript 101', instructions: 'Complete the exercises in the JS101 repository', 
       source: 'https://github.com'},

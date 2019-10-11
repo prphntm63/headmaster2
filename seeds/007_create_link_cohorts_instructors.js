@@ -1,5 +1,8 @@
 exports.seed = function(knex) {
-  return randomizeInstructorsCohorts(knex)
+  console.log('Seeding 007-Cohorts-Instructors')
+
+  return wait(1000)
+  .then(randomizeInstructorsCohorts(knex))
   .then(values => {
     return knex('link_cohorts_instructors')
     .insert( values )
@@ -31,8 +34,6 @@ async function randomizeInstructorsCohorts(knex) {
     let instructors = values[1]
     let output = []
 
-    console.log(instructors, cohorts)
-
     instructors.forEach(instructor => {
       let tempCohorts = cohorts.slice()
       for (let idx=0; idx < rng(1,3); idx++) {
@@ -52,4 +53,14 @@ function rng(lower, upper) {
   let range = upper - lower;
   let random = Math.floor(Math.random() * range)
   return random + lower;
+}
+
+function wait(ms) {
+  let waitPromise = new Promise((resolve, reject) => {
+    setTimeout(()=>{
+      resolve(true)
+    }, ms)
+  })
+
+  return waitPromise
 }

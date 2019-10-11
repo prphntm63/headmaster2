@@ -1,6 +1,9 @@
 exports.seed = function(knex) {
-  // Deletes ALL existing entries
-  return knex('students')
+  console.log('Seeding 004-Students...')
+
+  return wait(1000)
+  .then(() => {
+    return knex('students')
     .then(() => {
       return knex.table('cohorts')
       .pluck('id')
@@ -12,6 +15,9 @@ exports.seed = function(knex) {
     .catch(err => {
       console.log('students error - ', err)
     })
+  })
+
+  
 };
 
 function generateStudents(numStudents, cohortIds) {
@@ -125,6 +131,16 @@ function generateRandomNumberOfCommits(commit) {
   }
 
   return outputArray
+}
+
+function wait(ms) {
+  let waitPromise = new Promise((resolve, reject) => {
+    setTimeout(()=>{
+      resolve(true)
+    }, ms)
+  })
+
+  return waitPromise
 }
 
 function randomName() {

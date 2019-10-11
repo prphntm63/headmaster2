@@ -1,6 +1,9 @@
 
 exports.seed = function(knex) {
-  return randomizeStudentsAssignments(knex)
+  console.log('Seeding 005-Assignments-Students...')
+
+  return wait(1000)
+  .then(randomizeStudentsAssignments(knex))
   .then(values => {
     return knex('link_assignments_students')
     .insert( values )
@@ -52,4 +55,14 @@ function rng(lower, upper) {
   let range = upper - lower;
   let random = Math.floor(Math.random() * range)
   return random + lower;
+}
+
+function wait(ms) {
+  let waitPromise = new Promise((resolve, reject) => {
+    setTimeout(()=>{
+      resolve(true)
+    }, ms)
+  })
+
+  return waitPromise
 }

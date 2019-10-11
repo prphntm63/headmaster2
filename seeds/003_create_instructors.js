@@ -1,5 +1,6 @@
 
 exports.seed = function(knex) {
+  console.log('Seeding 003-Instructors...')
 
   return knex('instructors').insert( createInstructors() )
   .catch(err => {console.log('instructors error - ', err)});;

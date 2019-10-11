@@ -1,7 +1,9 @@
 exports.seed = function(knex) {
-  return randomizeAssignmentsCohorts(knex) 
+  console.log('Seeding 006-Cohorts-Assignments...')
+
+  return wait(1000)
+  .then(randomizeAssignmentsCohorts(knex) )
   .then(values => {
-    console.log(values)
     return knex('link_cohorts_assignments')
     .insert( values)
     .catch(err => {console.log('cohort-assignments error - ', err)});
@@ -29,14 +31,19 @@ async function randomizeAssignmentsCohorts(knex) {
   .then(values => {
     let cohorts = values[0]
     let assignments = values[1]
+    let dueDates = []
     let output = []
 
     cohorts.forEach(cohort => {
       for (let idx=0; idx < assignments.length; idx++) {
+        let initialDate = cohort.startDate;
+        let interval = (7*24*60*60*1000 * idx)
+        let newDate = new Date(initialDate.getTime() + interval)
+
         output.push({
           "cohortId" : cohort.id,
           "assignmentId" : assignments[idx],
-          "dueDate" : "15-12-2019"
+          "dueDate" : newDate
         })
       }
     })
@@ -56,4 +63,14 @@ function randomDate(start, end, startHour, endHour) {
   var hour = startHour + Math.random() * (endHour - startHour) | 0;
   date.setHours(hour);
   return date;
+}
+
+function wait(ms) {
+  let waitPromise = new Promise((resolve, reject) => {
+    setTimeout(()=>{
+      resolve(true)
+    }, ms)
+  })
+
+  return waitPromise
 }
