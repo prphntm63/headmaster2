@@ -1,9 +1,4 @@
-const knex = require('knex')({
-    client: 'sqlite3',
-    connection: {
-        filename: "./dev.sqlite3"
-    }
-});
+const knex = require(dbConfigs.development)
 
 let db = {
 
@@ -45,8 +40,8 @@ let db = {
         return knex
         .from('cohorts')
         .leftJoin('students', 'cohorts.id', '=', 'students.cohort')
-        .select('cohorts.id', 'cohorts.cohort', 'cohorts.startDate', 'cohorts.graduated', knex.raw('COUNT(students.cohort) as numStudents'))
-        .groupBy('cohorts.id', 'cohorts.cohort', 'cohorts.startDate', 'cohorts.graduated')
+        .select('cohorts.id', 'cohorts.cohortName', 'cohorts.startDate', 'cohorts.graduated', knex.raw('COUNT(students.cohort) as numStudents'))
+        .groupBy('cohorts.id', 'cohorts.cohortName', 'cohorts.startDate', 'cohorts.graduated')
     },
 
     getCohort : function(cohortId) {

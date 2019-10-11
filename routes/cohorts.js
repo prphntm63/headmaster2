@@ -40,4 +40,35 @@ router.get('/:cohortId', (req, res) => {
     })
 })
 
+router.post('/', (req,res) => {
+    console.log('got post request to /cohorts')
+    let cohortInfo = req.body
+    let validationErrors = []
+
+    for (key in studentInfo) {
+        if (!cohortInfo[key]) {
+            validationErrors.push({
+                "field" : key,
+                "error" : "Field value expected, none received"
+            })
+        }
+    }
+
+    if (validationErrors.length) {
+        res.status(400).send(
+            {"errors" : validationErrors}
+        )
+    } else {
+        db.addStudent(studentInfo)
+        .then(studentInfo => {
+            console.log(studentInfo)
+            res.status(200).send({"errors" : false})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+        })
+    }
+})
+
 module.exports = router;

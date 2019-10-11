@@ -13,9 +13,128 @@ block content
         each cohort in cohorts
             a.list-group-item.list-group-item-action(href="/cohorts/"+cohort.id)
                 .row
-                    .col-sm-7 #{cohort.cohort}
+                    .col-sm-7 #{cohort.cohortName}
                     .col-sm-3 #{cohort.graduated ? "Graduated" : cohort.startDate}
                     .col-sm-2 #{cohort.numStudents}
+    .container.my-3.d-flex.flex-row-reverse
+        //- button.btn.btn-primary.px-3(type='button' data-toggle="modal" data-target="#addStudentModal") Add Student
+        button.btn.btn-primary.px-3(type='button' onclick="openAddCohortModal()") Add Cohort
+
+
+    #addCohortModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header
+                    h5.modal-title Add Cohort
+                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") &times;
+                .modal-body
+                    form(action="submit")
+                        .form-row.my-2
+                            .col
+                                label(for="cohortName") Cohort Name
+                                input.form-control(type="text" placeholder="Cohort Name" name="cohortName" id="cohortName")
+                                #cohortNameFeedback.invalid-feedback Please Enter a First Name
+                            .col
+                                label(for="cohortDate") Start Date
+                                input.form-control(type="date" placeholder="Start Date" name="startDate" id="startDate")
+                                #startDateFeedback.invalid-feedback Please Enter a Last Name
+
+                .modal-footer
+                    button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                    button.btn.btn-primary(type="button" onclick="validateCohortForm()") Add Student
     ul
         each key in Object.keys(cohorts[0])
             li #{key}
+
+    script.
+        function navigateTo(url) {
+            window.location.href = url
+        }
+
+        function submitStudentForm(cohortData) {
+            fetch('/cohorts', {
+                method: 'POST',
+                body: JSON.stringify(cohortData),
+                headers : {
+                    'Content-Type' : 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('success')
+                    return response.json()
+                } else throw response
+            })
+            .then(responseJson => {
+                console.log(responseJson)
+                window.alert('Cohort added!')
+                $('#addCohortModal').modal('hide')
+            })
+            .catch(err => {
+                if (err.status === 400) {
+                    err.json()
+                    .then(responseJson => {
+                        console.log(responseJson)
+                        window.alert(`Cohort failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
+                    })
+                } else {
+                    console.log('you dun fucked up')
+                    window.alert('Server error')
+                }   
+
+            })
+        }
+
+        function openAddCohortModal() {
+            
+            $('#addCohortModal').modal('show')
+        }
+
+        function getCohortsFromDb() {
+            return fetch('/api/cohorts')
+            .then(cohorts => {
+                return cohorts.json()
+            })
+            .then(cohortsJson => {
+                let cohortList = []
+                cohortsJson.forEach(cohortJson => {
+                    cohortList.push(cohortJson.cohort)
+                })
+                return cohortList
+            })
+        }
+
+        async function validateCohortForm() {
+            let valid = true;
+
+            getCohortsFromDb()
+            .then(existingCohorts => {
+                let formData = {
+                    cohortName : $('#cohortName').val(),
+                    startDate : $('#startDate').val(),
+                }
+
+                for (key in formData) {
+                    $(`#${key}`).removeClass('is-invalid is-valid')
+
+                    if ( !$(`#${key}`).val() ) {
+                        $(`#${key}`).addClass('is-invalid')
+                        $(`#${key}Feedback`).text('Cannot be blank')
+                        valid = false;
+                    } else if (key === "cohortName" && existingCohorts.find( cohortName => {return cohortName == formData[key]} )) {
+                        $(`#${key}`).addClass('is-invalid')
+                        $(`#${key}Feedback`).text('Cohort already exists!')
+                        valid = false
+                    } else {
+                        $(`#${key}`).addClass('is-valid')
+                    }
+                }
+
+                if (valid) {
+                    submitStudentForm(formData)
+                }
+            })
+
+            
+        }

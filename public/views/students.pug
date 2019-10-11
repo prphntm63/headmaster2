@@ -112,7 +112,7 @@ block content
             })
             .then(cohortsJson => {
                 cohortsJson.forEach(cohortJson => {
-                    $('#cohort').append($('<option>', {"value":cohortJson.id, "text":cohortJson.cohort}))
+                    $('#cohort').append($('<option>', {"value":cohortJson.id, "text":cohortJson.cohortName}))
                 })
                 $('#addStudentModal').modal('show')
             })
