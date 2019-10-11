@@ -33,6 +33,7 @@ async function randomizeInstructorsCohorts(knex) {
     let instructors = values[1]
     let output = []
 
+    // Assign random number of cohorts to each instructor
     instructors.forEach(instructor => {
       let tempCohorts = cohorts.slice()
       for (let idx=0; idx < rng(1,3); idx++) {
@@ -40,6 +41,16 @@ async function randomizeInstructorsCohorts(knex) {
         output.push({
           "instructor" : instructor,
           "cohort" : cohort[0] ? cohort[0] : cohorts[0]
+        })
+      }
+    })
+
+    // Make sure each cohort has at least one instructor
+    cohorts.forEach(cohort => {
+      if ( !findCohort(cohort, output) ) {
+        output.push({
+          "instructor" : instructors[rng(0, instructors.length)],
+          "cohort" : cohort
         })
       }
     })
@@ -52,4 +63,10 @@ function rng(lower, upper) {
   let range = upper - lower;
   let random = Math.floor(Math.random() * range)
   return random + lower;
+}
+
+function findCohort(cohortId, outputArray) {
+  return outputArray.find( element => {
+    element.cohort === cohortId
+  })
 }

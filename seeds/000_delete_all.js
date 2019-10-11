@@ -17,6 +17,7 @@ exports.seed = function(knex) {
   // return knex.raw(deleteAllQuery)
 
   return knex.select('*').from('link_assignments_students').del()
+  .then(() => {return knex.select('*').from('touchpoints').del()})
   .then(() => {return knex.select('*').from('link_cohorts_assignments').del()})
   .then(() => {return knex.select('*').from('link_cohorts_instructors').del()})
   .then(() => {return knex.select('*').from('students').del()})

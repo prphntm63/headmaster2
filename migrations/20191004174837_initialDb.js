@@ -14,7 +14,8 @@ exports.up = function(knex) {
             // table.increments('id').primary();
             table.string('firstName', 255).notNullable();
             table.string('lastName', 255).notNullable();
-            table.unique('github', 255);
+            table.string('github', 255);
+            table.unique('github');
             table.uuid('cohort').references('id').inTable('cohorts').notNull();
         })
         .createTable('assignments', (table) => {

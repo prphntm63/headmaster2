@@ -62,54 +62,53 @@ function getRandomStatus() {
 }
 
 function generateRandomGithubEvents() {
-  let lastDate = Date.now()
-  let firstDate = new Date(lastDate - (1000*60*60*24*7*2))
   // api.github.com/users/prphntm/events
-  let sampleEvent = {
-    "id": "10464736396",
-    "type": "PushEvent",
-    "actor": {
-      "id": 4017530,
-      "login": "prphntm63",
-      "display_login": "prphntm63",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/prphntm63",
-      "avatar_url": "https://avatars.githubusercontent.com/u/4017530?"
-    },
-    "repo": {
-      "id": 204183427,
-      "name": "prphntm63/friendgen",
-      "url": "https://api.github.com/repos/prphntm63/friendgen"
-    },
-    "payload": {
-      "push_id": 4060025130,
-      "size": 1,
-      "distinct_size": 1,
-      "ref": "refs/heads/master",
-      "head": "7c27fade623dca2a38699ef0fdb977cb487880fb",
-      "before": "a5fe27bc83a98df816ad7752f0323f42b09543ad",
-      "commits": generateRandomNumberOfCommits
-        ({
-          "sha": "7c27fade623dca2a38699ef0fdb977cb487880fb",
-          "author": {
-            "email": "matt.westwick@gmail.com",
-            "name": "Matt Westwick"
-          },
-          "message": "CHANGED TO PRODUCTION APP",
-          "distinct": true,
-          "url": "https://api.github.com/repos/prphntm63/friendgen/commits/7c27fade623dca2a38699ef0fdb977cb487880fb"
-        })
-    },
-    "public": true,
-    "created_at": randomDate(firstDate, lastDate, 8, 17)
-  }
   // can get commit info thru GET api.github.com/repos/:owner/:repo/commits/:ref
+  
+  // let sampleEvent = {
+  //   "id": "10464736396",
+  //   "type": "PushEvent",
+  //   "actor": {
+  //     "id": 4017530,
+  //     "login": "prphntm63",
+  //     "display_login": "prphntm63",
+  //     "gravatar_id": "",
+  //     "url": "https://api.github.com/users/prphntm63",
+  //     "avatar_url": "https://avatars.githubusercontent.com/u/4017530?"
+  //   },
+  //   "repo": {
+  //     "id": 204183427,
+  //     "name": "prphntm63/friendgen",
+  //     "url": "https://api.github.com/repos/prphntm63/friendgen"
+  //   },
+  //   "payload": {
+  //     "push_id": 4060025130,
+  //     "size": 1,
+  //     "distinct_size": 1,
+  //     "ref": "refs/heads/master",
+  //     "head": "7c27fade623dca2a38699ef0fdb977cb487880fb",
+  //     "before": "a5fe27bc83a98df816ad7752f0323f42b09543ad",
+  //     "commits": generateRandomNumberOfCommits
+  //       ({
+  //         "sha": "7c27fade623dca2a38699ef0fdb977cb487880fb",
+  //         "author": {
+  //           "email": "matt.westwick@gmail.com",
+  //           "name": "Matt Westwick"
+  //         },
+  //         "message": "CHANGED TO PRODUCTION APP",
+  //         "distinct": true,
+  //         "url": "https://api.github.com/repos/prphntm63/friendgen/commits/7c27fade623dca2a38699ef0fdb977cb487880fb"
+  //       })
+  //   },
+  //   "public": true,
+  //   "created_at": randomDate(firstDate, lastDate, 8, 17)
+  // }
 
   let randomNumber = (Math.floor(Math.random() * 20))
   let outputArray = []
 
   for (let idx=0; idx<randomNumber; idx++) {
-    outputArray.push(sampleEvent)
+    outputArray.push( generateRandomEntry() )
   }
 
   return JSON.stringify(outputArray);
@@ -123,14 +122,25 @@ function randomDate(start, end, startHour, endHour) {
   return date
 }
 
-function generateRandomNumberOfCommits(commit) {
-  let randomNumber = Math.floor(Math.random() * 5)
-  let outputArray = [];
-  for (let idx=0; idx<randomNumber; idx++) {
-    outputArray.push(commit)
+function generateRandomEntry() {
+  let lastDate = Date.now()
+  let firstDate = new Date(lastDate - (1000*60*60*24*7*2))
+  
+  return {
+    "repo" : "prphntm63/friendgen",
+    "sha" : "7c27fade623dca2a38699ef0fdb977cb487880fb",
+    "message" : "CHANGED TO PRODUCTION APP",
+    "total" : rng(10,200),
+    "additions" : rng(8,150),
+    "deletions" : rng(0,100),
+    "createdAt" : randomDate(firstDate, lastDate, 8, 17)
   }
+}
 
-  return outputArray
+function rng(lower, upper) {
+  let range = upper - lower;
+  let random = Math.floor(Math.random() * range)
+  return random + lower;
 }
 
 function randomName() {
