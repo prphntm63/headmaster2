@@ -18,7 +18,7 @@ exports.up = function(knex) {
             table.string('firstName');
             table.string('lastName');
             table.binary('profilePic');
-            table.string('github');
+            table.unique('github');
             table.enu('role', ['admin', 'instructor', 'ta'])
         })
         .createTable('touchpoints', table => {

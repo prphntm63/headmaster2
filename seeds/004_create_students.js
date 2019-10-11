@@ -35,7 +35,7 @@ function generateRandomStudent(id, cohortIds) {
   let student = {
     firstName: name.firstName, 
     lastName: name.lastName, 
-    github: name.github, 
+    github: name.github + Math.floor(Math.random() * 100), 
     cohort: getRandomCohortId(cohortIds), 
     status: getRandomStatus(), 
     active:true, 
