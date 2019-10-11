@@ -38,7 +38,7 @@ function generateRandomStudent(id, cohortIds) {
   let student = {
     firstName: name.firstName, 
     lastName: name.lastName, 
-    github: 'https://github.com'+name.github, 
+    github: name.github, 
     cohort: getRandomCohortId(cohortIds), 
     status: getRandomStatus(), 
     active:true, 
@@ -65,6 +65,8 @@ function getRandomStatus() {
 }
 
 function generateRandomGithubEvents() {
+  let lastDate = Date.now()
+  let firstDate = new Date(lastDate - (1000*60*60*24*7*2))
   // api.github.com/users/prphntm/events
   let sampleEvent = {
     "id": "10464736396",
@@ -102,7 +104,7 @@ function generateRandomGithubEvents() {
         })
     },
     "public": true,
-    "created_at": randomDate()
+    "created_at": randomDate(firstDate, lastDate, 8, 17)
   }
   // can get commit info thru GET api.github.com/repos/:owner/:repo/commits/:ref
 
@@ -120,7 +122,9 @@ function randomDate(start, end, startHour, endHour) {
   var date = new Date(+start + Math.random() * (end - start));
   var hour = startHour + Math.random() * (endHour - startHour) | 0;
   date.setHours(hour);
-  return date;
+  let dateString = date.toISOString()
+  console.log(dateString)
+  return dateString
 }
 
 function generateRandomNumberOfCommits(commit) {
