@@ -56,19 +56,34 @@ function generateTouchpoint(student, instructors) {
     "student" : student.id,
     "instructor" : instructorObject ? instructorObject.instructor : instructors[0],
     "status" : status,
+    "tags" : generateRandomTags(status, rng(0,3) ),
     "comment" : comment,
   }
 }
 
+// .createTable('Touchpoints', table => {
+//   table.uuid('id').primary().defaultTo(knex.raw('CONCAT("toucpoint-", uuid_generate_v4())'))
+//   table.timestamp('ctime').defaultTo(knex.fn.now())
+//   table.timestamp('mtime').defaultTo(knex.fn.now())
+//   // table.increments('id').primary();
+//   table.timestamp('createdAt', { useTz : true });
+//   table.uuid('student').references('id').inTable('Students').notNull();
+//   table.enu('status', ['red', 'yellow', 'green']);
+//   table.json('tags')
+//   table.string('comment')
+//   table.uuid('user').references('id').inTable('Users').notNull()
+// })
+
 function getStudents(knex) {
-  return knex('students')
-  .innerJoin('cohorts', 'students.cohort', '=', 'cohorts.id')
-  .select('students.*', 'cohorts.startDate as startDate')
+  return knex('Students')
+  .innerJoin('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
+  .innerJoin('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
+  .select('Students.*', 'Cohorts.startDate as startDate')
 }
 
 function getInstructors(knex, cohortId) {
-  return knex('link_cohorts_instructors')
-  .select('instructor')
+  return knex('LinkCohortsUsers')
+  .select('Users')
   .where('cohort', '=', cohortId)
 }
 
@@ -109,6 +124,33 @@ function generateRandomComment(status) {
   return relevantComments[rng(0,relevantComments.length)]
 }
 
+function generateRandomTags(status, numTags) {
+  let tags = []
+
+  let descriptors = [
+    "Comprehension",
+    "Work Output",
+    "Social Engagement",
+    "Energy",
+    "Motivation",
+    "Attendance",
+    ""
+  ]
+
+  let modifiers = {
+    green : "High",
+    yellow : "Good",
+    red : "Low"
+  }
+
+  for (let idx=0; idx<numTags; idx++) {
+    let descriptor = descriptors.splice( rng(0, descriptors.length) )
+    tags.push(modifiers.status + " " + descriptor)
+  }
+
+  return tags
+}
+
 function rng(lower, upper) {
   let range = upper - lower;
   let random = Math.floor(Math.random() * range)
@@ -119,8 +161,3 @@ function flatDeep(arr) {
   return arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatDeep(val) : val), []);
 };
 
-  // table.timestamp('createdAt', { useTz : true });
-  // table.uuid('student').references('id').inTable('students').notNull();
-  // table.enu('status', ['red', 'yellow', 'green']);
-  // table.string('comment')
-  // table.uuid('instructor').references('id').inTable('instructors').notNull()

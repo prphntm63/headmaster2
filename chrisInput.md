@@ -1,0 +1,21 @@
+- I would use CapitalCase for table names. ie: `Students`, `Cohorts`, etc
+- For id fields, I like to use `student-<uuid>`, `cohort-<uuid>`, etc
+- It's nice to see which type the id is for in the id value itself. In 2019 storage space is cheap and databases are excellent at indexing strings as much as numbers, so no meaningful performance difference there.
+- You could not have them default in the database; ensure that the application inserts the ids. (edited) 
+- In general, do not include the prefix of a table for a field on the table itself. So `Cohorts.cohortName` is redundant. You can just use `name` there.
+- I like to have `ctime` and `mtime` timestamp fields on all tables. It's just good hygiene and always comes in handy when debugging things in the future.
+- Cohorts needs a `slug` field
+- Whether to put the `Cohorts.id` foreign key on the `Students` table or have a separate table - sort of a design decision / preference. I would probably choose to make a link table between those two. Again: hygiene, allows for easier separation in the future if you end up wanting to have the same Student record in multiple cohorts.
+- Another way to think of it: I should be able to conceive of a `Student` without a `Cohort`
+- `Student.status` I might just make a string until you are really sure of what status values you want. Or maybe just make that field NULLable?
+- You might separate `stoplightStatus` and `enrolledStatus`
+- I would make a separate table for GitHub stats. Join it to the `Students` table. (edited) 
+- `profilePic` should be a string for a URL. Dynamically load it clientside from github
+- I would skip assignments scope for this project completely
+- `Instructors` --> `Users`
+- And then have a `UsersCohortsRoles` table. So that one user may be ta to one cohort, admin to another, etc.
+- Touchpoints looks good. I forgot earlier that `Student.stoplightStatus` is derived from "status of their most recent Touchpoint"
+- So maybe drop `stoplightStatus` from the `Students` table
+- Excellent work so far!
+- When the project is brand new and the database schema goes through large changes; sometimes easier to "start from scratch" instead of writing migration tables. Up to you of course.
+- [Headmaster mock mode demo](https://oakmac.com/headmaster-demo/)
