@@ -4,7 +4,10 @@
   "description": "DigitalCraft Express/SQL exercise",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon index.js"
+    "start" : "node index.js",
+    "dev": "nodemon index.js",
+    "initialize": "npx knex migrate:latest",
+    "initializeData": "npx knex migrate:latest && npx knex seed:run"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +18,8 @@
     "pg": "^7.12.1",
     "pug": "^2.0.4",
     "sqlite3": "^4.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   }
 }

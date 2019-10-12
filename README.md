@@ -3,14 +3,24 @@
 Headmaster II is a full stack application catered toward managing your ~~little shits~~ **students**.
 
 ## Installation
+
+1. Ensure [PostgreSQL](https://www.postgresql.org/) has been installed on your machine
+
+2. (Optional) Run the following commands in the PostgreSQL shell to create the `headmaster2` database and `testUser` role.
  
-Clone the repository and  
+* `CREATE DATABASE headmaster2`
+* `CREATE USER testUser WITH PASSWORD 'password'`
+* `GRANT ALL PRIVILEGES ON DATABASE headmaster2 to testUser`
+ 
+3. Clone the repository and run `npm install` to install dependencies.
 
-Use the start script `npm setup` to initialize a blank database or `npm test` to initialize a database with test data.
+4. Install Knex globally by running `npm install knex -g`
 
-Currently the database is set up to run as SQLite 3, but can be changed to use any Knex compatible database by modifying the declaration in `index.js`.
+5. If using different database settings from 2, modify `knexfile.js` to properly include your PostgreSQL connection settings
 
-Deploy locally (using a package such as [serve]() or [nodemon]()) or to a provider of your choice.
+6. Use the start script `npm run initalize` to initialize a blank database or `npm run initializeData` to initialize a database with test data.
+
+7. Deploy locally using `npm run dev` to start [nodemon]()) or `npm start` to use Node.
 
 ## Usage
 
