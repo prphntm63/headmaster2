@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
-  console.log('Seeding 008-Touchpoints...')
+  console.log('Seeding 007-Touchpoints...')
 
   return generateTouchpoints(knex)
   .then(touchpoints => {
-    return knex('touchpoints').insert( touchpoints );
+    return knex('Touchpoints').insert( touchpoints );
   })
   .catch(err => {
     console.log('Error creating touchpoints - ', err)
@@ -25,7 +25,7 @@ function generateTouchpoints(knex) {
         .then(instructors => {
           let studentTouchpoints = [];
 
-          // Generate between 2 and 7 touchpoints
+          // Generate between 2 and 7 touchpoints per student
           for (let idx=0; idx<rng(2,7); idx++) {
             studentTouchpoints.push( generateTouchpoint(student,instructors) )
           }
@@ -54,9 +54,9 @@ function generateTouchpoint(student, instructors) {
   return {
     "createdAt" : randomDate(student.startDate, Date.now(), 8, 5),
     "student" : student.id,
-    "instructor" : instructorObject ? instructorObject.instructor : instructors[0],
+    "user" : instructorObject ? instructorObject.user : instructors[0],
     "status" : status,
-    "tags" : generateRandomTags(status, rng(0,3) ),
+    "tags" : JSON.stringify( generateRandomTags(status, rng(0,3) ) ),
     "comment" : comment,
   }
 }
@@ -78,12 +78,12 @@ function getStudents(knex) {
   return knex('Students')
   .innerJoin('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
   .innerJoin('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
-  .select('Students.*', 'Cohorts.startDate as startDate')
+  .select('Students.*', 'Cohorts.startDate as startDate', 'LinkCohortsStudents.cohort as cohort')
 }
 
 function getInstructors(knex, cohortId) {
   return knex('LinkCohortsUsers')
-  .select('Users')
+  .select('user')
   .where('cohort', '=', cohortId)
 }
 
@@ -95,8 +95,8 @@ function randomDate(start, end, startHour, endHour) {
 }
 
 function randomStatus() {
-  let statuses = ['red', 'yellow', 'green', 'green']
-  return statuses[rng(0,3)] //fudging rng so I don't have to make new function, lol
+  let statuses = ['red', 'yellow', 'green', 'green', 'green'] //fudging biased rng
+  return statuses[rng(0,4)] 
 }
 
 function generateRandomComment(status) {
@@ -134,7 +134,6 @@ function generateRandomTags(status, numTags) {
     "Energy",
     "Motivation",
     "Attendance",
-    ""
   ]
 
   let modifiers = {
@@ -144,8 +143,9 @@ function generateRandomTags(status, numTags) {
   }
 
   for (let idx=0; idx<numTags; idx++) {
-    let descriptor = descriptors.splice( rng(0, descriptors.length) )
-    tags.push(modifiers.status + " " + descriptor)
+    // Here we use splice to remove items from descriptors array to avoid duplicate tags
+    let descriptor = descriptors.splice( rng(0, descriptors.length) , 1 )
+    tags.push(modifiers[status] + " " + descriptor)
   }
 
   return tags
@@ -157,6 +157,7 @@ function rng(lower, upper) {
   return random + lower;
 }
 
+// Since Node doesn't support flat() function yet
 function flatDeep(arr) {
   return arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatDeep(val) : val), []);
 };

@@ -18,9 +18,11 @@ Headmaster II is a full stack application catered toward managing your ~~little 
 
 5. If using different database settings from 2, modify `knexfile.js` to properly include your PostgreSQL connection settings
 
-6. Use the start script `npm run initalize` to initialize a blank database or `npm run initializeData` to initialize a database with test data.
+6. Use the start script `npm run initalize` to initialize a blank database 
 
-7. Deploy locally using `npm run dev` to start [nodemon]()) or `npm start` to use Node.
+7. If desired, use `npm run seedRandom` to initialize a database with random test data.
+
+8. Deploy locally using `npm run dev` to start [nodemon]()) or `npm start` to use Node.
 
 ## Usage
 
@@ -28,10 +30,11 @@ Use it like a rented mule. Note to self: come back and update readme when not in
 
 ## Dependencies
 
-* ExpressJS
-* KnexJS
-* Pug
-* SQLite3
+* [ExpressJS](https://expressjs.com/)
+* [KnexJS](http://knexjs.org/)
+* [Pug](https://pugjs.org/)
+* [Node-Postgres](https://node-postgres.com/)
+* [PostgreSQL](https://www.postgresql.org/)
 
 ## Requirements
 ```
