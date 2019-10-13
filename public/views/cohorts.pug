@@ -7,15 +7,18 @@ block content
                 .col-sm-7 
                     h5 Cohort
                 .col-sm-3 
-                    h5 Graduation Date
-                .col-sm-2 
-                    h5 Active Students
+                    h5 Start Date
+                .col-sm-1
+                    h5 Active
+                .col-sm-1
+                    h5 Students
         each cohort in cohorts
             a.list-group-item.list-group-item-action(href="/cohorts/"+cohort.id)
                 .row
-                    .col-sm-7 #{cohort.cohortName}
-                    .col-sm-3 #{cohort.graduated ? "Graduated" : cohort.startDate}
-                    .col-sm-2 #{cohort.numStudents}
+                    .col-sm-7 #{cohort.name}
+                    .col-sm-3 #{cohort.startDate}
+                    .col-sm-1 #{!cohort.graduated ? "✔" : "❌"}
+                    .col-sm-1 #{cohort.numStudents}
     .container.my-3.d-flex.flex-row-reverse
         //- button.btn.btn-primary.px-3(type='button' data-toggle="modal" data-target="#addStudentModal") Add Student
         button.btn.btn-primary.px-3(type='button' onclick="openAddCohortModal()") Add Cohort
@@ -47,94 +50,5 @@ block content
         each key in Object.keys(cohorts[0])
             li #{key}
 
-    script.
-        function navigateTo(url) {
-            window.location.href = url
-        }
-
-        function submitStudentForm(cohortData) {
-            fetch('/cohorts', {
-                method: 'POST',
-                body: JSON.stringify(cohortData),
-                headers : {
-                    'Content-Type' : 'application/json'
-                }
-            })
-            .then(response => {
-                if (response.status === 200) {
-                    console.log('success')
-                    return response.json()
-                } else throw response
-            })
-            .then(responseJson => {
-                console.log(responseJson)
-                window.alert('Cohort added!')
-                $('#addCohortModal').modal('hide')
-            })
-            .catch(err => {
-                if (err.status === 400) {
-                    err.json()
-                    .then(responseJson => {
-                        console.log(responseJson)
-                        window.alert(`Cohort failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
-                    })
-                } else {
-                    console.log('you dun fucked up')
-                    window.alert('Server error')
-                }   
-
-            })
-        }
-
-        function openAddCohortModal() {
-            
-            $('#addCohortModal').modal('show')
-        }
-
-        function getCohortsFromDb() {
-            return fetch('/api/cohorts')
-            .then(cohorts => {
-                return cohorts.json()
-            })
-            .then(cohortsJson => {
-                let cohortList = []
-                cohortsJson.forEach(cohortJson => {
-                    cohortList.push(cohortJson.cohort)
-                })
-                return cohortList
-            })
-        }
-
-        async function validateCohortForm() {
-            let valid = true;
-
-            getCohortsFromDb()
-            .then(existingCohorts => {
-                let formData = {
-                    cohortName : $('#cohortName').val(),
-                    startDate : $('#startDate').val(),
-                }
-
-                for (key in formData) {
-                    $(`#${key}`).removeClass('is-invalid is-valid')
-
-                    if ( !$(`#${key}`).val() ) {
-                        $(`#${key}`).addClass('is-invalid')
-                        $(`#${key}Feedback`).text('Cannot be blank')
-                        valid = false;
-                    } else if (key === "cohortName" && existingCohorts.find( cohortName => {return cohortName == formData[key]} )) {
-                        $(`#${key}`).addClass('is-invalid')
-                        $(`#${key}Feedback`).text('Cohort already exists!')
-                        valid = false
-                    } else {
-                        $(`#${key}`).addClass('is-valid')
-                    }
-                }
-
-                if (valid) {
-                    submitStudentForm(formData)
-                }
-            })
-
-            
-        }
+    script(src="./public/scripts/cohorts.js")
+        

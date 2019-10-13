@@ -1,4 +1,6 @@
-const knex = require(dbConfigs.development)
+const environment = process.env.ENVIRONMENT || 'development'
+const config = require('./knexfile.js')[environment];
+const knex = require('knex')(config)
 
 let db = {
 
@@ -36,21 +38,61 @@ let db = {
 
     // ***** COHORT METHODS *****
 
-    getCohortList : function() {
+    getCohortsByUser : function(userId) {
         return knex
-        .from('cohorts')
-        .leftJoin('students', 'cohorts.id', '=', 'students.cohort')
-        .select('cohorts.id', 'cohorts.cohortName', 'cohorts.startDate', 'cohorts.graduated', knex.raw('COUNT(students.cohort) as numStudents'))
-        .groupBy('cohorts.id', 'cohorts.cohortName', 'cohorts.startDate', 'cohorts.graduated')
+        .from('Cohorts')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .leftJoin('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.user')
+        .select('Cohorts.*', 'Students.id as studentId', 'LinkCohortsStudents.cohort as studentCohort', knex.raw('COUNT(Students.cohort) as numStudents'))
+        .where({'LinkCohortsUsers.user' : userId})
     },
 
-    getCohort : function(cohortId) {
+    getCohortsList : function() {
         return knex
-        .from('cohorts')
-        .leftJoin('students', 'cohorts.id', '=', 'students.cohort')
-        .leftJoin('link_cohorts_assignments', 'cohorts.id', '=', 'link_cohorts_assignments.cohortId')
-        .select('cohorts.*', 'students.id as studentId', 'students.cohort as studentCohort', knex.raw('COUNT(students.cohort) as numStudents'))
-        .where({'cohorts.id' : cohortId})
+        .from('Cohorts')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        // .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
+        .groupBy('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated')
+    },
+
+    getCohortStudents : function(cohortId) {
+        return knex
+        .from('Cohorts')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .where({'Cohorts.id' : cohortId})
+    },
+
+    getCohortStudentsAndStatus : function(cohortId) {
+        return knex
+        .from('Cohorts')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .innerJoin('Touchpoints', 'Students.id', '=', 'Touchpoints.student')
+        .leftOuterJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")
+        .select('Students.id as studentId', 'tp.id as touchpointId', 'Students.*', 'tp.*')
+        .groupBy('Students.id', 'tp.id')
+        .where({'Cohorts.id' : cohortId})
+    },
+
+    getCohortInstructors : function(cohortId) {
+        return knex
+        .from('Cohorts')
+        .join('LinkCohortsUsers', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+        .join('Users', 'LinkCohortsUsers.user', '=', 'Users.id')
+        .select('Users.*', 'LinkCohortsUsers.role')
+        .where({'Cohorts.id' : cohortId})
+    },
+
+    getCohortInfo : function(cohortId) {
+        return knex
+        .from('Cohorts')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .select('Cohorts.id', 'Cohorts.*', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
+        .groupBy('Cohorts.id')
+        .where({'Cohorts.id' : cohortId})
     },
 
     // ***** ASSIGNMENT METHODS *****

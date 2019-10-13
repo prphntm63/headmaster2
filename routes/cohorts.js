@@ -3,14 +3,8 @@ const router = express.Router();
 const db = require('./../db.js');
 
 router.get('/', (req, res) => {
-    console.log('getting cohorts')
 
-    // knex
-    // .from('cohorts')
-    // .leftJoin('students', 'cohorts.id', '=', 'students.cohort')
-    // .select('cohorts.id', 'cohorts.cohort', 'cohorts.startDate', 'cohorts.graduated', knex.raw('COUNT(students.cohort) as numStudents'))
-    // .groupBy('cohorts.id', 'cohorts.cohort', 'cohorts.startDate', 'cohorts.graduated')
-    db.getCohortList()
+    db.getCohortsList()
     .then(cohorts => {
         res.render('cohorts', {cohorts:cohorts})
     })
@@ -23,16 +17,21 @@ router.get('/', (req, res) => {
 router.get('/:cohortId', (req, res) => {
     let cohortId = req.params.cohortId
 
-    // knex
-    // .from('cohorts')
-    // .join('students', 'cohorts.id', '=', 'students.cohort')
-    // .join('link_cohorts_assignments', 'cohorts.id', '=', 'link_cohorts_assignments.cohortId')
-    // .select('*')
-    // .where({'cohorts.id' : cohortId})
-    db.getCohort(cohortId)
-    .then(cohorts => {
-        let cohort = cohorts[0];
-        res.render('cohort', {cohort: cohort})
+    Promise.all([
+        db.getCohortInstructors(cohortId),
+        db.getCohortStudentsAndStatus(cohortId),
+        db.getCohortInfo(cohortId)
+    ])
+    .then(cohortData => {
+        let cohortInstructors = cohortData[0]
+        let cohortStudents = cohortData[1]
+        let cohortInfo = cohortData[2]
+
+        res.render('cohort', {
+            "instructors" : cohortInstructors,
+            "students" : cohortStudents,
+            "info" : cohortInfo[0]
+        })
     })
     .catch(err => {
         console.log(err)

@@ -36,7 +36,7 @@ async function randomizeInstructorsCohorts(knex) {
 
     // Assign random number of cohorts to each instructor
     instructors.forEach(instructor => {
-      let tempCohorts = cohorts.slice()
+      let tempCohorts = cohorts.slice().sort(() => {return .5 - Math.random()})
       for (let idx=0; idx < rng(1,3); idx++) {
         let cohort = tempCohorts.splice(idx, idx+1)
         output.push({

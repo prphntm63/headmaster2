@@ -1,7 +1,26 @@
 extends root
 
 block content
-    h1 #{cohort.cohort}
+    h2 Info
     ul
-        each key in Object.keys(cohort)
-            li #{key} #{cohort[key]}
+    each key in Object.keys(info)
+        li #{key} - #{info[key]}
+    
+    h2 Instructors
+    table
+        each instructor in instructors
+            tr
+                td
+                    ul
+                    each key in Object.keys(instructor)
+                        li #{key} - #{instructor[key]}
+
+    h2 Students
+    table
+        each student in students
+            tr
+                td
+                    ul
+                    each key in Object.keys(student)
+                        li #{key} - #{student[key]}
+                        

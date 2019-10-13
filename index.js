@@ -17,12 +17,12 @@ app.get('/', (req, res) => {
     res.render('index', {title:"Headmaster2", message:"Hello World!"})
 })
 
-let assignments = require('./routes/assignments')
+let dashboard = require('./routes/dashboard')
 let students = require('./routes/students')
 let cohorts = require('./routes/cohorts')
 let api = require('./routes/api')
 
-app.use('/assignments', assignments)
+app.use('/dashboard', dashboard)
 app.use('/cohorts', cohorts)
 app.use('/students', students)
 app.use('/api', api)

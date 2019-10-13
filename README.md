@@ -36,13 +36,9 @@ Use it like a rented mule. Note to self: come back and update readme when not in
 * [Node-Postgres](https://node-postgres.com/)
 * [PostgreSQL](https://www.postgresql.org/)
 
-## Requirements
-```
-Chris Oakman 9:07 PM
-- make a new template for the Cohorts page
+## To Do
 
-- add a new route for Students /students/65 should render student with id = 65
-- add a migration + seed for Assignments, link assignments to Students with a SQL JOIN (hard mode) (edited) 
-- add new route + page for student assignments (hard mode)
-- add startDate and endDate input elements for creating a cohort (hint: check out <input type="date">)
-```
+* Add user sign in capability with Github
+* Create personalized nav page for each users cohorts
+* Create cohort page
+* Create student page
