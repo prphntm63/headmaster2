@@ -52,7 +52,7 @@ function generateTouchpoint(student, instructors) {
   let instructorObject = instructors[ rng(0, instructors.length) ]
 
   return {
-    "createdAt" : randomDate(student.startDate, Date.now(), 8, 5),
+    "ctime" : randomDate(student.startDate, Date.now(), 8, 5),
     "student" : student.id,
     "user" : instructorObject ? instructorObject.user : instructors[0],
     "status" : status,

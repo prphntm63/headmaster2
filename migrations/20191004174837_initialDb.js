@@ -52,7 +52,6 @@ exports.up = function(knex) {
             table.timestamp('ctime').defaultTo(knex.fn.now())
             table.timestamp('mtime').defaultTo(knex.fn.now())
             // table.increments('id').primary();
-            table.timestamp('createdAt', { useTz : true });
             table.uuid('student').references('id').inTable('Students').notNull();
             table.enu('status', ['red', 'yellow', 'green']);
             table.json('tags')
@@ -60,12 +59,15 @@ exports.up = function(knex) {
             table.uuid('user').references('id').inTable('Users').notNull()
         })
         .createTable('LinkCohortsStudents', (table) => {
+            table.timestamp('ctime').defaultTo(knex.fn.now())
+            table.timestamp('mtime').defaultTo(knex.fn.now())
             table.uuid('cohort').references('id').inTable('Cohorts').notNull();
             table.uuid('student').references('id').inTable('Students').notNull();
 
         })
         .createTable('LinkCohortsUsers', table => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+            table.timestamp('ctime').defaultTo(knex.fn.now())
+            table.timestamp('mtime').defaultTo(knex.fn.now())
             // table.increments('id').primary();
             table.uuid('user').references('id').inTable('Users').notNull();
             table.uuid('cohort').references('id').inTable('Cohorts').notNull();
