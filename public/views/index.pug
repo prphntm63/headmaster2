@@ -1,4 +1,7 @@
 extends root
 
 block content
-    h1 #{message}
+    h1 Welcome!
+    h2 #{user.firstName} #{user.lastName}
+
+    button.btn.btn-primary(onclick="window.location.href = '/auth/github';") Login with Github

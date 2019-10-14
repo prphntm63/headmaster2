@@ -22,6 +22,8 @@ exports.up = function(knex) {
             table.string('photoUrl');
             table.string('github');
             table.unique('github');
+            table.string('accessToken');
+            table.string('refreshToken');
         })
         .createTable('Students', (table) => {
             table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))

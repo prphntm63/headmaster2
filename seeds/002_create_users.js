@@ -7,7 +7,13 @@ exports.seed = function(knex) {
 };
 
 function createInstructors() {
-  return [{
+  return [
+  {
+    "firstName" : "Matt",
+    "lastName" : "Westwick",
+    "github" : "prphntm63",
+    "photoUrl" : `https://randomuser.me/api/portraits/men/${Math.floor(Math.random() * 100)}.jpg`,
+  },  {
     "firstName": "Toby",
     "lastName": "Berks",
     "github": "tberks0",
