@@ -6,7 +6,7 @@ const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 
 const app = express()
-const port = 3000;
+const port = process.env.PORT || '3000';
 
 passport.use(new GitHubStrategy(
     {
