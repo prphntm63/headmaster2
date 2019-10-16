@@ -1,7 +1,10 @@
 extends root
 
 block content
-    h1 Welcome!
-    h2 #{user.firstName} #{user.lastName}
-
-    button.btn.btn-primary(onclick="window.location.href = '/auth/github';") Login with Github
+    if user
+        h2 Welcome #{user.firstName} #{user.lastName}
+    else
+        h2 Welcome!
+        button.btn.btn-primary.d-flex.flex-row.align-items-center(onclick="window.location.href = '/auth/github';") 
+            img.mr-2(src="./public/images/GitHub-mark.png" style="height:30px; width:30px;")
+            p.my-0.py-0 Login with Github

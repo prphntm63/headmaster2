@@ -75,7 +75,7 @@ app.get('/auth/github',
 app.get('/auth/github/callback', 
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
-        res.redirect('/');
+        res.redirect('/cohorts');
 });
 
 app.listen(port, () => {

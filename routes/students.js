@@ -2,16 +2,12 @@ const express = require('express');
 const router = express.Router();
 const db = require('./../db.js');
 
-router.get('/', (req, res) => {
-    console.log('getting students')
+router.get('/', ensureAuthenticated, (req, res) => {
+    let userId = req.user.id
 
-    // knex
-    // .from('students')
-    // .join('cohorts', 'students.cohort', '=', 'cohorts.id')
-    // .select('students.id as id', 'students.firstName', 'students.lastName', 'students.github', 'cohorts.cohort', 'cohorts.graduated')
-    db.getStudentList()
+    db.getStudentListByUser(userId)
     .then(students => {
-        res.render('students', {students:students})
+        res.render('students', {students:students, user:req.user})
     })
     .catch(err => {
         console.log(err)
@@ -19,19 +15,15 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/:studentId', (req, res) => {
+router.get('/:studentId', ensureAuthenticated, (req, res) => {
+    let userId = req.user.id
     let studentId = req.params.studentId
 
-    // knex
-    // .from('students')
-    // .join('cohorts', 'students.cohort', '=', 'cohorts.id')
-    // .join('link_assignments_students', 'students.id', '=', 'link_assignments_students.studentId')
-    // .select('*')
-    // .where({'students.id' : studentId})
-    db.getStudent(studentId)
+    db.getStudentByUser(userId, studentId)
     .then(students => {
+        console.log(students)
         let student = students[0];
-        res.render('student', {student: student})
+        res.render('student', {student: student, user:req.user})
     })
     .catch(err => {
         console.log(err)
@@ -39,11 +31,12 @@ router.get('/:studentId', (req, res) => {
     })
 })
 
-router.post('/', (req,res) => {
+router.post('/', ensureAuthenticated, (req,res) => {
     console.log('got post request to /students')
     let studentInfo = req.body
     let validationErrors = []
 
+    // Do validation and push errors into validationErrors array
     for (key in studentInfo) {
         if (!studentInfo[key]) {
             validationErrors.push({
@@ -54,21 +47,33 @@ router.post('/', (req,res) => {
         }
     }
 
+    // If there is errors, return a 400 status with error object
     if (validationErrors.length) {
         res.status(400).send(
             {"errors" : validationErrors}
         )
+    // Else, return 200 status with no errors 
     } else {
         db.addStudent(studentInfo)
         .then(studentInfo => {
             console.log(studentInfo)
+            // Feel free to redirect instead of sending 'no errors'
             res.status(200).send({"errors" : false})
         })
+    // If database error, return 500 status
         .catch(err => {
             console.log(err)
             res.status(500)
         })
     }
 })
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.status(401).redirect('/')
+    }
+}
 
 module.exports = router;

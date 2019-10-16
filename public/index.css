@@ -14,3 +14,7 @@
 .cohort-name {
     color: gray;
 }
+
+.linkstyle:hover {
+    cursor: pointer;
+}

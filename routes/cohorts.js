@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const db = require('./../db.js');
 
-router.get('/', (req, res) => {
+router.get('/', ensureAuthenticated, (req, res) => {
+    let userId = req.user.id
 
-    db.getCohortsList()
+    db.getCohortsByUser(userId)
     .then(cohorts => {
-        res.render('cohorts', {cohorts:cohorts})
+        res.render('cohorts', {
+            cohorts:cohorts,
+            "user" : req.user
+        })
     })
     .catch(err => {
         console.log(err)
@@ -14,7 +18,7 @@ router.get('/', (req, res) => {
     })
 })
 
-router.get('/:cohortId', (req, res) => {
+router.get('/:cohortId', ensureAuthenticated, (req, res) => {
     let cohortId = req.params.cohortId
 
     Promise.all([
@@ -30,7 +34,8 @@ router.get('/:cohortId', (req, res) => {
         res.render('cohort', {
             "instructors" : cohortInstructors,
             "students" : cohortStudents,
-            "info" : cohortInfo[0]
+            "info" : cohortInfo[0],
+            "user" : req.user
         })
     })
     .catch(err => {
@@ -39,7 +44,7 @@ router.get('/:cohortId', (req, res) => {
     })
 })
 
-router.post('/', (req,res) => {
+router.post('/', ensureAuthenticated, (req,res) => {
     console.log('got post request to /cohorts')
     let cohortInfo = req.body
     let validationErrors = []
@@ -69,5 +74,13 @@ router.post('/', (req,res) => {
         })
     }
 })
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.status(401).redirect('/')
+    }
+}
 
 module.exports = router;
