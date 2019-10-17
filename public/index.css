@@ -18,3 +18,46 @@
 .linkstyle:hover {
     cursor: pointer;
 }
+
+.student-card {
+    width: 22rem;
+    margin: 0.5rem;
+}
+
+.student-photo {
+    height: 4rem;
+}
+
+.student-card-footer {
+    justify-content: center
+}
+
+.student-card-footer > * {
+    width: 50%
+}
+
+.student-info {
+    padding: 5px 10px;
+}
+
+.student-touchpoint {
+    width: 50%;
+    padding: 5px 10px;
+}
+
+.student-commits {
+    width: 50%;
+    padding: 5px 10px;
+}
+
+.student-touchpoint-title {
+    margin: 0px;
+    margin-bottom: 5px;
+    padding: 0px;
+    width: 100%;
+    border-bottom:1px solid rgba(0,0,0,.125);
+}
+
+.touchpoint-comment {
+
+}

@@ -52,7 +52,7 @@ function generateRandomStudent(id, cohortIds) {
       github: name.login.username + Math.floor(Math.random() * 100), 
       photoUrl : name.picture.large,
       // cohort: getRandomCohortId(cohortIds), 
-      stoplightStatus: getRandomStatus(), 
+      // stoplightStatus: getRandomStatus(), 
       enrolledStatus:true,
     }
 

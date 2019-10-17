@@ -55,7 +55,7 @@ function generateTouchpoint(student, instructors) {
     "ctime" : randomDate(student.startDate, Date.now(), 8, 5),
     "student" : student.id,
     "user" : instructorObject ? instructorObject.user : instructors[0],
-    "status" : status,
+    "stoplightStatus" : status,
     "tags" : JSON.stringify( generateRandomTags(status, rng(0,3) ) ),
     "comment" : comment,
   }
@@ -145,7 +145,10 @@ function generateRandomTags(status, numTags) {
   for (let idx=0; idx<numTags; idx++) {
     // Here we use splice to remove items from descriptors array to avoid duplicate tags
     let descriptor = descriptors.splice( rng(0, descriptors.length) , 1 )
-    tags.push(modifiers[status] + " " + descriptor)
+    tags.push({
+      "text" : modifiers[status] + " " + descriptor,
+      "status" : status
+    })
   }
 
   return tags

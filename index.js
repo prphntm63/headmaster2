@@ -59,6 +59,11 @@ app.get('/', (req, res) => {
     res.render('index', {title:"Headmaster2", message:"Hello World!", user:req.user})
 })
 
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+})
+
 let dashboard = require('./routes/dashboard')
 let students = require('./routes/students')
 let cohorts = require('./routes/cohorts')

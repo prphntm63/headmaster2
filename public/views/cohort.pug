@@ -1,6 +1,56 @@
 extends root
 
 block content
+    .d-flex.flex-row.justify-content-between.mx-2
+        h2 Students
+        for instructor in instructors
+            if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
+                button.btn.btn-primary() Add Student
+    .d-flex.flex-row.flex-wrap.justify-content-between
+        each student in students
+            .card.student-card
+                .card-header.d-flex.flex-row
+                    div
+                        img.student-photo(src=student.photoUrl alt='./public/images/noPhoto.png')
+                    .w-100
+                        .d-flex.flex-row.justify-content-between
+                            h4.mx-2 #{student.firstName} #{student.lastName}
+                            //- h4 #{student.stoplightStatus}
+                            if student.stoplightStatus === 'green'
+                                span.badge.badge-success
+                                    i.material-icons.pt-1 done
+                            else if student.stoplightStatus === 'yellow'
+                                span.badge.badge-warning
+                                    i.material-icons.pt-1 help_outline
+                            else if student.stoplightStatus ==='red'
+                                span.badge.badge-danger
+                                    i.material-icons.pt-1 warning
+                        .d-flex.flex-row
+                            img.ml-2(src='./../public/images/GitHub-Mark.png' style="height:25px")
+                            a.ml-1(href='https://github.com/'+student.github) #{student.github}
+                .card-body.d-flex.flex-row.student-info
+                    .d-flex.flex-column.student-touchpoint
+                        .student-touchpoint-title Last Touchpoint
+                        if student.comment
+                            .touchpoint-comment #{student.comment}
+                        each tag in student.tags
+                            //- .touchpoint-tag(class = 'tag-'+tag.status) #{tag.text}
+                            if tag.status === 'green'
+                                span.badge.badge-success.mr-auto.my-1 #{tag.text}
+                            else if tag.status === 'yellow'
+                                span.badge.badge-warning.mr-auto.my-1 #{tag.text}
+                            else if tag.status ==='red'
+                                span.badge.badge-danger.mr-auto.my-1 #{tag.text}
+                        .touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
+                    .d-flex.flex-column.student-commits
+                        .student-touchpoint-title Latest Commits
+                .card-footer.d-flex.flex-row.student-card-footer.p-0
+                    .d-flex.justify-content-center.py-2(style="border-right:1px solid rgba(0,0,0,.125);")
+                        a(href='/students/'+student.github) Details
+                    .d-flex.justify-content-center.py-2
+                        a(href) Add Touchpoint
+                    
+
     h2 Info
     ul
     each key in Object.keys(info)
@@ -14,7 +64,6 @@ block content
                     ul
                     each key in Object.keys(instructor)
                         li #{key} - #{instructor[key]}
-
     h2 Students
     table
         each student in students
@@ -23,4 +72,6 @@ block content
                     ul
                     each key in Object.keys(student)
                         li #{key} - #{student[key]}
-                        
+
+    script(src="/public/scripts/cohort.js")
+    

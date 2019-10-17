@@ -15,20 +15,28 @@ router.get('/', ensureAuthenticated, (req, res) => {
     })
 })
 
-router.get('/:studentId', ensureAuthenticated, (req, res) => {
+router.get('/:studentGithub', ensureAuthenticated, (req, res) => {
     let userId = req.user.id
-    let studentId = req.params.studentId
+    let studentGithub = req.params.studentGithub
 
-    db.getStudentByUser(userId, studentId)
-    .then(students => {
-        console.log(students)
-        let student = students[0];
-        res.render('student', {student: student, user:req.user})
+    db.getStudentIdByGithub(studentGithub)
+    .then(studentId => {
+        db.getStudentByUser(userId, studentId)
+        .then(students => {
+            let student = students[0];
+            res.render('student', {student: student, user:req.user})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(404)
+        })
     })
     .catch(err => {
         console.log(err)
         res.status(404)
     })
+
+    
 })
 
 router.post('/', ensureAuthenticated, (req,res) => {

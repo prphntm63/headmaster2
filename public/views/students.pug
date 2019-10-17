@@ -12,7 +12,7 @@ block content
                 .col-sm-2
                     h5 Status
         each student in students
-            .list-group-item.list-group-item-action(onclick=`navigateTo("/students/${student.id}")`)
+            .list-group-item.list-group-item-action(onclick=`navigateTo("/students/${student.github}")`)
                 .row
                     .col-sm-1
                         a(href=student.github)

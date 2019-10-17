@@ -34,7 +34,6 @@ exports.up = function(knex) {
             table.string('lastName', 255).notNullable();
             table.string('github', 255);
             table.unique('github');
-            table.enu('stoplightStatus', ['red', 'yellow', 'green']);
             table.boolean('enrolledStatus');
             table.string('photoUrl');
         })
@@ -55,7 +54,7 @@ exports.up = function(knex) {
             table.timestamp('mtime').defaultTo(knex.fn.now())
             // table.increments('id').primary();
             table.uuid('student').references('id').inTable('Students').notNull();
-            table.enu('status', ['red', 'yellow', 'green']);
+            table.enu('stoplightStatus', ['red', 'yellow', 'green']);
             table.json('tags')
             table.string('comment')
             table.uuid('user').references('id').inTable('Users').notNull()
