@@ -6,6 +6,7 @@ html
         script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous")
         script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous")
         script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous")
+        script(src="/public/scripts/root.js")
         link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
         link(rel="stylesheet" href="/public/index.css")
     body
@@ -32,4 +33,90 @@ html
                         a.nav-item.nav-link(href="/logout") Logout
         .mt-2.mx-3
             block content
+        
+        //- Add Student Modal
+        #addStudentModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true")
+            .modal-dialog(role="document")
+                .modal-content
+                    .modal-header
+                        h5.modal-title Add Student
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    .modal-body
+                        form(action="submit")
+                            .form-row.my-2
+                                .col
+                                    label(for="firstName") First Name
+                                    input.form-control(type="text" placeholder="First Name" name="firstName" id="firstName")
+                                    .invalid-feedback Please Enter a First Name
+                                .col
+                                    label(for="lastName") Last Name
+                                    input.form-control(type="text" placeholder="Last Name" name="lastName" id="lastName")
+                                    .invalid-feedback Please Enter a Last Name
+                            .form-row.my-2
+                                .col
+                                    label(for="cohort") Cohort
+                                    select.form-control(id="cohort" name="cohort")
+                                        option(selected value='') Select...
+                                    .invalid-feedback Please Select a Cohort
+                            .form-row.my-2
+                                .col
+                                    label(for="github") Github Profile
+                                    input.form-control(type="text" placeholder="Github Username" name="github" id="github")
+                                    .invalid-feedback Please Add a Github Profile
+                                .col.pt-3
+                                    p Just the username, not the whole URL
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                        button.btn.btn-primary(type="button" onclick="validateStudentForm()") Add Student
+
+        //- Add Touchpoint Modal
+        #addTouchpointModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addTouchpointModalLabel" aria-hidden="true")
+            .modal-dialog.modal-lg(role="document")
+                .modal-content
+                    .modal-header
+                        h5.modal-title Add Touchpoint
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    .modal-body
+                        input#newTouchpointStudentId(type="text" hidden)
+                        form(action="submit")
+                            .form-row.my-2
+                                .col-sm-4
+                                    label(for="firstName") Stoplight Status
+                                    .btn-group.btn-group-toggle.stoplightStatus(data-toggle="buttons")
+                                        label.btn.btn-success.active
+                                            input(type="radio" name="stoplightButtons" value="green" autocomplete="off" checked)
+                                            i.material-icons.pt-1 done
+                                        label.btn.btn-warning
+                                            input(type="radio" name="stoplightButtons" value="yellow" autocomplete="off")
+                                            i.material-icons.pt-1 help_outline
+                                        label.btn.btn-danger
+                                            input(type="radio" name="stoplightButtons" value="red" autocomplete="off")
+                                            i.material-icons.pt-1 warning
+                                    .invalid-feedback Please Select a Status
+                                .col-sm-8
+                                    label(for="newTouchPointTag") Tags
+                                    .input-group
+                                        .input-group-prepend
+                                            select.form-control#newTouchpointTagStatus
+                                                option(selected value='') Select...
+                                                option(value='green' style="background: var(--success)") Green
+                                                option(value='yellow' style="background: var(--warning)") Yellow
+                                                option(value='red' style="background: var(--danger)") Red
+                                        input.form-control(type="text" placeholder="Add Tag" name="newTouchpointTag" id="newTouchpointTag")
+                                        .input-group-append
+                                            button.btn.btn-primary#newTouchpointTagSubmit +
+                                    #studentModalTags
+                                    .invalid-feedback
+                            .form-row.my-2
+                                .col
+                                    label(for="newTouchPointComment") Comment
+                                    textarea.form-control(rows='5', name='newTouchPointComment', id='newTouchPointComment')
+                                    .invalid-feedback
+
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                        button.btn.btn-primary#addTouchpointSubmit(type="button") Add Touchpoint
             

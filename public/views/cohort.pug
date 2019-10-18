@@ -5,10 +5,10 @@ block content
         h2 Students
         for instructor in instructors
             if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
-                button.btn.btn-primary() Add Student
+                button.btn.btn-primary.add-student-button Add Student
     .d-flex.flex-row.flex-wrap.justify-content-between
         each student in students
-            .card.student-card
+            .card.student-card(data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
                 .card-header.d-flex.flex-row
                     div
                         img.student-photo(src=student.photoUrl alt='./public/images/noPhoto.png')
@@ -32,7 +32,8 @@ block content
                     .d-flex.flex-column.student-touchpoint
                         .student-touchpoint-title Last Touchpoint
                         if student.comment
-                            .touchpoint-comment #{student.comment}
+                            .student-touchpoint-comment
+                                small #{student.comment}
                         each tag in student.tags
                             //- .touchpoint-tag(class = 'tag-'+tag.status) #{tag.text}
                             if tag.status === 'green'
@@ -41,13 +42,13 @@ block content
                                 span.badge.badge-warning.mr-auto.my-1 #{tag.text}
                             else if tag.status ==='red'
                                 span.badge.badge-danger.mr-auto.my-1 #{tag.text}
-                        .touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
+                        .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
                     .d-flex.flex-column.student-commits
                         .student-touchpoint-title Latest Commits
                 .card-footer.d-flex.flex-row.student-card-footer.p-0
                     .d-flex.justify-content-center.py-2(style="border-right:1px solid rgba(0,0,0,.125);")
                         a(href='/students/'+student.github) Details
-                    .d-flex.justify-content-center.py-2
+                    .d-flex.justify-content-center.py-2.add-touchpoint-button
                         a(href) Add Touchpoint
                     
 

@@ -20,6 +20,7 @@ router.get('/', ensureAuthenticated, (req, res) => {
 
 router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
     let cohortSlug = req.params.cohortSlug
+    let userId = req.user.id
 
     db.getCohortIdFromSlug(cohortSlug) //Convert URL slug to cohortId
     .then(cohortId => {
@@ -32,13 +33,21 @@ router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
             let cohortInstructors = cohortData[0]
             let cohortStudents = cohortData[1]
             let cohortInfo = cohortData[2]
-    
-            res.render('cohort', {
-                "instructors" : cohortInstructors,
-                "students" : cohortStudents,
-                "info" : cohortInfo[0],
-                "user" : req.user
-            })
+
+            // Make sure user is cohort instructor to view
+            if (!cohortInstructors.find((instructor => {
+                return instructor.id === userId
+            }))) {
+                res.status(401).redirect('/')
+            } else {
+                res.render('cohort', {
+                    "instructors" : cohortInstructors,
+                    "students" : cohortStudents,
+                    "info" : cohortInfo[0],
+                    "user" : req.user
+                })
+            }
+
         })
         .catch(err => {
             console.log(err)

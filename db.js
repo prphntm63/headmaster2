@@ -82,14 +82,14 @@ let db = {
 
     getStudentByUser : function(userId, studentId) {
         if (!userId || !studentId) return null
-        console.log(studentId)
 
         return knex
         .from('Students')
+        .leftJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")        
         .join('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
         .join('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
         .join('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.cohort')
-        .select('*')
+        .select('tp.*', 'Students.*', 'Students.id as studentId')
         .where({
             'Students.id' : studentId,
             'LinkCohortsUsers.user' : userId
@@ -210,21 +210,59 @@ let db = {
         .where({'Cohorts.id' : cohortId})
     },
 
-    // // ***** ASSIGNMENT METHODS *****
+    // ***** ASSIGNMENT METHODS *****
 
-    // getAssignmentsList : function() {
-    //     return knex.select('*')
-    //     .from('assignments')
-    // },
+    getTouchpoint(userId, touchpointId) {
+        return knex
+        .from('Touchpoints')
+        .join('Students.id', '=', 'Touchpoints.student')
+        .join('LinkCohortsStudents.student', '=', 'Students.id')
+        .join('Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .join('LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+        .select('LinkCohortsUsers.user as cohortUserId', 'Touchpoints.*')
+        .where({
+            'cohortUserId' : userId,
+            'Touchpoints.id' : touchpointId
+        })
+    },
 
-    // getAssignment : function(assignmentId) {
-    //     return knex
-    //     .from('assignments')
-    //     .join('link_assignments_students', 'assignments.id', '=', 'link_assignments_students.assignmentId')
-    //     .join('link_cohorts_assignments', 'assignments.id', '=', 'link_cohorts_assignments.cohortId')
-    //     .select('assignments.*', 'link_assignments_students.studentId as studentId', 'link_cohorts_assignments.cohortId as cohortId')
-    //     .where({'assignments.id' : assignmentId})
-    // }
+    getTouchpointsByStudent(userId, studentId) {
+        return knex
+        .from('Touchpoints')
+        .join('Students.id', '=', 'Touchpoints.student')
+        .join('LinkCohortsStudents.student', '=', 'Students.id')
+        .join('Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .join('LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+        .select('LinkCohortsUsers.user as cohortUserId', 'Students.id as studentId', 'Touchpoints.*')
+        .where({
+            'cohortUserId' : userId,
+            'studentId' : studentId
+        })
+    },
+
+    getTouchpointsByUser(userId) {
+        return knex
+        .from('Touchpoints')
+        .select('*')
+        .where({
+            'Touchpoints.user' : userId
+        })
+    },
+
+    addTouchpoint(params) {
+        console.log(params)
+
+        return knex
+        .insert(params)
+        .into('Touchpoints')
+        .then(data => {
+            console.log(data)
+            return data
+        })
+        .catch(err => {
+            console.log('error adding touchpoint - ', err)
+        })
+    },
 
 }
 
