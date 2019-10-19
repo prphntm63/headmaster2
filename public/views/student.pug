@@ -5,3 +5,7 @@ block content
     ul
         each key in Object.keys(student)
             li #{key}
+
+    button.btn.btn-primary#edit-student(href data-student-id=student.id) Edit Student
+
+    script(src = "/public/scripts/student.js")

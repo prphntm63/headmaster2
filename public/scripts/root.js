@@ -1,10 +1,13 @@
+function navigateTo(url) {
+    window.location.href = url
+}
+
 function getCohortsFromDb() {
     fetch('/api/cohorts')
     .then(cohorts => {
         return cohorts.json()
     })
     .then(cohortsJson => {
-        console.log(cohortsJson)
         cohortsJson.forEach(cohort => {
             $('#cohort').append($('<option>', {"value":cohort.id, "text":cohort.name}))
         })
@@ -22,13 +25,18 @@ function validateStudentForm() {
         firstName : $('#firstName').val(),
         lastName : $('#lastName').val(),
         cohort : $('#cohort').val(),
-        github : $('#github').val()
+        github : $('#github').val(),
+        enrolledStatus : $('#enrolledStatus').is(':checked')
     }
+
+    console.log(formData)
 
     for (key in formData) {
         $(`#${key}`).removeClass('is-invalid is-valid')
 
-        if ( !$(`#${key}`).val() ) {
+        if (key === enrolledStatus) {
+            $(`#${key}`).addClass('is-valid')
+        } else if( !$(`#${key}`).val() ) {
             $(`#${key}`).addClass('is-invalid')
             valid = false;
         } else (

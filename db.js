@@ -89,10 +89,13 @@ let db = {
         .join('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
         .join('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
         .join('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.cohort')
-        .select('tp.*', 'Students.*', 'Students.id as studentId')
+        .select('tp.*', 'Students.*', 'Cohorts.id as cohortId', 'Cohorts.name as cohortName', 'Students.id as studentId')
         .where({
             'Students.id' : studentId,
             'LinkCohortsUsers.user' : userId
+        })
+        .catch(err => {
+            console.log('error getStudentByUser - ', err)
         })
         
     },
@@ -113,19 +116,63 @@ let db = {
     //     .where({'students.id' : studentId})
     // },
 
-    // addStudent : function(studentParams) {
-    //     return knex
-    //     .returning('id', 'firstName', 'lastName')
-    //     .insert(studentParams)
-    //     .into('students')
-    // },
+    addStudent : function(formData) {
+        let cohort = formData.cohort
+        let studentParams = {
+            "firstName" : formData.firstName,
+            "lastName" : formData.lastName,
+            "github" : formData.github,
+            "enrolledStatus" : formData.enrolledStatus
+        }
 
-    // updateStudent : function(studentId, studentParams) {
-    //     return knex('students')
-    //     .returning('id', 'firstName', 'lastName')
-    //     .where('id', '=', studentId)
-    //     .update(studentParams)
-    // },
+        return knex
+        .returning('*')
+        .insert(studentParams)
+        .into('Students')
+        .then(studentDataRows => {
+            let studentData = studentDataRows[0]
+            let linkCohortParams = {
+                "student" : studentData.id,
+                "cohort" : cohort
+            }
+            return knex
+            .returning('*')
+            .insert(linkCohortParams)
+            .into('LinkCohortsStudents')
+            .then(linkStudentCohortDataRows => {
+                let linkStudentCohortData = linkStudentCohortDataRows[0]
+                studentData.cohort = linkStudentCohortData.cohort
+                return studentData
+            })
+        })
+    },
+
+    updateStudent : function(studentId, formData) {
+        let cohort = formData.cohort
+        let studentParams = {
+            "firstName" : formData.firstName,
+            "lastName" : formData.lastName,
+            "github" : formData.github,
+            "enrolledStatus" : formData.enrolledStatus
+        }
+
+        return knex('Students')
+        .returning('*')
+        .where({'id' : studentId})
+        .update(studentParams)
+        .then(studentDataRows => {
+            let studentData = studentDataRows[0]
+            return knex('LinkCohortsStudents')
+            .returning('*')
+            .where({'student' : studentId})
+            .update({'cohort' : cohort})
+            .then(linkStudentCohortDataRows => {
+                let linkStudentCohortData = linkStudentCohortDataRows[0]
+                studentData.cohort = linkStudentCohortData.cohort
+                return studentData
+            })
+        })
+    },
 
     // ***** COHORT METHODS *****
 
@@ -255,10 +302,6 @@ let db = {
         return knex
         .insert(params)
         .into('Touchpoints')
-        .then(data => {
-            console.log(data)
-            return data
-        })
         .catch(err => {
             console.log('error adding touchpoint - ', err)
         })
@@ -267,6 +310,9 @@ let db = {
 }
 
 function timeSinceTouchpoint(date) {
+    if (!date) {
+        return ''
+    }
     var seconds = Math.floor((new Date() - date) / 1000);
     var interval = Math.floor(seconds / 31536000);
     if (interval > 1) {

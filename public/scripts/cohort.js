@@ -52,6 +52,7 @@ function getBadgeClassFromStatus(status) {
 }
 
 function addExistingTagsToTouchpointModal(tags) {
+    if (!tags) return
     tags.forEach(tag => {
         let badgeClass = getBadgeClassFromStatus(tag.status)
         $('#studentModalTags').append(`

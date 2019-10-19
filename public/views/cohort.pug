@@ -11,7 +11,7 @@ block content
             .card.student-card(data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
                 .card-header.d-flex.flex-row
                     div
-                        img.student-photo(src=student.photoUrl alt='./public/images/noPhoto.png')
+                        img.student-photo(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}`) 
                     .w-100
                         .d-flex.flex-row.justify-content-between
                             h4.mx-2 #{student.firstName} #{student.lastName}
@@ -34,15 +34,17 @@ block content
                         if student.comment
                             .student-touchpoint-comment
                                 small #{student.comment}
-                        each tag in student.tags
-                            //- .touchpoint-tag(class = 'tag-'+tag.status) #{tag.text}
-                            if tag.status === 'green'
-                                span.badge.badge-success.mr-auto.my-1 #{tag.text}
-                            else if tag.status === 'yellow'
-                                span.badge.badge-warning.mr-auto.my-1 #{tag.text}
-                            else if tag.status ==='red'
-                                span.badge.badge-danger.mr-auto.my-1 #{tag.text}
-                        .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
+                        if student.tags
+                            each tag in student.tags
+                                //- .touchpoint-tag(class = 'tag-'+tag.status) #{tag.text}
+                                if tag.status === 'green'
+                                    span.badge.badge-success.mr-auto.my-1 #{tag.text}
+                                else if tag.status === 'yellow'
+                                    span.badge.badge-warning.mr-auto.my-1 #{tag.text}
+                                else if tag.status ==='red'
+                                    span.badge.badge-danger.mr-auto.my-1 #{tag.text}
+                        if student.timeSinceTouchpoint
+                            .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
                     .d-flex.flex-column.student-commits
                         .student-touchpoint-title Latest Commits
                 .card-footer.d-flex.flex-row.student-card-footer.p-0
