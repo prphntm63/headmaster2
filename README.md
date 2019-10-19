@@ -36,9 +36,3 @@ Use it like a rented mule. Note to self: come back and update readme when not in
 * [Node-Postgres](https://node-postgres.com/)
 * [PostgreSQL](https://www.postgresql.org/)
 
-## To Do
-
-* Add user sign in capability with Github
-* Create personalized nav page for each users cohorts
-* Create cohort page
-* Create student page
