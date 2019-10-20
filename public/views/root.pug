@@ -165,4 +165,33 @@ html
                     .modal-footer
                         button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
                         button.btn.btn-primary#addTouchpointSubmit(type="button") Add Touchpoint
+
+        //- Add Cohort Modal
+        #addCohortModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true")
+            .modal-dialog(role="document")
+                .modal-content
+                    .modal-header
+                        h5.modal-title Add Cohort
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    .modal-body
+                        form(action="submit")
+                            .form-row.my-2
+                                .col
+                                    label(for="cohortName") Cohort Name
+                                    input.form-control(type="text" placeholder="Cohort Name" name="cohortName" id="cohortName")
+                                    #cohortNameFeedback.invalid-feedback Please Enter a Cohort Name
+                                .col
+                                    label(for="cohortDate") Start Date
+                                    input.form-control(type="date" placeholder="Start Date" name="startDate" id="startDate")
+                                    #startDateFeedback.invalid-feedback Please Enter a Start Date
+                            .form-row.my-2
+                                .col
+                                    label(for="cohortSlug") Cohort URL
+                                    input.form-control(type="text" placeholder="Cohort URL" name="cohortSlug" id="cohortSlug")
+                                    #cohortNameFeedback.invalid-feedback Please Enter a Cohort URL
+                            //- To do- add instructors here initially
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                        button.btn.btn-primary#submitAddCohortModal(type="button") Add Cohort
             

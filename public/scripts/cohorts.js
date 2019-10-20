@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    $('#addCohortModalButton').on('click', openAddCohortModal)
 
 })
 
@@ -6,41 +7,42 @@ function navigateTo(url) {
     window.location.href = url
 }
 
-function submitStudentForm(cohortData) {
-    fetch('/cohorts', {
+function submitCohortForm(cohortData) {
+    fetch('/api/cohorts', {
         method: 'POST',
         body: JSON.stringify(cohortData),
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => {
-            if (response.status === 200) {
-                console.log('success')
-                return response.json()
-            } else throw response
-        })
-        .then(responseJson => {
-            console.log(responseJson)
-            window.alert('Cohort added!')
-            $('#addCohortModal').modal('hide')
-        })
-        .catch(err => {
-            if (err.status === 400) {
-                err.json()
-                    .then(responseJson => {
-                        console.log(responseJson)
-                        window.alert(`Cohort failed to add! \n${responseJson.errors.map(error => { return error.field + ': ' + error.error + '\n' }).join('')}`)
-                    })
-            } else {
-                console.log('you dun fucked up')
-                window.alert('Server error')
-            }
+    .then(response => {
+        if (response.status === 200) {
+            console.log('success')
+            return response.json()
+        } else throw response
+    })
+    .then(responseJson => {
+        console.log(responseJson)
+        window.alert('Cohort added!')
+        $('#addCohortModal').modal('hide')
+    })
+    .catch(err => {
+        if (err.status === 400) {
+            err.json()
+                .then(responseJson => {
+                    console.log(responseJson)
+                    window.alert(`Cohort failed to add! \n${responseJson.errors.map(error => { return error.field + ': ' + error.error + '\n' }).join('')}`)
+                })
+        } else {
+            console.log('you dun fucked up')
+            window.alert('Server error')
+        }
 
-        })
+    })
 }
 
 function openAddCohortModal() {
+    $('#submitAddCohortModal').on('click', validateCohortForm)
 
     $('#addCohortModal').modal('show')
 }
@@ -65,8 +67,9 @@ async function validateCohortForm() {
     getCohortsFromDb()
         .then(existingCohorts => {
             let formData = {
-                cohortName: $('#cohortName').val(),
-                startDate: $('#startDate').val(),
+                "cohortName": $('#cohortName').val(),
+                "startDate": $('#startDate').val(),
+                "cohortSlug" : $('#cohortSlug').val(),
             }
 
             for (key in formData) {
@@ -86,7 +89,7 @@ async function validateCohortForm() {
             }
 
             if (valid) {
-                submitStudentForm(formData)
+                submitCohortForm(formData)
             }
         })
 }

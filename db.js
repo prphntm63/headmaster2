@@ -196,10 +196,10 @@ let db = {
         .from('Users')
         .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
         .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
-        .join('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
-        // .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
-        .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated', 'Cohorts.slug', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
-        .groupBy('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated', 'Cohorts.slug')
+        .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
+        .groupBy('Cohorts.id')
         .where({'LinkCohortsUsers.user' : userId})
     },
 
@@ -231,6 +231,8 @@ let db = {
         .groupBy('Students.id', 'tp.id', 'Users.firstName', 'Users.lastName')
         .where({'Cohorts.id' : cohortId})
         .then(rows => {
+            if (rows[0].studentId === null) {return null}
+
             rows.forEach(row => {
                 row.timeSinceTouchpoint = timeSinceTouchpoint(row.touchpointCreated)
             })
@@ -255,6 +257,39 @@ let db = {
         .select('Cohorts.id', 'Cohorts.*', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
         .groupBy('Cohorts.id')
         .where({'Cohorts.id' : cohortId})
+    },
+
+    addCohort : function(params) {
+        let user = params.user
+        delete params.user // User goes in the LinkUsersCohorts table, so we do not pass that param
+
+        return knex
+        .returning('*')
+        .insert(params)
+        .into('Cohorts')
+        .then(cohortDataRows => {
+            let cohortData = cohortDataRows[0]
+            return knex
+            .returning('*')
+            .insert({
+                "cohort" : cohortData.id,
+                "user" : user,
+                "role" : "admin"
+            })
+            .into('LinkCohortsUsers')
+            .then(LinkCohortUsersDataRows => {
+                let LinkCohortUsersData = LinkCohortUsersDataRows[0]
+                cohortData.instructors = {
+                    "cohort": LinkCohortUsersData.cohort, 
+                    "user" : user, 
+                    "role" : LinkCohortUsersData.role
+                }
+                return cohortData
+            })
+        })
+        .catch(err => {
+            console.log('DB error adding cohort - ', err)
+        })
     },
 
     // ***** ASSIGNMENT METHODS *****

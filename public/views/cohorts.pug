@@ -21,31 +21,8 @@ block content
                     .col-sm-1 #{cohort.numStudents}
     .container.my-3.d-flex.flex-row-reverse
         //- button.btn.btn-primary.px-3(type='button' data-toggle="modal" data-target="#addStudentModal") Add Student
-        button.btn.btn-primary.px-3(type='button' onclick="openAddCohortModal()") Add Cohort
+        button.btn.btn-primary.px-3#addCohortModalButton(type='button') Add Cohort
 
-
-    #addCohortModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addStudentModalLabel" aria-hidden="true")
-        .modal-dialog(role="document")
-            .modal-content
-                .modal-header
-                    h5.modal-title Add Cohort
-                    button.close(type="button" data-dismiss="modal" aria-label="Close")
-                        span(aria-hidden="true") &times;
-                .modal-body
-                    form(action="submit")
-                        .form-row.my-2
-                            .col
-                                label(for="cohortName") Cohort Name
-                                input.form-control(type="text" placeholder="Cohort Name" name="cohortName" id="cohortName")
-                                #cohortNameFeedback.invalid-feedback Please Enter a First Name
-                            .col
-                                label(for="cohortDate") Start Date
-                                input.form-control(type="date" placeholder="Start Date" name="startDate" id="startDate")
-                                #startDateFeedback.invalid-feedback Please Enter a Last Name
-
-                .modal-footer
-                    button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
-                    button.btn.btn-primary(type="button" onclick="validateCohortForm()") Add Student
     ul
         each key in Object.keys(cohorts[0])
             li #{key}

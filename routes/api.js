@@ -27,6 +27,45 @@ router.get('/cohorts/:cohortId', ensureAuthenticated, (req, res) => {
     })
 })
 
+router.post('/cohorts', ensureAuthenticated, (req,res) => {
+    let cohortInfo = req.body
+    let validationErrors = []
+    let user = req.user.id
+
+    for (key in cohortInfo) {
+        if (!cohortInfo[key]) {
+            validationErrors.push({
+                "field" : key,
+                "error" : "Field value expected, none received"
+            })
+        }
+    }
+
+    if (validationErrors.length) {
+        res.status(400).send(
+            {"errors" : validationErrors}
+        )
+    } else {
+        let params = {
+            "name" : cohortInfo.cohortName,
+            "startDate" : cohortInfo.startDate,
+            "slug" : cohortInfo.cohortSlug,
+            "graduated" : false,
+            "user" : user
+        }
+
+        db.addCohort(params)
+        .then(cohortInfo => {
+            console.log(cohortInfo)
+            res.status(200).send({"errors" : false})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+        })
+    }
+})
+
 router.get('/students', ensureAuthenticated, (req, res) => {
     db.getStudentList()
     .then(studentListJson => {
