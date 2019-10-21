@@ -1,3 +1,7 @@
+$(document).ready(() => {
+    $('#addStudentButton').on('click', getCohortsFromDb)
+})
+
 // function navigateTo(url) {
 //     window.location.href = url
 // }

@@ -1,12 +1,46 @@
 extends root
 
 block content
+    .d-flex.flex-row.justify-content-between.mx-2.mb-2
+        h2 #{info.name}
+        for instructor in instructors
+            if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
+                button.btn.btn-danger#deleteCohortButton Delete Cohort
+
+    //- Instructors Container
     .d-flex.flex-row.justify-content-between.mx-2
-        h2 Students
+        h3 Instructors
+        for instructor in instructors
+            if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
+                button.btn.btn-primary#addInstructorButton Add Instructor
+    .d-flex.flex-row.flex-wrap.mb-4
+        each instructor in instructors
+            .card.student-card
+                .card-header.d-flex.flex-row
+                        div
+                            img.student-photo(alt="/public/images/noPhoto.png" src=`${instructor.photoUrl ? instructor.photoUrl : '/public/images/noPhoto.png'}`) 
+                        .w-100
+                            .d-flex.flex-row.justify-content-between
+                                h4.mx-2 #{instructor.firstName} #{instructor.lastName}
+                            .d-flex.flex-row
+                                img.ml-2(src='./../public/images/GitHub-Mark.png' style="height:25px")
+                                a.ml-1(href='https://github.com/'+instructor.github) #{instructor.github}
+                                if instructor.role === "admin"
+                                    span.badge.badge-primary.ml-auto 
+                                        .pt-1 #{instructor.role.toUpperCase()}
+                                else if instructor.role === "instructor"
+                                    span.badge.badge-info.ml-auto 
+                                        .pt-1 #{instructor.role.toUpperCase()}
+                                else
+                                    span.badge.badge-secondary.ml-auto 
+                                        .pt-1 #{instructor.role.toUpperCase()}
+    //- Students Container
+    .d-flex.flex-row.justify-content-between.mx-2
+        h3 Students
         for instructor in instructors
             if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
                 button.btn.btn-primary.add-student-button Add Student
-    .d-flex.flex-row.flex-wrap.justify-content-between
+    .d-flex.flex-row.flex-wrap
         if students
             each student in students
                 .card.student-card(data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
@@ -16,7 +50,6 @@ block content
                         .w-100
                             .d-flex.flex-row.justify-content-between
                                 h4.mx-2 #{student.firstName} #{student.lastName}
-                                //- h4 #{student.stoplightStatus}
                                 if student.stoplightStatus === 'green'
                                     span.badge.badge-success
                                         i.material-icons.pt-1 done
@@ -37,7 +70,6 @@ block content
                                     small #{student.comment}
                             if student.tags
                                 each tag in student.tags
-                                    //- .touchpoint-tag(class = 'tag-'+tag.status) #{tag.text}
                                     if tag.status === 'green'
                                         span.badge.badge-success.mr-auto.my-1 #{tag.text}
                                     else if tag.status === 'yellow'
@@ -54,29 +86,29 @@ block content
                         .d-flex.justify-content-center.py-2.add-touchpoint-button
                             a(href) Add Touchpoint
                     
-
-    h2 Info
-    ul
-    each key in Object.keys(info)
-        li #{key} - #{info[key]}
+    //- //- Info Vomit
+    //- h2 Info
+    //- ul
+    //- each key in Object.keys(info)
+    //-     li #{key} - #{info[key]}
     
-    h2 Instructors
-    table
-        each instructor in instructors
-            tr
-                td
-                    ul
-                    each key in Object.keys(instructor)
-                        li #{key} - #{instructor[key]}
-    h2 Students
-    table
-        if students
-            each student in students
-                tr
-                    td
-                        ul
-                        each key in Object.keys(student)
-                            li #{key} - #{student[key]}
+    //- h2 Instructors
+    //- table
+    //-     each instructor in instructors
+    //-         tr
+    //-             td
+    //-                 ul
+    //-                 each key in Object.keys(instructor)
+    //-                     li #{key} - #{instructor[key]}
+    //- h2 Students
+    //- table
+    //-     if students
+    //-         each student in students
+    //-             tr
+    //-                 td
+    //-                     ul
+    //-                     each key in Object.keys(student)
+    //-                         li #{key} - #{student[key]}
 
     script(src="/public/scripts/cohort.js")
     

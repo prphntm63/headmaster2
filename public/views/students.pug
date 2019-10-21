@@ -1,33 +1,46 @@
 extends root
 
 block content
-    .list-group
-        .list-group-item.active.disabled
-            .row
-                .col-sm-1
-                .col-sm-6
-                    h5 Student
-                .col-sm-3
-                    h5 Cohort
-                .col-sm-2
-                    h5 Status
-        each student in students
-            .list-group-item.list-group-item-action(onclick=`navigateTo("/students/${student.github}")`)
+    .container
+        .list-group
+            .list-group-item.active.disabled
                 .row
+                    .col-sm-5
+                        h5 Student
+                    .col-sm-3
+                        h5 Github
+                    .col-sm-3
+                        h5 Cohort
                     .col-sm-1
-                        a(href=student.github)
-                            img(src="./public/images/GitHub-Mark.png" style="height:30px")
-                    .col-sm-6 #{student.firstName} #{student.lastName}
-                    .col-sm-3 #{student.name}
-                    .col-sm-2 #{student.status}
+                        h5 Status
+            each student in students
+                .list-group-item.list-group-item-action(onclick=`navigateTo("/students/${student.github}")`)
+                    .row
+                        .col-sm-5.d-flex.flex-row.align-items-center
+                            img.mr-2(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}` style="height:50px") 
+                            h6 #{student.firstName} #{student.lastName}
+                        .col-sm-3.my-auto
+                            a.d-flex.flex-row.align-items-center(href="https://github.com/"+student.github)
+                                img(src="./public/images/GitHub-Mark.png" style="height:30px")
+                                div #{student.github}
+                        .col-sm-3.my-auto #{student.name}
+                        .col-sm-1.my-auto
+                            if student.stoplightStatus === 'green'
+                                span.badge.badge-success
+                                    i.material-icons.pt-1 done
+                            else if student.stoplightStatus === 'yellow'
+                                span.badge.badge-warning
+                                    i.material-icons.pt-1 help_outline
+                            else if student.stoplightStatus ==='red'
+                                span.badge.badge-danger
+                                    i.material-icons.pt-1 warning
     .container.my-3.d-flex.flex-row-reverse
-        //- button.btn.btn-primary.px-3(type='button' data-toggle="modal" data-target="#addStudentModal") Add Student
-        button.btn.btn-primary.px-3(type='button' onclick="getCohortsFromDb()") Add Student
+        button.btn.btn-primary.px-3#addStudentButton(type='button') Add Student
                 
-
-    ul
-        each key in Object.keys(students[0])
-            li #{key}
+    //- Info Vomit
+    //- ul
+    //-     each key in Object.keys(students[0])
+    //-         li #{key}
 
     script(src="./public/scripts/students.js")
         
