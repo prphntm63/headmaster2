@@ -67,11 +67,13 @@ app.get('/logout', (req, res) => {
 let dashboard = require('./routes/dashboard')
 let students = require('./routes/students')
 let cohorts = require('./routes/cohorts')
+let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
 app.use('/dashboard', dashboard)
 app.use('/cohorts', cohorts)
 app.use('/students', students)
+app.use('/instructors', instructors)
 app.use('/api', api)
 
 app.get('/auth/github',

@@ -15,10 +15,10 @@ block content
                 button.btn.btn-primary#addInstructorButton Add Instructor
     .d-flex.flex-row.flex-wrap.mb-4
         each instructor in instructors
-            .card.student-card
+            .card.instructor-card.linkstyle(onclick=`navigateTo("/instructors/${instructor.github}")`)
                 .card-header.d-flex.flex-row
                         div
-                            img.student-photo(alt="/public/images/noPhoto.png" src=`${instructor.photoUrl ? instructor.photoUrl : '/public/images/noPhoto.png'}`) 
+                            img.instructor-photo(alt="/public/images/noPhoto.png" src=`${instructor.photoUrl ? instructor.photoUrl : '/public/images/noPhoto.png'}`) 
                         .w-100
                             .d-flex.flex-row.justify-content-between
                                 h4.mx-2 #{instructor.firstName} #{instructor.lastName}
@@ -44,7 +44,7 @@ block content
         if students
             each student in students
                 .card.student-card(data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
-                    .card-header.d-flex.flex-row
+                    .card-header.d-flex.flex-row.linkstyle(onclick=`navigateTo("/students/${student.github}")`)
                         div
                             img.student-photo(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}`) 
                         .w-100
@@ -109,6 +109,8 @@ block content
     //-                     ul
     //-                     each key in Object.keys(student)
     //-                         li #{key} - #{student[key]}
-
+    include modals/addInstructorModal.pug 
+    include modals/addStudentModal.pug
+    include modals/deleteCohortModal.pug
     script(src="/public/scripts/cohort.js")
     

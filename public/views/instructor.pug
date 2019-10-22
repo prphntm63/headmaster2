@@ -1,0 +1,20 @@
+extends root
+
+block content
+    .container
+        h1 #{instructor.firstName} #{instructor.lastName}
+        ul
+            each key in Object.keys(instructor)
+                li #{key} #{instructor[key]}
+        h2 Cohorts
+        ul
+            each key in Object.keys(cohorts)
+                li #{key} #{cohorts[key]}
+        h2 Touchpoints
+        ul
+            each key in Object.keys(touchpoints)
+                li #{key} #{touchpoints[key]}
+
+        button.btn.btn-primary#edit-instructor(href data-student-id=instructor.id) Edit Instructor
+
+    script(src = "/public/scripts/student.js")

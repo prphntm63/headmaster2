@@ -1,0 +1,41 @@
+script(src="/public/scripts/modals/editStudentModal.js")
+
+#editStudentModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true")
+    .modal-dialog(role="document")
+        .modal-content
+            .modal-header
+                h5.modal-title Edit Student
+                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+            .modal-body
+                form(action="submit")
+                    .form-row.my-2
+                        .col
+                            label(for="firstNameEdit") First Name
+                            input.form-control(type="text" placeholder="First Name" name="firstNameEdit" id="firstNameEdit")
+                            .invalid-feedback Please Enter a First Name
+                        .col
+                            label(for="lastNameEdit") Last Name
+                            input.form-control(type="text" placeholder="Last Name" name="lastNameEdit" id="lastNameEdit")
+                            .invalid-feedback Please Enter a Last Name
+                    .form-row.my-2
+                        .col
+                            label(for="cohortEdit") Cohort
+                            select.form-control(id="cohortEdit" name="cohortEdit")
+                                option(selected value='') Select...
+                            .invalid-feedback Please Select a Cohort
+                    .form-row.my-2
+                        .col
+                            label(for="githubEdit") Github Profile
+                            input.form-control(type="text" placeholder="Github Username" name="githubEdit" id="githubEdit")
+                            .invalid-feedback Please Add a Github Profile
+                        .col.pt-3
+                            p Just the username, not the whole URL
+                    .form-row.my-2
+                        .col.mx-4
+                            input.form-check-input(type="checkbox" name="enrolledStatusEdit" id="enrolledStatusEdit" checked)
+                            label.form-check-label(for="enrolledStatusEdit") Active
+
+            .modal-footer
+                button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                button.btn.btn-primary#editStudentModalSubmit(type="button") Edit Student

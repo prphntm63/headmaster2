@@ -61,3 +61,12 @@
 .touchpoint-comment {
 
 }
+
+.instructor-card {
+    width: 22rem;
+    margin: 0.5rem;
+}
+
+.instructor-photo {
+    height: 4rem;
+}

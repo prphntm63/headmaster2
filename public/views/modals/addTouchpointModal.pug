@@ -1,0 +1,49 @@
+script(src="/public/scripts/modals/addTouchpointModal.js")
+
+#addTouchpointModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addTouchpointModalLabel" aria-hidden="true")
+    .modal-dialog.modal-lg(role="document")
+        .modal-content
+            .modal-header
+                h5.modal-title Add Touchpoint
+                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+            .modal-body
+                input#newTouchpointStudentId(type="text" hidden)
+                form(action="submit")
+                    .form-row.my-2
+                        .col-sm-4
+                            label(for="firstName") Stoplight Status
+                            .btn-group.btn-group-toggle.stoplightStatus(data-toggle="buttons")
+                                label.btn.btn-success.active
+                                    input(type="radio" name="stoplightButtons" value="green" autocomplete="off" checked)
+                                    i.material-icons.pt-1 done
+                                label.btn.btn-warning
+                                    input(type="radio" name="stoplightButtons" value="yellow" autocomplete="off")
+                                    i.material-icons.pt-1 help_outline
+                                label.btn.btn-danger
+                                    input(type="radio" name="stoplightButtons" value="red" autocomplete="off")
+                                    i.material-icons.pt-1 warning
+                            .invalid-feedback Please Select a Status
+                        .col-sm-8
+                            label(for="newTouchPointTag") Tags
+                            .input-group
+                                .input-group-prepend
+                                    select.form-control#newTouchpointTagStatus
+                                        option(selected value='') Select...
+                                        option(value='green' style="background: var(--success)") Green
+                                        option(value='yellow' style="background: var(--warning)") Yellow
+                                        option(value='red' style="background: var(--danger)") Red
+                                input.form-control(type="text" placeholder="Add Tag" name="newTouchpointTag" id="newTouchpointTag")
+                                .input-group-append
+                                    button.btn.btn-primary#newTouchpointTagSubmit +
+                            #studentModalTags
+                            .invalid-feedback
+                    .form-row.my-2
+                        .col
+                            label(for="newTouchPointComment") Comment
+                            textarea.form-control(rows='5', name='newTouchPointComment', id='newTouchPointComment')
+                            .invalid-feedback
+
+            .modal-footer
+                button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                button.btn.btn-primary#addTouchpointSubmit(type="button") Add Touchpoint

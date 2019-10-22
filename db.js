@@ -4,6 +4,40 @@ const knex = require('knex')(config)
 
 let db = {
     // ***** USER METHODS *****
+    getUsers : function(userId) {
+        // Check to see if user is superadmin
+        return knex
+        .from('Users')
+        .select('Users.github') // Change to sysrole
+        .where({'Users.id' : userId})
+        .then(rows => {
+            return rows[0]
+        })
+        .then(user => {
+            user.sysrole = 'admin' // This is temporary to prevent crashes before superadmin role defined
+            
+            // if (user.sysrole != 'admin' || user.sysrole != 'superadmin') {
+            //     return null
+            // }
+
+            return knex
+            .from('Users')
+            .leftJoin('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
+            .select(
+                'Users.id',
+                'Users.firstName', 
+                'Users.lastName', 
+                'Users.photoUrl', 
+                'Users.github',
+                knex.raw('COUNT("LinkCohortsUsers".cohort) as "numCohorts"')
+            )
+            .groupBy('Users.id')
+            .then(rows => {
+                return rows
+            })
+        })
+    },
+
     getUser : function(userId) {
         return knex
         .from('Users')
@@ -14,6 +48,17 @@ let db = {
         })
         .catch(err => {
             console.log('Error in db.getUser - ', err)
+        })
+    },
+
+    getUserIdFromGithub(userGithub) {
+        return knex
+        .from('Users')
+        .select('Users.id')
+        .where('Users.github', '=', userGithub)
+        .then(rows => {
+            let user = rows[0]
+            return user.id
         })
     },
 
