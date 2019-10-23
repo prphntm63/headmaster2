@@ -31,7 +31,7 @@ let github = {
             fetchPeriod = 48*60*60*1000; //milliseconds; default to 48 hours
         }
 
-        // Check API limit
+        // Check API limit (does not count against API calls limit)
         fetch('https://api.github.com/rate_limit'+secretParams)
         .then(response => {
             return response.json()
@@ -65,15 +65,25 @@ let github = {
         })
         .then(events => {
             let commitPromises = []
+            let commitHashes = []
 
             events.forEach(event => {
-                if (event.type != "PushEvent") return //We only want push events
+                //We only want push events
+                if (event.type != "PushEvent") return 
+
+                //Check to see if we are within desired range
                 let createdDate = new Date(event.created_at)
+                if (dateNow - createdDate.getTime() > fetchPeriod) return 
 
-                if (dateNow - createdDate.getTime() > fetchPeriod) return //Check to see if we are within desired range
                 // make API call for each commit
-
                 event.payload.commits.forEach(commit => {
+                    // Kill duplicates
+                    if (commitHashes.find(existingCommit => {return existingCommit === commit.sha})) {
+                        return
+                    } else {
+                        commitHashes.push(commit.sha)
+                    }
+
                     commitPromises.push(
                         fetch(commit.url+secretParams)
                         .then(response => {
@@ -100,9 +110,11 @@ let github = {
                 let commitsOutArray = []
 
                 commitsArray.forEach(commit => {
+                    // Make sure we are only logging commits for our user
                     if (commit.author.login != username) return
                     let outFiles = []
 
+                    // OH hellz yeah we be trackin files too!
                     commit.files.forEach(file => {
                         outFiles.push({
                             "filename" : file.filename.split('/').slice(-1)[0],
@@ -151,3 +163,8 @@ function flatDeep(arr) {
 };
 
 module.exports = github;
+
+github.getUserCommits('prphntm63')
+.then(commits => {
+    console.log(commits)
+})
