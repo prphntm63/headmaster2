@@ -20,4 +20,6 @@ $(document).ready(() => {
         showAddInstructorToCohortModal(evt)
     })
 
+    $('[data-toggle="tooltip"]').tooltip();
+
 })

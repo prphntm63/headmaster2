@@ -80,6 +80,24 @@ block content
                                 .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
                         .d-flex.flex-column.student-commits
                             .student-touchpoint-title Latest Commits
+                            if student.commits
+                                .graph-container
+                                    each headerDay in ['','','M','','W','','F','']
+                                        .graph-item.graph-item-header #{headerDay}
+                                    each day, index in student.commits
+                                        if index%7 === 0
+                                            .graph-item.graph-item-header ##{Math.floor(index/7)+1}
+                                        
+                                        if !day.commits.length
+                                            .graph-item.no-commits
+                                        else if day.commits.length < 1
+                                            .graph-item.sm-commits(data-toggle="tooltip" data-placement="top" title=`Commits: ${day.commits.length} \r\nRepos: ${day.repos.length} \r\nLines: ${day.total}`)
+                                        else if day.commits.length < 2
+                                            .graph-item.md-commits(data-toggle="tooltip" data-placement="top" title=`Commits: ${day.commits.length} \r\nRepos: ${day.repos.length} \r\nLines: ${day.total}`)
+                                        else if day.commits.length < 3
+                                            .graph-item.lg-commits(data-toggle="tooltip" data-placement="top" title=`Commits: ${day.commits.length} \r\nRepos: ${day.repos.length} \r\nLines: ${day.total}`)
+                                        else
+                                            .graph-item.xl-commits(data-toggle="tooltip" data-placement="top" title=`Commits: ${day.commits.length} \r\nRepos: ${day.repos.length} \r\nLines: ${day.total}`)
                     .card-footer.d-flex.flex-row.student-card-footer.p-0
                         .d-flex.justify-content-center.py-2(style="border-right:1px solid rgba(0,0,0,.125);")
                             a(href='/students/'+student.github) Details
@@ -100,18 +118,31 @@ block content
     //-                 ul
     //-                 each key in Object.keys(instructor)
     //-                     li #{key} - #{instructor[key]}
-    h2 Students
-    table
-        if students
-            each student in students
-                tr
-                    td
-                        ul
-                        each key in Object.keys(student)
-                            li #{key} - #{student[key]}
+    //- h2 Students
+    //- table
+    //-     if students
+    //-         each student in students
+    //-             tr
+    //-                 td
+    //-                     ul
+    //-                     each key in Object.keys(student)
+    //-                         if key == "commits"
+    //-                                 for commit,index in student.commits
+    //-                                     if index%7 === 0
+    //-                                         tr
+    //-                                     td(style="border:1px solid black") 
+    //-                                         if commit.total
+    //-                                             div #{commit.commits.length}
+    //-                                         else
+    //-                                             div -
+
+                            else
+                                li #{key} - #{student[key]}
     include modals/addInstructorToCohortModal.pug 
     include modals/addStudentModal.pug
     include modals/deleteCohortModal.pug
     include modals/addTouchpointModal.pug
     script(src="/public/scripts/cohort.js")
+    link(rel="stylesheet" href="/public/css/githubGraph.css")
+    
     

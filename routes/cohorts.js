@@ -54,7 +54,7 @@ router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
 
                             cohortStudents.forEach(student => {
                                 if (studentId === student.studentId) {
-                                    student.commits = studentCommits
+                                    student.commits = parseCommits(studentCommits)
                                 }
                             })
                         }
@@ -92,6 +92,41 @@ function ensureAuthenticated(req, res, next) {
     } else {
         res.status(401).redirect('/')
     }
+}
+
+// Make commits array more front-end friendly
+function parseCommits(commits) {
+    let today = new Date()
+    let dayOfWeek = today.getDay()
+    let commitsArray = []
+
+    // Show 4 weeks max
+    for (let idx=(22+dayOfWeek); idx>0; idx--) {
+        let offset = 24*60*60*1000
+        let dayObject = {
+            commits : [],
+            repos : [],
+            date : null,
+            total : null,
+            add : null,
+            sub : null
+        }
+
+        commits.forEach(commit => {
+            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) + (offset/2) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - (offset/2) )) {
+                
+                dayObject.commits.push(commit)
+                dayObject.repos.push(commit.repo)
+                dayObject.date = commit.ctime.getDate()
+                dayObject.total += commit.total
+                dayObject.add += commit.added
+                dayObject.sub += commit.deleted
+            }
+        })
+        commitsArray.push(dayObject)
+    }
+
+    return commitsArray
 }
 
 module.exports = router;

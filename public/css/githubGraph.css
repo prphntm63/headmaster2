@@ -1,18 +1,43 @@
 .graph-container {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto;
+    grid-template-columns: 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5% 12.5%;
+    grid-template-rows : 20% 20% 20% 20% 20%;
     background-color: transparent;
     padding: 2px;
+    grid-gap: 2px;
+
 }
 
 .graph-item {
-    background-color: #999;
-    width: 10px;
-    height: 10px;
 }
 
 .graph-item.graph-item-header {
     background-color: transparent;
-    font-size: 6px;
+    font-size: 8px;
     text-align: center;
 }
+
+.no-commits {
+    background-color:#ebedf0
+}
+
+.sm-commits {
+    background-color:#c6e48b
+}
+
+.md-commits {
+    background-color:#7bc96f
+}
+
+.lg-commits {
+    background-color:#239a3b
+}
+
+.xl-commits {
+    background-color:#196127
+}
+
+.tooltip-inner {
+    white-space:pre-wrap;
+}
+
