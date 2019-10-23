@@ -12,7 +12,7 @@ block content
         h3 Instructors
         for instructor in instructors
             if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
-                button.btn.btn-primary#addInstructorButton Add Instructor
+                button.btn.btn-primary#addInstructorButton(data-cohort-slug=info.slug) Add Instructor
     .d-flex.flex-row.flex-wrap.mb-4
         each instructor in instructors
             .card.instructor-card.linkstyle(onclick=`navigateTo("/instructors/${instructor.github}")`)
@@ -100,17 +100,18 @@ block content
     //-                 ul
     //-                 each key in Object.keys(instructor)
     //-                     li #{key} - #{instructor[key]}
-    //- h2 Students
-    //- table
-    //-     if students
-    //-         each student in students
-    //-             tr
-    //-                 td
-    //-                     ul
-    //-                     each key in Object.keys(student)
-    //-                         li #{key} - #{student[key]}
-    include modals/addInstructorModal.pug 
+    h2 Students
+    table
+        if students
+            each student in students
+                tr
+                    td
+                        ul
+                        each key in Object.keys(student)
+                            li #{key} - #{student[key]}
+    include modals/addInstructorToCohortModal.pug 
     include modals/addStudentModal.pug
     include modals/deleteCohortModal.pug
+    include modals/addTouchpointModal.pug
     script(src="/public/scripts/cohort.js")
     

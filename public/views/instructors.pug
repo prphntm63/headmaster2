@@ -25,3 +25,6 @@ block content
                             h6 #{instructor.numCohorts}
     .container.my-3.d-flex.flex-row-reverse
         button.btn.btn-primary.px-3#addInstructorButton(type='button') Add Instructor
+
+    include modals/addInstructorToCohortModal.pug
+    script(src="/public/scripts/instructors.js")

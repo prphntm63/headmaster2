@@ -40,14 +40,39 @@ router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
             }))) {
                 res.status(401).redirect('/')
             } else {
-                res.render('cohort', {
-                    "instructors" : cohortInstructors,
-                    "students" : cohortStudents,
-                    "info" : cohortInfo[0],
-                    "user" : req.user
+                // Attach commits to each student
+                let commitPromises = []
+                cohortStudents.forEach(student => {
+                    commitPromises.push(db.getStudentCommits(student.studentId))
                 })
-            }
 
+                Promise.all(commitPromises)
+                .then(commitsArray => {
+                    commitsArray.forEach(studentCommits => {
+                        if (studentCommits.length) {
+                            let studentId = studentCommits[0].studentId
+
+                            cohortStudents.forEach(student => {
+                                if (studentId === student.studentId) {
+                                    student.commits = studentCommits
+                                }
+                            })
+                        }
+                    })
+                    return cohortStudents
+                })
+                .then(cohortStudents => {
+                    res.render('cohort', {
+                        "instructors" : cohortInstructors,
+                        "students" : cohortStudents,
+                        "info" : cohortInfo[0],
+                        "user" : req.user
+                    })
+                })
+                .catch(err => {
+                    console.log('error getting student commits - ', err)
+                })   
+            }
         })
         .catch(err => {
             console.log(err)

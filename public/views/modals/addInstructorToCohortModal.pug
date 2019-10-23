@@ -1,0 +1,30 @@
+script(src="/public/scripts/modals/addInstructorToCohortModal.js")
+
+#addInstructorToCohortModal.modal.fade(tabindex='-1', role="dialog" aria-labelledby="addInstructorToCohortModalLabel" aria-hidden="true")
+    .modal-dialog(role="document")
+        .modal-content
+            .modal-header
+                h5.modal-title Add Instructor to Cohort
+                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                    span(aria-hidden="true") &times;
+            .modal-body
+                form(action="submit")
+                    .input#cohortSlug(hidden value=null)
+                    .form-row.my-2
+                        .col-sm-8
+                            label(for="instructorId") Instructor
+                            select.form-control(id="instructorId" name="instructorId")
+                                option(selected value='') Select...
+                            .invalid-feedback Please Select an Instructor
+                        .col-sm-4
+                            label(for="instructorRole") Role
+                            select.form-control(id="instructorRole" name="instructorRole")
+                                option(selected value='') Select...
+                                option(value='instructor') Instructor
+                                option(value='ta') T.A.
+                                option(value='admin') Administrator
+                            .invalid-feedback Please Select a Role
+
+            .modal-footer
+                button.btn.btn-secondary(type="button" data-dismiss="modal" ) Close
+                button.btn.btn-primary#submitAddInstructorToCohortModal(type="button") Add Instructor

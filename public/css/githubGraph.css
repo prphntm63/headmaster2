@@ -1,0 +1,18 @@
+.graph-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+    background-color: transparent;
+    padding: 2px;
+}
+
+.graph-item {
+    background-color: #999;
+    width: 10px;
+    height: 10px;
+}
+
+.graph-item.graph-item-header {
+    background-color: transparent;
+    font-size: 6px;
+    text-align: center;
+}

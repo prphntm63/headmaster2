@@ -66,6 +66,10 @@ router.post('/cohorts', ensureAuthenticated, (req,res) => {
     }
 })
 
+router.post('cohorts/:cohortId', ensureAuthenticated, (req,res) => {
+    
+})
+
 router.get('/students', ensureAuthenticated, (req, res) => {
     db.getStudentList()
     .then(studentListJson => {
@@ -137,6 +141,17 @@ router.post('/touchpoints', ensureAuthenticated, (req, res) => {
     .then(touchpointData => {
         // Add method to ensure user is instructor for cohort
         res.status(200).json(touchpointData)
+    })
+    .catch(err => {
+        res.status(500)
+        console.log(err)
+    })
+})
+
+router.get('/instructors', ensureAuthenticated, (req,res) => {
+    db.getUserList()
+    .then(users => {
+        res.status(200).json(users)
     })
     .catch(err => {
         res.status(500)

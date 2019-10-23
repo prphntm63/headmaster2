@@ -38,6 +38,12 @@ let db = {
         })
     },
 
+    getUserList : function() {
+        return knex
+        .from('Users')
+        .select('Users.id', 'Users.firstName', 'Users.lastName', 'Users.github')
+    },
+
     getUser : function(userId) {
         return knex
         .from('Users')
@@ -217,6 +223,14 @@ let db = {
                 return studentData
             })
         })
+    },
+
+    getStudentCommits : function(studentId) {
+        return knex
+        .from('Commits')
+        .join('Students', 'Commits.student', '=', 'Students.id')
+        .select('Students.id as studentId', 'Commits.*')
+        .where({'Students.id' : studentId})
     },
 
     // ***** COHORT METHODS *****

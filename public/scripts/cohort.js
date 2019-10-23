@@ -14,4 +14,10 @@ $(document).ready(() => {
         getLatestTouchpointFromDb(studentId)
     })
 
+    $('#addInstructorButton').on('click', function(evt) {
+        let cohortSlug = $(evt.target).data('cohort-slug')
+        $('#cohortSlug').val(cohortSlug)
+        showAddInstructorToCohortModal(evt)
+    })
+
 })
