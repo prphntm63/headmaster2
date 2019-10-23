@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const db = require('./db.js');
+const github = require('./github.js');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 
@@ -54,9 +55,8 @@ app.set('views', './public/views')
 // ***** Routes *****
 
 app.use('/public', express.static('public'));
-
-app.get('/', (req, res) => {
-    res.render('index', {title:"Headmaster2", message:"Hello World!", user:req.user})
+app.use('/favicon.ico', (req, res) => {
+    res.status(204)
 })
 
 app.get('/logout', (req, res) => {
@@ -71,7 +71,7 @@ let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
 app.use('/dashboard', dashboard)
-app.use('/cohorts', cohorts)
+app.use('/', cohorts)
 app.use('/students', students)
 app.use('/instructors', instructors)
 app.use('/api', api)
@@ -82,7 +82,7 @@ app.get('/auth/github',
 app.get('/auth/github/callback', 
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
-        res.redirect('/cohorts');
+        res.redirect('/');
 });
 
 app.listen(port, () => {

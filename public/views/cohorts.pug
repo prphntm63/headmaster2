@@ -14,7 +14,7 @@ block content
                     .col-sm-1
                         h5 Students
             each cohort in cohorts
-                a.list-group-item.list-group-item-action(href="/cohorts/"+cohort.slug)
+                a.list-group-item.list-group-item-action(href="/"+cohort.slug)
                     .row
                         .col-sm-7 #{cohort.name}
                         .col-sm-3 #{cohort.startDate}
