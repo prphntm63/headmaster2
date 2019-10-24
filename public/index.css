@@ -28,6 +28,10 @@
     height: 4rem;
 }
 
+.student-name {
+    max-width: 12rem;
+}
+
 .student-card-footer {
     justify-content: center
 }
@@ -56,6 +60,10 @@
     padding: 0px;
     width: 100%;
     border-bottom:1px solid rgba(0,0,0,.125);
+}
+
+.stoplight-badge {
+    color : transparent;
 }
 
 .touchpoint-comment {
