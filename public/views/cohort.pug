@@ -20,12 +20,12 @@ block content
             .d-flex.flex-row.flex-wrap
                 if students
                     each student in students
-                        .card.student-card(data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
+                        .card.student-card(class=`${student.enrolledStatus ? '' : 'student-card-inactive'}` data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
                             .card-header.d-flex.flex-row.linkstyle(onclick=`navigateTo("/students/${student.github}")`)
                                 div
                                     img.student-photo(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}`) 
                                 .w-100
-                                    .d-flex.flex-row.justify-content-between
+                                    .d-flex.flex-row.justify-content-between.stoplight-status-div
                                         h4.mx-2.student-name.text-truncate #{student.firstName} #{student.lastName}
                                         if student.stoplightStatus === 'green'
                                             span.badge.badge-pill.badge-success

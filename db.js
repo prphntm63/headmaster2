@@ -394,8 +394,12 @@ let db = {
         console.log(params)
 
         return knex
+        .returning('*')
         .insert(params)
         .into('Touchpoints')
+        .then(rows => {
+            return rows[0]
+        })
         .catch(err => {
             console.log('error adding touchpoint - ', err)
         })

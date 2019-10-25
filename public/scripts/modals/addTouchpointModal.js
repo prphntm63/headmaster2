@@ -98,8 +98,10 @@ function validateTouchpoint(evt) {
         .then(returnData => {
             return returnData.json()
         })
-        .then(returnJson => {
-            console.log(returnJson)
+        .then(returnJSON => {
+            console.log(returnJSON.student)
+            console.log($('.add-touchpoint-button').closest('.student-card').filter(function(idx, elem) {return $(elem).data('student-id') === returnJSON.student}).data('student-id'))
+            $('.add-touchpoint-button').closest('.student-card').filter(function(idx, elem) {return $(elem).data('student-id') === returnJSON.student}).trigger("addTouchpointEvent", [returnJSON])
             $('#addTouchpointModal').modal('hide')
         })
     }

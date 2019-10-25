@@ -17,6 +17,50 @@ $(document).ready(() => {
         getLatestTouchpointFromDb(studentId)
     })
 
+    $('.student-card').on('addTouchpointEvent', function(evt, updatedTouchpointData) {
+        let headerHtmlOut=''
+        let infoHtmlOut =''
+
+        if (updatedTouchpointData.stoplightStatus === 'green') {
+            headerHtmlOut += 
+            `<span class="badge badge-pill badge-success">
+                <i class="material-icons pt-1 stoplight-badge">done</i>
+            </span>`
+        } else if (updatedTouchpointData.stoplightStatus === 'yellow') {
+            headerHtmlOut += 
+            `<span class="badge badge-pill badge-warning">
+                <i class="material-icons pt-1 stoplight-badge">help_outline</i>
+            </span>`
+        } else if (updatedTouchpointData.stoplightStatus === 'red') {
+            headerHtmlOut += 
+            `<span class="badge badge-pill badge-danger">
+                <i class="material-icons pt-1">warning</i>
+            </span>`
+        }
+        
+        if (updatedTouchpointData.comment) {
+            infoHtmlOut += '<div class="student-touchpoint-comment"><small>'+updatedTouchpointData.comment+'</small></div>'
+        }
+
+        if (updatedTouchpointData.tags) {
+            updatedTouchpointData.tags.forEach(tag => {
+                if (tag.status === 'green') {
+                    infoHtmlOut += '<span class="badge badge-success mr-auto my-1">'+tag.text+'</span>'
+                } else if (tag.status === 'yellow') {
+                    infoHtmlOut += '<span class="badge badge-warning mr-auto my-1">'+tag.text+'</span>'
+                } else if (tag.status === 'red') {
+                    infoHtmlOut += '<span class="badge badge-danger mr-auto my-1">'+tag.text+'</span>'
+                }
+            })
+        }
+
+        infoHtmlOut += '<div class="blockquote-footer touchpoint-date> 1 second ago by '+updatedTouchpointData.user
+
+        $(evt.target).find('.student-touchpoint').html(infoHtmlOut)
+        $(evt.target).find('.stoplight-status-div').find('span').remove()
+        $(evt.target).find('.stoplight-status-div').append(headerHtmlOut)
+    })
+
     $('#addInstructorButton').on('click', function(evt) {
         let cohortSlug = $(evt.target).data('cohort-slug')
         $('#cohortSlug').val(cohortSlug)
@@ -61,24 +105,17 @@ $(document).ready(() => {
 
 })
 
-{/* <div class="row">
-<div class="col-sm-1 my-auto">
-    "Stoplight Status"
-</div>
-<div class="col-sm-3 d-flex flex-row align-items-center">
-    <img class="mr-2" alt="/public/images/noPhoto.png" src="photoSource" style="height:50px" />
-    <h6>Name</h6>
-</div>
-<div class="col-sm-2 my-auto">
-    <a class="d-flex flex-row align-items-center" href="https://github.com/student.github"><img src="./public/images/GitHub-Mark.png" style="height:30px" />studentGithub</a>
-</div>
-<div class="col-sm-2 my-auto mx-auto">
-    LastCommit
-</div>
-<div class="col-sm-2 my-auto">
-
-</div>
-<div class="col-sm-offset d-flex flex-row-reverse my-auto mx-3">
-    <button class="btn btn-primary" id="edit-student" type="button" data-student-id="student.studentId">Edit...</button>
-</div>
-</div> */}
+// .student-touchpoint-title Last Touchpoint
+//     if student.comment
+//         .student-touchpoint-comment
+//             small #{student.comment}
+//     if student.tags
+//         each tag in student.tags
+//             if tag.status === 'green'
+//                 span.badge.badge-success.mr-auto.my-1 #{tag.text}
+//             else if tag.status === 'yellow'
+//                 span.badge.badge-warning.mr-auto.my-1 #{tag.text}
+//             else if tag.status ==='red'
+//                 span.badge.badge-danger.mr-auto.my-1 #{tag.text}
+//     if student.timeSinceTouchpoint
+//         .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}

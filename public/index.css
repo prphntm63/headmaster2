@@ -24,6 +24,10 @@
     margin: 0.5rem;
 }
 
+.student-card-inactive {
+    opacity: 0.4
+}
+
 .student-photo {
     height: 4rem;
 }

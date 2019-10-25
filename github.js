@@ -164,8 +164,10 @@ function flatDeep(arr) {
 
 module.exports = github;
 
-// // Test function
-// github.getUserCommits('prphntm63')
-// .then(commits => {
-//     console.log(commits)
-// })
+console.log('starting')
+
+// Test function
+github.getUserCommits('prphntm63')
+.then(commits => {
+    console.log(commits)
+})

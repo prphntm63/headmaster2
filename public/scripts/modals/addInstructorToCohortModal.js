@@ -1,6 +1,7 @@
 function showAddInstructorToCohortModal(evt) {
     evt.preventDefault()
     evt.stopPropagation()
+    $('#instructorId').html('')
 
     fetch('/api/instructors')
     .then(instructors => {
