@@ -54,7 +54,9 @@ router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
 
                             cohortStudents.forEach(student => {
                                 if (studentId === student.studentId) {
-                                    student.commits = parseCommits(studentCommits)
+                                    let parsedStudentCommits = parseCommits(studentCommits)
+                                    student.commits = parsedStudentCommits.commits
+                                    student.lastCommit = parsedStudentCommits.lastCommit
                                 }
                             })
                         }
@@ -99,6 +101,7 @@ function parseCommits(commits) {
     let today = new Date()
     let dayOfWeek = today.getDay()
     let commitsArray = []
+    let lastCommit = null
 
     // Show 4 weeks max
     for (let idx=(22+dayOfWeek); idx>0; idx--) {
@@ -121,12 +124,45 @@ function parseCommits(commits) {
                 dayObject.total += commit.total
                 dayObject.add += commit.added
                 dayObject.sub += commit.deleted
+
+                lastCommit = commit
             }
         })
         commitsArray.push(dayObject)
     }
 
-    return commitsArray
+    return {
+        "commits" : commitsArray,
+        "lastCommit" : timeSince(lastCommit.ctime)
+    }
+}
+
+function timeSince(date) {
+    if (!date) {
+        return ''
+    }
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+    if (interval > 1) {
+        return interval + " years";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes";
+    }
+    return Math.floor(seconds) + " seconds";
 }
 
 module.exports = router;

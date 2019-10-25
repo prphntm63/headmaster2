@@ -1,6 +1,7 @@
 function editStudent(evt) {
     evt.preventDefault()
-    let studentId = $('#edit-student').data('student-id')
+    let studentId = $(evt.target).data('student-id')
+    console.log(studentId)
 
     Promise.all([getStudentFromDbEdit(studentId), getCohortsFromDbEdit()])
     .then(([studentInfoJson, cohortsJson]) => {
@@ -13,8 +14,12 @@ function editStudent(evt) {
         })
         $('#cohortEdit').val(studentInfoJson.cohortId ? studentInfoJson.cohortId : '')
         $('#editStudentModal').modal('show')
-        $('#editStudentModalSubmit').on('click', validateEditStudentForm)
+        $('#editStudentModalSubmit').on('click', function(studentInfoJson, evt) {
+            validateEditStudentForm(studentInfoJson.id)
+        }.bind($('#editStudentModalSubmit'), studentInfoJson))
     })
+
+
 
     console.log('Editing Student', studentId)
 }
@@ -44,16 +49,18 @@ function getCohortsFromDbEdit() {
     })
 }
 
-function validateEditStudentForm() {
+function validateEditStudentForm(studentId) {
     let errors = [];
     let studentData = {
-        "id" : $('#edit-student').data('student-id'),
+        "id" : studentId,
         "firstName" : $('#firstNameEdit').val(),
         "lastName" : $('#lastNameEdit').val(),
         "cohort" : $('#cohortEdit').val(),
         "github" : $('#githubEdit').val(),
         "enrolledStatus" : $('#enrolledStatusEdit').is(':checked'),
     }
+
+    console.log(studentData)
 
     // Add validation checking here and push mistakes to errors[]
 
@@ -83,5 +90,14 @@ function submitEditStudentForm(studentData) {
     })
     .then(returnJSON => {
         console.log(returnJSON)
+        // let editStudentEvent = new CustomEvent('editStudentComplete', {
+        //     detail: {
+        //         "updatedStudentData" : returnJSON
+        //     }
+        // })
+
+        $('.edit-student-button').filter(function(idx, elem) {return $(elem).data('student-id') === returnJSON.id}).trigger("editStudentEvent", [returnJSON])
+        // $('.edit-student-button').data(`student-id:contains(${studentData.id})`).trigger("editStudentEvent", [returnJSON])
+        $('#editStudentModal').modal('hide')
     })
 }

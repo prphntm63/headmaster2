@@ -257,7 +257,7 @@ let db = {
         .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
         .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
         .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
-        .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
+        .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug', knex.raw('COUNT("LinkCohortsStudents".student) as "numStudents" '))
         .groupBy('Cohorts.id')
         .where({'LinkCohortsUsers.user' : userId})
     },
@@ -268,7 +268,7 @@ let db = {
         .leftJoin('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
         // .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
         .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated', 'Cohorts.slug', knex.raw('COUNT("LinkCohortsStudents".cohort) as "numStudents"'))
-        .groupBy('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.graduated', 'Cohorts.slug')
+        .groupBy('Cohorts.id')
     },
 
     getCohortStudents : function(cohortId) {

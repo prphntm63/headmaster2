@@ -16,9 +16,7 @@ block content
         .tab-pane.fade.show.active#dashboard(role="tabpanel" aria-labelledby="dashboard-tab")
             .d-flex.flex-row.justify-content-between.mx-2
                 h3 Students
-                for instructor in instructors
-                    if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
-                        button.btn.btn-primary.add-student-button Add Student
+
             .d-flex.flex-row.flex-wrap
                 if students
                     each student in students
@@ -82,8 +80,47 @@ block content
                                     a(href='/students/'+student.github) Details
                                 .d-flex.justify-content-center.py-2.add-touchpoint-button
                                     a(href) Add Touchpoint
-        //- Dashbaord / Students Cards Container
+        //- List / Students List
         .tab-pane.fade#students(role="tabpanel" aria-labelledby="students-tab")
+            .container.mt-4
+                .list-group
+                    .list-group-item.active.disabled
+                        .row
+                            .col-sm-1
+                                h5 Status
+                            .col-sm-3
+                                h5 Student
+                            .col-sm-2
+                                h5 Github
+                            .col-sm-2
+                                h5 Last Commit
+                            .col-sm-2
+                            .col-sm-2
+                            
+                    each student in students
+                        .list-group-item.list-group-item-action(class=`${student.enrolledStatus ? '' : 'list-group-item-secondary'}` onclick=`navigateTo("/students/${student.github}")`)
+                            .row
+                                .col-sm-1.my-auto
+                                    if student.stoplightStatus === 'green'
+                                        span.badge.badge-pill.badge-success
+                                            i.material-icons.pt-1.stoplight-badge done
+                                    else if student.stoplightStatus === 'yellow'
+                                        span.badge.badge-pill.badge-warning
+                                            i.material-icons.pt-1.stoplight-badge help_outline
+                                    else if student.stoplightStatus ==='red'
+                                        span.badge.badge-pill.badge-danger
+                                            i.material-icons.pt-1 warning
+                                .col-sm-3.d-flex.flex-row.align-items-center.student-info
+                                    img.mr-2(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}` style="height:50px") 
+                                    h6 #{student.firstName} #{student.lastName}
+                                .col-sm-2.my-auto.student-github
+                                    a.d-flex.flex-row.align-items-center(href="https://github.com/"+student.github)
+                                        img(src="./public/images/GitHub-Mark.png" style="height:30px")
+                                        div #{student.github}
+                                .col-sm-2.my-auto.mx-auto #{student.lastCommit} #{student.lastCommit ? 'ago' : ''}
+                                .col-sm-2.my-auto
+                                .col-sm-offset.d-flex.flex-row-reverse.my-auto.mx-3
+                                    button.btn.btn-primary.edit-student-button(type='button' data-student-id=student.studentId) Edit...
 
         //- Instructors Container
         .tab-pane.fade#staff(role="tabpanel" aria-labelledby="staff-tab")
@@ -158,6 +195,7 @@ block content
                                 li #{key} - #{student[key]}
     include modals/addInstructorToCohortModal.pug 
     include modals/addStudentModal.pug
+    include modals/editStudentModal.pug
     include modals/deleteCohortModal.pug
     include modals/addTouchpointModal.pug
     script(src="/public/scripts/cohort.js")
