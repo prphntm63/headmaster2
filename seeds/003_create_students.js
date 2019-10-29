@@ -51,9 +51,6 @@ function generateRandomStudent(id, cohortIds) {
       lastName: name.name.last, 
       github: name.login.username + Math.floor(Math.random() * 100), 
       photoUrl : name.picture.large,
-      // cohort: getRandomCohortId(cohortIds), 
-      // stoplightStatus: getRandomStatus(), 
-      enrolledStatus:true,
     }
 
     if (id) {

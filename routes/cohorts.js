@@ -133,7 +133,7 @@ function parseCommits(commits) {
 
     return {
         "commits" : commitsArray,
-        "lastCommit" : timeSince(lastCommit.ctime)
+        "lastCommit" : lastCommit ? timeSince(lastCommit.ctime) : null
     }
 }
 

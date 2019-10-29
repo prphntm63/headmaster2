@@ -183,7 +183,6 @@ let db = {
             "lastName" : formData.lastName,
             "github" : formData.github,
             "photoUrl" : formData.photoUrl ? formData.photoUrl : '',
-            "enrolledStatus" : formData.enrolledStatus
         }
 
         return knex
@@ -194,7 +193,8 @@ let db = {
             let studentData = studentDataRows[0]
             let linkCohortParams = {
                 "student" : studentData.id,
-                "cohort" : cohort
+                "cohort" : cohort,
+                "enrolledStatus" : formData.enrolledStatus
             }
             return knex
             .returning('*')
@@ -227,7 +227,10 @@ let db = {
             return knex('LinkCohortsStudents')
             .returning('*')
             .where({'student' : studentId})
-            .update({'cohort' : cohort})
+            .update({
+                'cohort' : cohort,
+                "enrolledStatus" : formData.enrolledStatus
+            })
             .then(linkStudentCohortDataRows => {
                 let linkStudentCohortData = linkStudentCohortDataRows[0]
                 studentData.cohort = linkStudentCohortData.cohort
@@ -297,8 +300,8 @@ let db = {
         .leftJoin('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
         .leftOuterJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")
         .leftJoin('Users', 'tp.user', '=', 'Users.id')
-        .select('Students.id as studentId', 'tp.id as touchpointId', 'tp.ctime as touchpointCreated', 'Students.*', 'tp.*', 'Users.firstName as userFirstName', 'Users.lastName as userLastName')
-        .groupBy('Students.id', 'tp.id', 'Users.firstName', 'Users.lastName')
+        .select('Students.id as studentId', 'tp.id as touchpointId', 'tp.ctime as touchpointCreated', 'LinkCohortsStudents.enrolledStatus', 'Students.*', 'tp.*', 'Users.firstName as userFirstName', 'Users.lastName as userLastName')
+        .groupBy('Students.id', 'tp.id', 'Users.firstName', 'Users.lastName', 'LinkCohortsStudents.enrolledStatus')
         .where({'Cohorts.id' : cohortId})
         .then(rows => {
             if (rows[0].studentId === null) {return null}
@@ -402,7 +405,6 @@ let db = {
     },
 
     addTouchpoint(params) {
-        console.log(params)
 
         return knex
         .returning('*')
@@ -415,6 +417,21 @@ let db = {
             console.log('error adding touchpoint - ', err)
         })
     },
+
+    // ************ COMMIT METHODS ***************
+    addCommits(commitsArray) {
+        return knex
+        .returning('*')
+        .insert(commitsArray)
+        .into('Commits')
+        .then(rows => {
+            console.log(rows)
+            return rows
+        })
+        .catch(err => {
+            console.log('error adding commits array - ', err)
+        })
+    }
 
 }
 

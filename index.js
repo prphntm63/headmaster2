@@ -2,7 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const db = require('./db.js');
-const github = require('./github.js');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 

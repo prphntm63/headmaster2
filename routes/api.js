@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('./../db.js');
+const github = require('./../github.js');
 
 router.get('/cohorts', ensureAuthenticated, (req, res) => {
     let userId = req.user.id 
@@ -132,8 +133,25 @@ router.post('/students', ensureAuthenticated, (req, res) => {
         // Add method to ensure user is allowed to create students
 
         // Get github commit history for new student
-        
-        res.status(200).json(studentData)
+        let fetchTime = 30*24*60*60*1000 //milliseconds
+        github.getUserCommits(studentData.github, fetchTime)
+        .then(commitsOutArray => {
+            commitsOutArray.forEach(commit => {
+                commit.student = studentData.id
+            })
+
+            db.addCommits(commitsOutArray)
+            .then(commitsAdded => {
+                if (commitsAdded.length) {
+                    studentData.commits = commitsAdded
+                }
+                console.log(studentData)
+                res.status(200).json(studentData)
+            })
+        })
+        .catch(err => {
+            console.log('error getting github data for student - ', err)
+        })
     })
     .catch(err => {
         res.status(500)

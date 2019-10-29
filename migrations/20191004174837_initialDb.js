@@ -10,7 +10,7 @@ exports.up = function(knex) {
             table.string('name')
             table.string('slug')
             table.date('startDate')
-            table.boolean('graduated')
+            table.boolean('archived')
         })
         .createTable('Users', table => {
             table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
@@ -24,6 +24,7 @@ exports.up = function(knex) {
             table.unique('github');
             table.string('accessToken');
             table.string('refreshToken');
+            table.enu('superuser', ['user', 'admin', 'superadmin']).defaultsTo('user')
         })
         .createTable('Students', (table) => {
             table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
@@ -34,7 +35,6 @@ exports.up = function(knex) {
             table.string('lastName', 255).notNullable();
             table.string('github', 255);
             table.unique('github');
-            table.boolean('enrolledStatus');
             table.string('photoUrl');
         })
         .createTable('Commits', table => {
@@ -47,6 +47,7 @@ exports.up = function(knex) {
             table.integer('total')
             table.integer('added')
             table.integer('deleted')
+            table.json('files')
         })
         .createTable('Touchpoints', table => {
             table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
@@ -64,7 +65,7 @@ exports.up = function(knex) {
             table.timestamp('mtime').defaultTo(knex.fn.now())
             table.uuid('cohort').references('id').inTable('Cohorts').notNull();
             table.uuid('student').references('id').inTable('Students').notNull();
-
+            table.boolean('enrolledStatus').defaultTo(true);
         })
         .createTable('LinkCohortsUsers', table => {
             table.timestamp('ctime').defaultTo(knex.fn.now())

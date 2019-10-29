@@ -125,13 +125,14 @@ let github = {
                     })
 
                     let commitData = {
+                        "ctime" : commit.commit.date,
                         "sha" : commit.sha,
                         "message" : commit.commit.message,
                         "repo" : commit.commit.url.split('/')[5],
                         "total" : commit.stats.total,
                         "added" : commit.stats.additions,
                         "deleted" : commit.stats.deletions,
-                        "files" : outFiles,
+                        "files" : JSON.stringify(outFiles),
                     }
                     commitsOutArray.push(commitData)
                 })
