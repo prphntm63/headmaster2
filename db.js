@@ -126,6 +126,24 @@ let db = {
         })
     },
 
+    getStudentGithubFromName : async function(firstName, lastName) {
+        return knex
+        .from('Students')
+        .select('Students.github')
+        .where({
+            "Students.firstName" : firstName,
+            "Students.lastName" : lastName
+        })
+        .then(rows => {
+            if (rows.length === 1) {
+                let studentInfo = rows[0]
+                return studentInfo.github
+            } else {
+                return null //Either multiple or no students match
+            }
+        })
+    },
+
     getStudentListByUser : function(userId) {
         if (!userId) return null
 
@@ -424,10 +442,6 @@ let db = {
         .returning('*')
         .insert(commitsArray)
         .into('Commits')
-        .then(rows => {
-            console.log(rows)
-            return rows
-        })
         .catch(err => {
             console.log('error adding commits array - ', err)
         })

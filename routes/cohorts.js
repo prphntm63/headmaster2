@@ -119,7 +119,9 @@ function parseCommits(commits) {
             if ((commit.ctime.getTime() < today.getTime() - (idx*offset) + (offset/2) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - (offset/2) )) {
                 
                 dayObject.commits.push(commit)
-                dayObject.repos.push(commit.repo)
+                if (!dayObject.repos.find(repo => {return repo === commit.repo} ) ) {
+                    dayObject.repos.push(commit.repo)
+                }
                 dayObject.date = commit.ctime.getDate()
                 dayObject.total += commit.total
                 dayObject.add += commit.added

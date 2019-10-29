@@ -133,7 +133,7 @@ router.post('/students', ensureAuthenticated, (req, res) => {
         // Add method to ensure user is allowed to create students
 
         // Get github commit history for new student
-        let fetchTime = 30*24*60*60*1000 //milliseconds
+        let fetchTime = 90*24*60*60*1000 //milliseconds
         github.getUserCommits(studentData.github, fetchTime)
         .then(commitsOutArray => {
             commitsOutArray.forEach(commit => {
@@ -145,7 +145,6 @@ router.post('/students', ensureAuthenticated, (req, res) => {
                 if (commitsAdded.length) {
                     studentData.commits = commitsAdded
                 }
-                console.log(studentData)
                 res.status(200).json(studentData)
             })
         })
