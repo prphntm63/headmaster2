@@ -82,6 +82,11 @@ block content
                                     a(href) Add Touchpoint
         //- List / Students List
         .tab-pane.fade#students(role="tabpanel" aria-labelledby="students-tab")
+            .d-flex.flex-row.justify-content-between.mx-2
+                    h3 Instructors
+                    for instructor in instructors
+                        if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
+                            button.btn.btn-primary.add-student-button(data-cohort-id=info.id) Add Student
             .container.mt-4
                 .list-group
                     .list-group-item.active.disabled

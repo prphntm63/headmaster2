@@ -43,7 +43,7 @@ let github = {
         let dateNow = new Date().getTime()
         let eventPromises = []
 
-        for (let page=1; page<=10; page++) {
+        for (let page=1; page<=1; page++) { // Note: can change this up to 10. Just 1 right now to preserve API calls
             eventPromises.push( 
                 fetch('https://api.github.com/users/'+username+'/events'+secretParams)
                 .then(response => {

@@ -2,6 +2,14 @@ $(document).ready(() => {
     if(performance.navigation.type == 2){
         location.reload(true);
     }
+    
+    $('#github').blur(function() {
+        let githubUsername = $('#github').val()
+    
+        if (githubUsername) {
+            checkGithubUser(githubUsername, true)
+        }
+    })
 
     $('.add-student-button').on('click', (evt) => {
         evt.preventDefault()

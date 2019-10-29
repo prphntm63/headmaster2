@@ -9,6 +9,15 @@ script(src="/public/scripts/modals/addStudentModal.js")
                     span(aria-hidden="true") &times;
             .modal-body
                 form(action="submit")
+                    input(hidden id='photoUrl' value=null)
+                    .form-row.my-2
+                        .col-sm-2#profilePicLoad
+                        .col
+                            label(for="github") Github Profile
+                            input.form-control(type="text" placeholder="Github Username" name="github" id="github")
+                            .invalid-feedback#githubUsernameFeedback Please Add a Github Profile
+                        .col.pt-3
+                            small Just the username, not the whole URL
                     .form-row.my-2
                         .col
                             label(for="firstName") First Name
@@ -24,13 +33,6 @@ script(src="/public/scripts/modals/addStudentModal.js")
                             select.form-control(id="cohort" name="cohort")
                                 option(selected value='') Select...
                             .invalid-feedback Please Select a Cohort
-                    .form-row.my-2
-                        .col
-                            label(for="github") Github Profile
-                            input.form-control(type="text" placeholder="Github Username" name="github" id="github")
-                            .invalid-feedback Please Add a Github Profile
-                        .col.pt-3
-                            p Just the username, not the whole URL
                     .form-row.my-2
                         .col.mx-4
                             input.form-check-input(type="checkbox" name="enrolledStatus" id="enrolledStatus" checked)

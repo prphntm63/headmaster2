@@ -63,8 +63,13 @@ let db = {
         .select('Users.id')
         .where('Users.github', '=', userGithub)
         .then(rows => {
-            let user = rows[0]
-            return user.id
+            if (rows.length) {
+                let user = rows[0]
+                return user.id
+            } else {
+                return null
+            }
+            
         })
     },
 
@@ -112,8 +117,12 @@ let db = {
         .select('Students.id')
         .where({"Students.github" : studentGithub})
         .then(rows => {
-            let studentInfo = rows[0]
-            return studentInfo.id
+            if (rows.length) {
+                let studentInfo = rows[0]
+                return studentInfo.id
+            } else {
+                return null
+            }
         })
     },
 

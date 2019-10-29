@@ -70,6 +70,32 @@ router.post('cohorts/:cohortId', ensureAuthenticated, (req,res) => {
     
 })
 
+router.get('/github/:githubId', ensureAuthenticated, (req,res) => {
+    let githubId = req.params.githubId
+
+    Promise.all([db.getStudentIdByGithub(githubId), db.getUserIdFromGithub(githubId)])
+    .then(([studentId, userId]) => {
+        if (userId) {
+            res.status(200).json({
+                "type" : "user",
+                "id" : userId
+            })
+        } else if (studentId) {
+            res.status(200).json({
+                "type" : "student",
+                "id" : studentId
+            })
+
+        } else {
+            res.status(200).json(null)
+        }
+    })
+    .catch(err => {
+        console.log('error getting github id from db - ', err)
+        res.status(500)
+    })
+})
+
 router.get('/students', ensureAuthenticated, (req, res) => {
     db.getStudentList()
     .then(studentListJson => {
