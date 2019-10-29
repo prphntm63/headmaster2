@@ -182,6 +182,7 @@ let db = {
             "firstName" : formData.firstName,
             "lastName" : formData.lastName,
             "github" : formData.github,
+            "photoUrl" : formData.photoUrl ? formData.photoUrl : '',
             "enrolledStatus" : formData.enrolledStatus
         }
 
@@ -213,6 +214,7 @@ let db = {
             "firstName" : formData.firstName,
             "lastName" : formData.lastName,
             "github" : formData.github,
+            "photoUrl" : formData.photoUrl ? formData.photoUrl : '',
             "enrolledStatus" : formData.enrolledStatus
         }
 

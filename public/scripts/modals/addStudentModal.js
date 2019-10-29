@@ -21,8 +21,9 @@ function checkGithubUser(githubUsername, populateFields) {
     }
 
     $(`#github`).removeClass('is-invalid is-valid')
+    $('#profilePicLoad').html('')
 
-    fetch('/api/github/'+githubUsername)
+    return fetch('/api/github/'+githubUsername)
     .then(response => {
         return response.json()
     })
@@ -31,12 +32,20 @@ function checkGithubUser(githubUsername, populateFields) {
             $('#github').addClass('is-invalid')
             $('#githubUsernameFeedback').text(`${githubUsername} is already retgistered as a ${responseJSON.type}`)
         } else {
-            fetch('https://api.github.com/users/'+githubUsername)
+            return fetch('https://api.github.com/users/'+githubUsername)
             .then(response => {
                 return response.json()
             })
             .then(responseJSON => {
-                if (!responseJSON.name) {
+                let firstName = null;
+                let lastName = null;
+                let photoUrl = null;
+
+                if (responseJSON.avatar_url) {
+                    photoUrl = responseJSON.avatar_url
+                }
+                
+                if (!responseJSON.login) {
                     $('#github').addClass('is-invalid')
                     $('#githubUsernameFeedback').text(`${githubUsername} is not a valid Github username`)
                     $('#photoUrl').val('')
@@ -46,10 +55,10 @@ function checkGithubUser(githubUsername, populateFields) {
                     $(`#lastName`).removeClass('is-invalid is-valid')
                     $('#profilePicLoad').html('')
                     return false
+                } else if (responseJSON.name) {
+                    firstName = responseJSON.name.split(' ').slice(0,1)
+                    lastName = responseJSON.name.split(' ').slice(1).join(' ')
                 }
-
-                let firstName = responseJSON.name.split(' ').slice(0,1)
-                let lastName = responseJSON.name.split(' ').slice(1)
 
                 if (populateFields) {
                     $('#github').addClass('is-valid')
@@ -64,7 +73,7 @@ function checkGithubUser(githubUsername, populateFields) {
                     }
 
                     if (photoUrl) {
-                        $('#photoUrl').val(responseJSON.avatar_url)
+                        $('#photoUrl').val(photoUrl)
                         $('#profilePicLoad').html(`
                             <div style="display:flex; flex-direction:row; justify-content:center; align-items:center">
                                 <img src=${responseJSON.avatar_url} style="height:60px;width:60px;" />
@@ -115,15 +124,16 @@ function validateStudentForm() {
         )
     }
 
-    valid = checkGithubUser(formData.github, false)
-
-    if (valid) {
-        submitStudentForm(formData)
-    }
+    checkGithubUser(formData.github, false)
+    .then(githubValid => {
+        if (valid && githubValid) {
+            submitStudentForm(formData)
+        }
+    })
 }
 
 function submitStudentForm(studentData) {
-    fetch('/students', {
+    fetch('/api/students', {
         method: 'POST',
         body: JSON.stringify(studentData),
         headers : {
@@ -137,8 +147,8 @@ function submitStudentForm(studentData) {
         } else throw response
     })
     .then(responseJson => {
-        console.log(responseJson)
         window.alert('Student added!')
+        $('.add-student-button').trigger("addStudentEvent", [responseJson])
         $('#addStudentModal').modal('hide')
     })
     .catch(err => {

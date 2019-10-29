@@ -17,7 +17,7 @@ block content
             .d-flex.flex-row.justify-content-between.mx-2
                 h3 Students
 
-            .d-flex.flex-row.flex-wrap
+            .d-flex.flex-row.flex-wrap.student-cards
                 if students
                     each student in students
                         .card.student-card(class=`${student.enrolledStatus ? '' : 'student-card-inactive'}` data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
@@ -88,7 +88,7 @@ block content
                         if instructor.id === user.id && (instructor.role === 'admin' || instructor.role ==='instructor')
                             button.btn.btn-primary.add-student-button(data-cohort-id=info.id) Add Student
             .container.mt-4
-                .list-group
+                .list-group.student-list
                     .list-group-item.active.disabled
                         .row
                             .col-sm-1

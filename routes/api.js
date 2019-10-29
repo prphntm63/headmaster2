@@ -130,7 +130,9 @@ router.post('/students', ensureAuthenticated, (req, res) => {
     db.addStudent(studentParams)
     .then(studentData => {
         // Add method to ensure user is allowed to create students
-        console.log(studentData)
+
+        // Get github commit history for new student
+        
         res.status(200).json(studentData)
     })
     .catch(err => {
@@ -148,6 +150,10 @@ router.post('/students/:studentId', ensureAuthenticated, (req, res) => {
 
     db.updateStudent(studentId, studentParams)
     .then(updatedStudentInfo => {
+        if (studentParams.github != updatedStudentInfo.github) {
+            // Update commit history if github username changed
+
+        }
         res.status(200).json(updatedStudentInfo)
     })
     .catch(err => {

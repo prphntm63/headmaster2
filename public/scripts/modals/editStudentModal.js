@@ -8,6 +8,11 @@ function editStudent(evt) {
         $('#firstNameEdit').val(studentInfoJson.firstName ? studentInfoJson.firstName : '')
         $('#lastNameEdit').val(studentInfoJson.lastName ? studentInfoJson.lastName : '')
         $('#githubEdit').val(studentInfoJson.github ? studentInfoJson.github : '')
+        $('#profilePicLoadEdit').html(`
+            <div style="display:flex; flex-direction:row; justify-content:center; align-items:center">
+                <img src=${studentInfoJson.photoUrl} style="height:60px;width:60px;" />
+            </div>
+        `)
         $('#enrolledStatusEdit').prop('checked', studentInfoJson.enrolledStatus)
         cohortsJson.forEach(cohort => {
             $('#cohortEdit').append($('<option>', {"value":cohort.id, "text":cohort.name}))
@@ -23,6 +28,89 @@ function editStudent(evt) {
 
     console.log('Editing Student', studentId)
 }
+
+function checkGithubUserEdit(githubUsername, populateFields) {
+    if (populateFields === undefined) {
+        populateFields = false;
+    }
+
+    $(`#githubEdit`).removeClass('is-invalid is-valid')
+
+    return fetch('/api/github/'+githubUsername)
+    .then(response => {
+        return response.json()
+    })
+    .then(responseJSON => {
+        if (responseJSON != null) {
+            $('#githubEdit').addClass('is-invalid')
+            $('#githubEditUsernameFeedback').text(`${githubUsername} is already retgistered as a ${responseJSON.type}`)
+        } else {
+            return fetch('https://api.github.com/users/'+githubUsername)
+            .then(response => {
+                return response.json()
+            })
+            .then(responseJSON => {
+                let firstName = null;
+                let lastName = null;
+                let photoUrl = null;
+
+                if (responseJSON.avatar_url) {
+                    photoUrl = responseJSON.avatar_url
+                }
+
+                if (!responseJSON.login) {
+                    $('#githubEdit').addClass('is-invalid')
+                    $('#githubEditUsernameFeedback').text(`${githubUsername} is not a valid Github username`)
+                    $('#photoUrlEdit').val('')
+                    $('#firstNameEdit').val('')
+                    $(`#firstNameEdit`).removeClass('is-invalid is-valid')
+                    $('#lastNameEdit').val('')
+                    $(`#lastNameEdit`).removeClass('is-invalid is-valid')
+                    $('#profilePicLoadEdit').html('')
+                    return false
+                } else if (responseJSON.name) {
+                    firstName = responseJSON.name.split(' ').slice(0,1)
+                    lastName = responseJSON.name.split(' ').slice(1).join(' ')
+                }
+
+
+                if (populateFields) {
+                    $('#github').addClass('is-valid')
+                    if (firstName) {
+                        $('#firstNameEdit').val(firstName)
+                        $('#firstNameEdit').addClass('is-valid')
+                    }
+                    
+                    if (lastName) {
+                        $('#lastNameEdit').val(lastName)
+                        $('#lastNameEdit').addClass('is-valid')
+                    }
+
+                    if (photoUrl) {
+                        $('#photoUrlEdit').val(photoUrl)
+                        $('#profilePicLoadEdit').html(`
+                            <div style="display:flex; flex-direction:row; justify-content:center; align-items:center">
+                                <img src=${responseJSON.avatar_url} style="height:60px;width:60px;" />
+                            </div>
+                        `)
+                    }
+
+                    return true
+                } else {
+                    return true
+                }
+            })
+        }
+    })
+    .catch(err => {
+        if (err.status != '404') {
+            console.log('error with github API call - ', err)
+        }
+    })
+
+    
+}
+
 
 function getStudentFromDbEdit(studentId) {
     return fetch('/api/students/'+studentId)
@@ -57,16 +145,18 @@ function validateEditStudentForm(studentId) {
         "lastName" : $('#lastNameEdit').val(),
         "cohort" : $('#cohortEdit').val(),
         "github" : $('#githubEdit').val(),
+        "photoUrl" : $('#photoUrlEdit').val(),
         "enrolledStatus" : $('#enrolledStatusEdit').is(':checked'),
     }
 
-    console.log(studentData)
-
     // Add validation checking here and push mistakes to errors[]
 
-    if (!errors.length) {
-        submitEditStudentForm(studentData)
-    }
+    checkGithubUserEdit(studentData.github, false)
+    .then(githubValid => {
+        if (!errors.length && githubValid) {
+            submitEditStudentForm(studentData)
+        }
+    })
 }
 
 function submitEditStudentForm(studentData) {

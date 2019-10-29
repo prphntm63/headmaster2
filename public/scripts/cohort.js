@@ -2,12 +2,20 @@ $(document).ready(() => {
     if(performance.navigation.type == 2){
         location.reload(true);
     }
-    
+
     $('#github').blur(function() {
         let githubUsername = $('#github').val()
     
         if (githubUsername) {
             checkGithubUser(githubUsername, true)
+        }
+    })
+
+    $('#githubEdit').blur(function() {
+        let githubUsername = $('#githubEdit').val()
+    
+        if (githubUsername) {
+            checkGithubUserEdit(githubUsername, true)
         }
     })
 
@@ -109,21 +117,53 @@ $(document).ready(() => {
         }
     })
 
+    $('.add-student-button').on('addStudentEvent', function(evt, updatedStudentData) {
+        $('.student-list').append(
+            `
+            <div class="list-group-item list-group-item-action enrolledStatus" onclick="navigateTo('/students/${updatedStudentData.github}')">
+                <div class="row">
+                    <div class="col-sm-1 my-auto"></div>
+                    <div class="col-sm-3 d-flex flex-row align-items-center student-info"><img class="mr-2" alt="/public/images/noPhoto.png" src="${updatedStudentData.photoUrl}" style="height:50px;" />
+                        <h6>${updatedStudentData.firstName} ${updatedStudentData.lastName}</h6>
+                    </div>
+                    <div class="col-sm-2 my-auto student-github"><a class="d-flex flex-row align-items-center" href="https://github.com/"+${updatedStudentData.github}><img src="./public/images/GitHub-Mark.png" style="height:30px;"/><div>${updatedStudentData.github}</div></a></div>
+                    <div class="col-sm-2 my-auto mx-auto"></div>
+                    <div class="col-sm-2 my-auto"></div>
+                    <div class="col-sm-offset d-flex flex-row-reverse my-auto mx-3"><button class="btn btn-primary edit-student-button" type="button" data-student-id="${updatedStudentData.studentId}">Edit...</button></div>
+                </div>
+            </div>
+            `
+        )
+
+        $('.student-cards').append(
+            `
+            <div class="card student-card" data-student-id=${updatedStudentData.studentId} data-stoplight-status=null data-student-name=${updatedStudentData.firstName + ' ' + updatedStudentData.lastName} data-last-touchpoint=null>
+                <div class="card-header d-flex flex-row linkstyle" onclick="navigateTo('/students/${updatedStudentData.github}')">
+                    <div><img class="student-photo" alt="/public/images/noPhoto.png" src="${updatedStudentData.photoUrl}" /></div>
+                    <div class="w-100">
+                        <div class="d-flex flex-row justify-content-between stoplight-status-div">
+                            <h4 class="mx-2 student-name text-truncate">${updatedStudentData.firstName + ' ' + updatedStudentData.lastName}</h4>
+                        </div>
+                        <div class="d-flex flex-row"><img class="ml-2" src="./../public/images/GitHub-Mark.png" style="height:25px;" /><a class="ml-1" href="https://github.com/${updatedStudentData.github}">${updatedStudentData.github}</a></div>
+                    </div>
+                </div>
+                <div class="card-body d-flex flex-row student-info">
+                    <div class="d-flex flex-column student-touchpoint">
+                        <div class="student-touchpoint-title">Last Touchpoint</div>
+                    </div>
+                    <div class="d-flex flex-column student-commits">
+                        <div class="student-touchpoint-title">Latest Commits</div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex flex-row student-card-footer p-0">
+                    <div class="d-flex justify-content-center py-2" style="border-right:1px solid rgba(0,0,0,.125);"><a href="/students/${updatedStudentData.github}">Details</a></div>
+                    <div class="d-flex justify-content-center py-2 add-touchpoint-button"><a href="href">Add Touchpoint</a></div>
+                </div>
+            </div>
+            `
+        )
+    })
+
     $('[data-toggle="tooltip"]').tooltip();
 
 })
-
-// .student-touchpoint-title Last Touchpoint
-//     if student.comment
-//         .student-touchpoint-comment
-//             small #{student.comment}
-//     if student.tags
-//         each tag in student.tags
-//             if tag.status === 'green'
-//                 span.badge.badge-success.mr-auto.my-1 #{tag.text}
-//             else if tag.status === 'yellow'
-//                 span.badge.badge-warning.mr-auto.my-1 #{tag.text}
-//             else if tag.status ==='red'
-//                 span.badge.badge-danger.mr-auto.my-1 #{tag.text}
-//     if student.timeSinceTouchpoint
-//         .blockquote-footer.touchpoint-date #{student.timeSinceTouchpoint} ago by #{student.userFirstName} #{student.userLastName}
