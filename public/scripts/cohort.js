@@ -33,6 +33,27 @@ $(document).ready(() => {
         getLatestTouchpointFromDb(studentId)
     })
 
+    $('#sort-type').on('change', function(evt) {
+        let sortValue = $('#sort-type').val()
+        let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
+
+        sortStudents(sortValue, upDown)
+    })
+
+    $('#sortUp').on('change', function(evt) {
+        let sortValue = $('#sort-type').val()
+        let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
+
+        sortStudents(sortValue, upDown)
+    })
+
+    $('#sortDown').on('change', function(evt) {
+        let sortValue = $('#sort-type').val()
+        let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
+
+        sortStudents(sortValue, upDown)
+    })
+
     $('.student-card').on('addTouchpointEvent', function(evt, updatedTouchpointData) {
         let headerHtmlOut=''
         let infoHtmlOut =''
@@ -167,3 +188,56 @@ $(document).ready(() => {
     $('[data-toggle="tooltip"]').tooltip();
 
 })
+
+function sortStudents(parameter, order) {
+    if (parameter === undefined) {
+        parameter = 'student-firstname'
+    }
+
+    if (order === undefined) {
+        order = 'up'
+    }
+
+    let elements = $('.student-card').sort(
+            function(elem1, elem2) {
+                let param1 = $(elem1).data(parameter)
+                let param2 = $(elem2).data(parameter)
+                if (param1 === undefined) {
+                    if (order === 'up') {
+                        return 1
+                    } else {
+                        return -1
+                    }
+                } else if (param2 === undefined) {
+                    if (order === 'up') {
+                        return -1
+                    } else {
+                        return 1
+                    }
+                }
+
+                if (parameter === 'stoplight-status') {
+                    // Remap colors to numbers for comparison
+                    param1 = param1 === 'green' ? '2' :  (param1 === 'yellow' ? '1' : '0') 
+                    param2 = param2 === 'green' ? '2' :  (param2 === 'yellow' ? '1' : '0') 
+                }
+
+                if (parameter === 'last-touchpoint' || parameter === 'last-commit') {
+                    if (order === 'up') {
+                        return param2.localeCompare(param1)
+                    } else {
+                        return param1.localeCompare(param2)
+                    }
+                    
+                } else {
+                    if (order === 'up') {
+                        return param1.localeCompare(param2)
+                    } else {
+                        return param2.localeCompare(param1)
+                    }
+                }
+
+            } 
+        ).appendTo('.student-cards')
+
+}

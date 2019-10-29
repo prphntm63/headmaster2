@@ -57,6 +57,7 @@ router.get('/:cohortSlug', ensureAuthenticated, (req, res) => {
                                     let parsedStudentCommits = parseCommits(studentCommits)
                                     student.commits = parsedStudentCommits.commits
                                     student.lastCommit = parsedStudentCommits.lastCommit
+                                    student.commitCreated = parsedStudentCommits.commitCreated
                                 }
                             })
                         }
@@ -116,7 +117,7 @@ function parseCommits(commits) {
         }
 
         commits.forEach(commit => {
-            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) + (offset/2) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - (offset/2) )) {
+            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - offset )) {
                 
                 dayObject.commits.push(commit)
                 if (!dayObject.repos.find(repo => {return repo === commit.repo} ) ) {
@@ -135,7 +136,8 @@ function parseCommits(commits) {
 
     return {
         "commits" : commitsArray,
-        "lastCommit" : lastCommit ? timeSince(lastCommit.ctime) : null
+        "lastCommit" : lastCommit ? timeSince(lastCommit.ctime) : null,
+        "commitCreated" : lastCommit ? lastCommit.ctime : null
     }
 }
 

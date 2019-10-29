@@ -82,3 +82,15 @@
 .instructor-photo {
     height: 4rem;
 }
+
+.sort-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sort-controls > * {
+    margin-right: 10px;
+    margin-bottom: 0px;
+}

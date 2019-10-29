@@ -16,11 +16,27 @@ block content
         .tab-pane.fade.show.active#dashboard(role="tabpanel" aria-labelledby="dashboard-tab")
             .d-flex.flex-row.justify-content-between.mx-2
                 h3 Students
+                .sort-controls
+                    h6 Sort:
+                    select.form-control(id="sort-type" name="sort-type")
+                        option(text="Name" value="student-firstname") Name
+                        option(text="Last Name" value="student-lastname") Last Name
+                        option(text="Github Username" value="github-username") Github Username
+                        option(text="Stoplight Status" value="stoplight-status") Stoplight Status
+                        option(text="Last Commit" value="last-commit") Last Commit
+                        option(text="Last Touchpoint" value="last-touchpoint") Last Touchpoint
+                    .btn-group.btn-group-toggle(data-toggle="buttons")
+                        label.btn.btn-light.active
+                            | Up
+                            input(type="radio" name="sort-up-down" id="sortUp" autocomplete="off" checked)
+                        label.btn.btn-light
+                            | Down
+                            input(type="radio" name="sort-up-down" id="sortDown" autocomplete="off")
 
             .d-flex.flex-row.flex-wrap.student-cards
                 if students
                     each student in students
-                        .card.student-card(class=`${student.enrolledStatus ? '' : 'student-card-inactive'}` data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated)
+                        .card.student-card(class=`${student.enrolledStatus ? '' : 'student-card-inactive'}` data-student-firstname=student.firstName data-student-lastname=student.lastName data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated, data-last-commit=student.commitCreated, data-github-username=student.github)
                             .card-header.d-flex.flex-row.linkstyle(onclick=`navigateTo("/students/${student.github}")`)
                                 div
                                     img.student-photo(alt="/public/images/noPhoto.png" src=`${student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'}`) 
@@ -182,7 +198,9 @@ block content
     //- table
     //-     if students
     //-         each student in students
+    //-             - console.log(student.studentId, student.firstName, student.lastCommit)
     //-             tr
+    //-                 td #{student.firstName ? student.firstName : 'bullcrap'}
     //-                 td
     //-                     ul
     //-                     each key in Object.keys(student)
@@ -196,8 +214,8 @@ block content
     //-                                         else
     //-                                             div -
 
-                            else
-                                li #{key} - #{student[key]}
+    //-                         else
+    //-                             li #{key} - #{student[key]}
     include modals/addInstructorToCohortModal.pug 
     include modals/addStudentModal.pug
     include modals/editStudentModal.pug
