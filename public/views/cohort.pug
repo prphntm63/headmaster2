@@ -105,21 +105,22 @@ block content
                             button.btn.btn-primary.add-student-button(data-cohort-id=info.id) Add Student
             .container.mt-4
                 .list-group.student-list
-                    .list-group-item.active.disabled
+                    .list-group-item.active
                         .row
                             .col-sm-1
-                                h5 Status
+                                h5.mb-0.linkstyle#stoplight-status-indicator.arrow-up-down Status
                             .col-sm-3
-                                h5 Student
+                                h5.mb-0.linkstyle#student-firstname-indicator.arrow-up-down Student
                             .col-sm-2
-                                h5 Github
+                                h5.mb-0.linkstyle#github-username-indicator.arrow-up-down Github
                             .col-sm-2
-                                h5 Last Commit
+                                h5.mb-0.linkstyle#last-commit-indicator.arrow-up-down Last Commit
                             .col-sm-2
+                                h5.mb-0.linkstyle#last-touchpoint-indicator.arrow-up-down Last Touchpoint
                             .col-sm-2
-                            
+                                h5.mb-0.linkstyle#data-indicator.arrow-up-down Data
                     each student in students
-                        .list-group-item.list-group-item-action(class=`${student.enrolledStatus ? '' : 'list-group-item-secondary'}` onclick=`navigateTo("/students/${student.github}")`)
+                        .list-group-item.list-group-item-action.student-tab-list-item(class=`${student.enrolledStatus ? '' : 'list-group-item-secondary'}` onclick=`navigateTo("/students/${student.github}")` data-student-firstname=student.firstName data-student-lastname=student.lastName data-student-id=student.studentId, data-stoplight-status=student.stoplightStatus, data-student-name=student.firstName+student.lastName, data-last-touchpoint=student.touchpointCreated, data-last-commit=student.commitCreated, data-github-username=student.github)
                             .row
                                 .col-sm-1.my-auto
                                     if student.stoplightStatus === 'green'
@@ -139,7 +140,7 @@ block content
                                         img(src="./public/images/GitHub-Mark.png" style="height:30px")
                                         div #{student.github}
                                 .col-sm-2.my-auto.mx-auto #{student.lastCommit} #{student.lastCommit ? 'ago' : ''}
-                                .col-sm-2.my-auto
+                                .col-sm-2.my-auto.mx-auto #{student.timeSinceTouchpoint} #{student.timeSinceTouchpoint ? 'ago' : ''}
                                 .col-sm-offset.d-flex.flex-row-reverse.my-auto.mx-3
                                     button.btn.btn-primary.edit-student-button(type='button' data-student-id=student.studentId) Edit...
 

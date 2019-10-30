@@ -37,21 +37,41 @@ $(document).ready(() => {
         let sortValue = $('#sort-type').val()
         let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
 
-        sortStudents(sortValue, upDown)
+        sortStudents('.student-card', sortValue, upDown)
     })
 
     $('#sortUp').on('change', function(evt) {
         let sortValue = $('#sort-type').val()
         let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
 
-        sortStudents(sortValue, upDown)
+        sortStudents('.student-card', sortValue, upDown)
     })
 
     $('#sortDown').on('change', function(evt) {
         let sortValue = $('#sort-type').val()
         let upDown = $('#sortUp').prop('checked') ? 'up' : 'down'
 
-        sortStudents(sortValue, upDown)
+        sortStudents('.student-card', sortValue, upDown)
+    })
+
+    $('.arrow-up-down').on('click', function(evt) {
+        let upDown = 'up'
+        if ($(evt.target).hasClass('ascending')) {
+            upDown = 'down'
+            $('.arrow-up-down').removeClass('ascending descending')
+            $(evt.target).addClass('descending')
+        } else if ($(evt.target).hasClass('descending')) {
+            upDown = 'up'
+            $('.arrow-up-down').removeClass('ascending descending')
+            $(evt.target).addClass('ascending')
+        } else {
+            upDown = 'up'
+            $('.arrow-up-down').removeClass('ascending descending')
+            $(evt.target).addClass('ascending')
+        }
+        let parameter = $(evt.target).attr('id').slice(0, -10)
+
+        sortStudents('.student-tab-list-item', parameter, upDown)
     })
 
     $('.student-card').on('addTouchpointEvent', function(evt, updatedTouchpointData) {
@@ -189,7 +209,9 @@ $(document).ready(() => {
 
 })
 
-function sortStudents(parameter, order) {
+function sortStudents(cssClass, parameter, order) {
+    if (cssClass === undefined) return
+    
     if (parameter === undefined) {
         parameter = 'student-firstname'
     }
@@ -198,7 +220,7 @@ function sortStudents(parameter, order) {
         order = 'up'
     }
 
-    let elements = $('.student-card').sort(
+    let elements = $(`${cssClass}`).sort(
             function(elem1, elem2) {
                 let param1 = $(elem1).data(parameter)
                 let param2 = $(elem2).data(parameter)
@@ -218,8 +240,8 @@ function sortStudents(parameter, order) {
 
                 if (parameter === 'stoplight-status') {
                     // Remap colors to numbers for comparison
-                    param1 = param1 === 'green' ? '2' :  (param1 === 'yellow' ? '1' : '0') 
-                    param2 = param2 === 'green' ? '2' :  (param2 === 'yellow' ? '1' : '0') 
+                    param1 = param1 === 'green' ? '1' :  (param1 === 'yellow' ? '2' : '3') 
+                    param2 = param2 === 'green' ? '1' :  (param2 === 'yellow' ? '2' : '3') 
                 }
 
                 if (parameter === 'last-touchpoint' || parameter === 'last-commit') {
@@ -238,6 +260,7 @@ function sortStudents(parameter, order) {
                 }
 
             } 
-        ).appendTo('.student-cards')
+        ).appendTo( $(`${cssClass}`).parent().eq(0) )
 
 }
+

@@ -19,6 +19,10 @@
     cursor: pointer;
 }
 
+.ontop {
+    z-index: 100;
+}
+
 .student-card {
     width: 22rem;
     margin: 0.5rem;
@@ -93,4 +97,12 @@
 .sort-controls > * {
     margin-right: 10px;
     margin-bottom: 0px;
+}
+
+.ascending:after {
+    content: '▲'
+}
+
+.descending:after {
+    content: '▼'
 }
