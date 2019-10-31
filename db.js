@@ -402,14 +402,14 @@ let db = {
     getTouchpointsByStudent(userId, studentId) {
         return knex
         .from('Touchpoints')
-        .join('Students.id', '=', 'Touchpoints.student')
-        .join('LinkCohortsStudents.student', '=', 'Students.id')
-        .join('Cohorts.id', '=', 'LinkCohortsStudents.cohort')
-        .join('LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+        .join('Students', 'Students.id', '=', 'Touchpoints.student')
+        .join('LinkCohortsStudents', 'LinkCohortsStudents.student', '=', 'Students.id')
+        .join('Cohorts', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        .join('LinkCohortsUsers', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
         .select('LinkCohortsUsers.user as cohortUserId', 'Students.id as studentId', 'Touchpoints.*')
         .where({
-            'cohortUserId' : userId,
-            'studentId' : studentId
+            'LinkCohortsUsers.user' : userId,
+            'Students.id' : studentId
         })
     },
 
@@ -444,6 +444,15 @@ let db = {
         .into('Commits')
         .catch(err => {
             console.log('error adding commits array - ', err)
+        })
+    },
+
+    getCommitsByStudent(studentId) {
+        return knex
+        .from('Commits')
+        .select('*')
+        .where({
+            'student' : studentId
         })
     }
 

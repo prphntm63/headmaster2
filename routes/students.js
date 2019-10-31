@@ -21,10 +21,16 @@ router.get('/:studentGithub', ensureAuthenticated, (req, res) => {
 
     db.getStudentIdByGithub(studentGithub)
     .then(studentId => {
-        db.getStudentByUser(userId, studentId)
-        .then(students => {
+        Promise.all([db.getStudentByUser(userId, studentId), db.getTouchpointsByStudent(userId, studentId), db.getCommitsByStudent(studentId)])
+        
+        .then(([students, touchpoints, commits]) => {
             let student = students[0];
-            res.render('student', {student: student, user:req.user})
+            res.render('student', {
+                student : student, 
+                touchpoints : touchpoints,
+                commits : commits,
+                user : req.user
+            })
         })
         .catch(err => {
             console.log(err)

@@ -2,8 +2,19 @@ extends root
 
 block content
     h1 #{student.firstName} #{student.lastName}
+
+
+
     ul
         each key in Object.keys(student)
+            li #{key}
+
+    ul
+        each key in Object.keys(touchpoints[0])
+            li #{key}
+
+    ul
+        each key in Object.keys(commits[0])
             li #{key}
 
     button.btn.btn-primary#edit-student(href data-student-id=student.id) Edit Student
