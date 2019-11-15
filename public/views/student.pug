@@ -9,10 +9,12 @@ block content
         each key in Object.keys(student)
             li #{key}
 
+    h6 Touchpoints: #{touchpoints.length}
     ul
         each key in Object.keys(touchpoints[0])
             li #{key}
 
+    h6 Commits: #{commits.length}
     ul
         each key in Object.keys(commits[0])
             li #{key}
