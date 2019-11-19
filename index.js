@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const db = require('./db.js');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
+const path = require('path')
 
 const app = express()
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '5000';
 
 passport.use(new GitHubStrategy(
     {
@@ -53,7 +54,7 @@ app.set('views', './public/views')
 
 // ***** Routes *****
 
-app.use('/public', express.static('public'));
+// app.use('/public', express.static('public'));
 app.use('/favicon.ico', (req, res) => {
     res.status(204)
 })
@@ -69,11 +70,17 @@ let cohorts = require('./routes/cohorts')
 let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
-app.use('/dashboard', dashboard)
-app.use('/', cohorts)
-app.use('/students', students)
-app.use('/instructors', instructors)
-app.use('/api', api)
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
+// app.use('/dashboard', dashboard)
+// app.use('/', cohorts)
+// app.use('/students', students)
+// app.use('/instructors', instructors)
+// app.use('/api', api)
 
 app.get('/auth/github',
     passport.authenticate('github'));
