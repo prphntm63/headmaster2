@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
+
+import { connect } from 'react-redux'
+// import { * } from './actionCreators'
+
 import Home from './pages/Home';
 import List from './pages/List';
 

@@ -72,15 +72,11 @@ let api = require('./routes/api')
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
-
 // app.use('/dashboard', dashboard)
 // app.use('/', cohorts)
 // app.use('/students', students)
 // app.use('/instructors', instructors)
-// app.use('/api', api)
+app.use('/api', api)
 
 app.get('/auth/github',
     passport.authenticate('github'));
@@ -89,6 +85,10 @@ app.get('/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
         res.redirect('/');
+});
+
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 app.listen(port, () => {
