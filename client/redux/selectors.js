@@ -28,3 +28,12 @@
 //   }
 // };
 
+import {
+    COHORT_SORT_FILTERS,
+    STUDENT_SORT_FILTERS,
+    COHORT_HIDE_FILTERS,
+    STUDENT_HIDE_FILTERS
+} from "../constants"
+
+export const getCohortsState = store => store.cohorts;
+export const getCohortList = store => getCohortsState(store) ? {...getCohortsState(store).byIds[id], id} : {}
