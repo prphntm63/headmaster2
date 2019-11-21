@@ -1,5 +1,40 @@
 // import { ADD_TODO, TOGGLE_TODO } from "../actionTypes";
 
+import {
+    UPDATE_USER,
+    LOGIN_USER,
+    LOGOUT_USER
+} from "../actionTypes"
+
+const initialState = {
+    "id" : null,
+    "firstName" : null,
+    "lastName" : null,
+    "photoUrl" : null,
+    "github" : null,
+    "superuser" : null
+}
+
+export default function(state = initialState, action) {
+    let newState = {...state}
+
+    switch (action.type) {
+        case UPDATE_USER: {
+            newState = action.payload
+            return newState
+        }
+        case LOGIN_USER: {
+            return newState
+        }
+        case LOGOUT_USER: {
+            return initialState
+        }
+        default: {
+            return newState
+        }
+    }
+}
+
 // const initialState = {
 //   allIds: [],
 //   byIds: {}

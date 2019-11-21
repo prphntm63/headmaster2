@@ -1,9 +1,3 @@
-// export const VISIBILITY_FILTERS = {
-//     ALL: "all",
-//     COMPLETED: "completed",
-//     INCOMPLETE: "incomplete"
-//   };
-
 export const COHORT_SORT_FILTERS = {
     STARTDATE: "startDate",
     GRADUATED: "graduated",
@@ -20,10 +14,12 @@ export const STUDENT_SORT_FILTERS = {
 
 export const COHORT_HIDE_FILTERS = {
     ALL: "all",
-    GRADUATED: "graduated"
+    ACTIVE: "active",
+    INACTIVE: "inactive"
 }
 
 export const STUDENT_HIDE_FILTERS = {
     ALL: "all",
-    ACTIVE : "active"
+    ACTIVE : "active",
+    INACTIVE : "inactive"
 }

@@ -1,30 +1,21 @@
 import {
-    SET_COHORT_SORT_FILTER,
-    SET_STUDENT_SORT_FILTER,
-    SET_COHORT_HIDE_FILTER,
-    SET_STUDENT_HIDE_FILTER
+    UPDATE_COHORTS,
+    UPDATE_TOUCHPOINT,
+    UPDATE_COMMITS,
 } from "../actionTypes"
 
-import {
-    COHORT_SORT_FILTERS,
-    STUDENT_SORT_FILTERS,
-    COHORT_HIDE_FILTERS,
-    STUDENT_HIDE_FILTERS
-} from "../constants"
+const initialState = {}
 
-export default cohortSortFilter = (state = initialCohortSortFilter, action) => {
+export default function(state = initialState, action) {
     let newState = {...state}
-    if (action.type != SET_COHORT_SORT_FILTER) return newState
 
     switch (action.type) {
-        case SET_COHORT_SORT_FILTER: {
-            return action.payload.filter;
+        case UPDATE_COHORTS: {
+            newState = action.payload
+            return newState
         }
-        case SET_COHORT_HIDE_FILTER: {
-            return action.payload.filter;
+        default: {
+            return newState
         }
-        default : {
-            return newState;
-        }
-    } 
+    }
 }

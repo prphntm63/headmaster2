@@ -41,9 +41,22 @@
                             "deleted" : "",
                             "files" : {}
                         }
+                    ],
+                    "githubGraph" : [
+                        {
+                            "a":"asdf"
+                        }
                     ]
                 }
             ]
         }
-    ]
+    ],
+    "views" : {
+        "cohortSortFilter" : "firstName",
+        "cohortHideFilter" : "lastName",
+        "studentListSortFilter" : "stoplightStatus",
+        "studentListHideFilter" : "ctime",
+        "studentCardSortFilter" : "lastTouchpoint",
+        "studentCardHideFilter" : "lastCommit"
+    }
 }

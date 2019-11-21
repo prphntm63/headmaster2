@@ -24,6 +24,8 @@ import {
     STUDENT_HIDE_FILTER,
     UPDATE_COHORTS,
     UPDATE_USER,
+    LOGIN_USER,
+    LOGOUT_USER,
     UPDATE_TOUCHPOINT,
     UPDATE_COMMITS
 } from "./actionTypes";
@@ -55,6 +57,16 @@ export const updateCohorts = payload => ({
 
 export const updateUser = payload => ({
     type : UPDATE_USER,
+    payload : { payload }
+})
+
+export const loginUser = payload => ({
+    type : LOGIN_USER,
+    payload : { payload }
+})
+
+export const logoutUser = payload => ({
+    type : LOGOUT_USER,
     payload : { payload }
 })
 
