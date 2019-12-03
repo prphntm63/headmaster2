@@ -4,7 +4,15 @@ export const COHORT_SORT_FILTERS = {
     NUMSTUDENTS: "numStudents"
 }
   
-export const STUDENT_SORT_FILTERS = {
+export const STUDENT_CARD_SORT_FILTERS = {
+    NAME: "firstName",
+    LASTNAME: "lastName",
+    STATUS: "stoplightStatus",
+    TOUCHPOINT: "timeSinceTouchpoint",
+    COMMIT: "timeSinceCommit"
+}
+
+export const STUDENT_LIST_SORT_FILTERS = {
     NAME: "firstName",
     LASTNAME: "lastName",
     STATUS: "stoplightStatus",
@@ -18,7 +26,13 @@ export const COHORT_HIDE_FILTERS = {
     INACTIVE: "inactive"
 }
 
-export const STUDENT_HIDE_FILTERS = {
+export const STUDENT_CARD_HIDE_FILTERS = {
+    ALL: "all",
+    ACTIVE : "active",
+    INACTIVE : "inactive"
+}
+
+export const STUDENT_LIST_HIDE_FILTERS = {
     ALL: "all",
     ACTIVE : "active",
     INACTIVE : "inactive"

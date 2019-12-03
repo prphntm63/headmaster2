@@ -1,10 +1,12 @@
 // Sort Actions
 export const SET_COHORT_SORT_FILTER = "COHORT_SORT_FILTER"
-export const SET_STUDENT_SORT_FILTER = "STUDENT_SORT_FILTER"
+export const SET_STUDENT_CARD_SORT_FILTER = "STUDENT_CARD_SORT_FILTER"
+export const SET_STUDENT_LIST_SORT_FILTER = "STUDENT_LIST_SORT_FILTER"
 
 // Hide Actions
 export const SET_COHORT_HIDE_FILTER = "COHORT_HIDE_FILTER"
-export const SET_STUDENT_HIDE_FILTER = "STUDENT_HIDE_FILTER"
+export const SET_STUDENT_CARD_HIDE_FILTER = "STUDENT_CARD_HIDE_FILTER"
+export const SET_STUDENT_LIST_HIDE_FILTER = "STUDENT_LIST_HIDE_FILTER"
 
 // Update Actions 
 // (we will make this such that it does one giant API pull/refresh from DB)
