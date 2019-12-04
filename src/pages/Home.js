@@ -4,11 +4,7 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 
 class Home extends Component {
   loginHandler = () => {
-    window.location.href = `http://localhost:5000/auth/github`;
-    console.log('Auth Call')
-    // fetch('/auth/github', {
-    //   method : "POST"
-    // })
+    window.location.href = `${window.location.origin}/auth/github`;
   }
 
   render() {

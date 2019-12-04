@@ -1,0 +1,62 @@
+{
+    "user" : {
+        "id" : "",
+        "firstName" : "",
+        "lastName" : "",
+        "photoUrl" : "",
+        "github" : "",
+        "superuser" : ""
+    },
+    "cohorts" : [
+        {
+            "id" : "",
+            "name" : "",
+            "slug" : "",
+            "startDate" : "",
+            "archived" : "",
+            "students" : [
+                {
+                    "id" : "",
+                    "firstName" : "",
+                    "lastName" : "",
+                    "github" : "",
+                    "photoUrl" : "",
+                    "touchpoints" : [
+                        {
+                            "id" : "",
+                            "ctime" : "",
+                            "stoplightStatus" : "",
+                            "comment" : "",
+                            "user" : {}
+                        }
+                    ],
+                    "commits" : [
+                        {
+                            "id" : "",
+                            "ctime" : "",
+                            "message" : "",
+                            "repo" : "",
+                            "total" : "",
+                            "added" : "",
+                            "deleted" : "",
+                            "files" : {}
+                        }
+                    ],
+                    "githubGraph" : [
+                        {
+                            "a":"asdf"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "views" : {
+        "cohortSortFilter" : "firstName",
+        "cohortHideFilter" : "lastName",
+        "studentListSortFilter" : "stoplightStatus",
+        "studentListHideFilter" : "ctime",
+        "studentCardSortFilter" : "lastTouchpoint",
+        "studentCardHideFilter" : "lastCommit"
+    }
+}

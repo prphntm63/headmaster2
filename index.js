@@ -74,7 +74,11 @@ let api = require('./routes/api')
 // app.use('/', cohorts)
 // app.use('/students', students)
 // app.use('/instructors', instructors)
+
 app.use('/api', api)
+// app.get('/api/test', (req, res) => {
+//     res.status(200).json({"ok":"ok"})
+// })
 
 app.get('/auth/github',
     passport.authenticate('github'), function(req,res) {
@@ -85,7 +89,9 @@ app.get('/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
         console.log('Authenticated with Github')
-        res.redirect('/');
+        // res.sendFile(path.join(__dirname+'/client/build/index.html'));
+        // res.redirect('/');
+        res.redirect("http://localhost:3000/");
 });
 
 app.use(express.static(path.join(__dirname, 'client/build')));
