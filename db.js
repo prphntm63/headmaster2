@@ -267,6 +267,63 @@ let db = {
 
     // ***** COHORT METHODS *****
 
+    getAllDataByUser : function(userId) {
+        return knex
+        .from('Users')
+        .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
+        .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+        .groupBy('Cohorts.id')
+        .where({'LinkCohortsUsers.user' : userId})
+        .then(cohortsList => {
+            let cohortPromises = []
+
+            cohortsList.forEach(cohort => {
+                let cohortPromise = knex
+                .from('LinkCohortsStudents')
+                .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+                .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
+                .where({'LinkCohortsStudents.student' : cohort.id})
+                .then(students => {
+                    let studentPromises = [];
+
+                    students.forEach(student => {
+                        let studentPromise = new Promise((resolve, reject) => {
+                            let touchpointsPromse = knex
+                            .from('Touchpoints')
+                            .select('*')
+                            .where({'Touchpoints.student' : student.id})
+                            
+                            let commitsPromise = knex
+                            .from('Commits')
+                            .select('*')
+                            .where({'Commits.student' : student.id})
+                            
+                            Promise.all([touchpointsPromse, commitsPromise])
+                            .then(([touchpoints, commits]) => {
+                                student.touchpoints = touchpoints
+                                student.commits = commits
+                                resolve(student)
+                            })
+                        })
+
+                        studentPromises.push(studentPromise)
+                    })
+                    return Promise.all(studentPromises)
+                    .then(students => {
+                        cohort.students = students
+                        return cohort
+                    })
+                })
+                cohortPromises.push(cohortPromise)
+            })
+            return Promise.all(cohortPromises)
+        })
+
+        // .join('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        // .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        // .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
+    },
+
     getCohortIdFromSlug : function(cohortSlug) {
         return knex
         .from('Cohorts')

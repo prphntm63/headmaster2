@@ -18,10 +18,12 @@
 // export const setFilter = filter => ({ type: SET_FILTER, payload: { filter } });
 
 import {
-    COHORT_SORT_FILTER,
-    STUDENT_SORT_FILTER,
-    COHORT_HIDE_FILTER,
-    STUDENT_HIDE_FILTER,
+    SET_COHORT_SORT_FILTER,
+    SET_STUDENT_CARD_SORT_FILTER,
+    SET_STUDENT_LIST_SORT_FILTER,
+    SET_COHORT_HIDE_FILTER,
+    SET_STUDENT_CARD_HIDE_FILTER,
+    SET_STUDENT_LIST_HIDE_FILTER,
     UPDATE_COHORTS,
     UPDATE_USER,
     LOGIN_USER,
@@ -31,22 +33,32 @@ import {
 } from "./actionTypes";
 
 export const setCohortSortFilter = filter => ({
-    type : COHORT_SORT_FILTER,
+    type : SET_COHORT_SORT_FILTER,
     payload : { filter }
 })
 
-export const setStudentSortFilter = filter => ({
-    type : STUDENT_SORT_FILTER,
+export const setStudentCardSortFilter = filter => ({
+    type : SET_STUDENT_CARD_SORT_FILTER,
+    payload : { filter }
+})
+
+export const setStudentListSortFilter = filter => ({
+    type : SET_STUDENT_LIST_SORT_FILTER,
     payload : { filter }
 })
 
 export const setCohortHideFilter = filter => ({
-    type : COHORT_HIDE_FILTER,
+    type : SET_COHORT_HIDE_FILTER,
     payload : { filter }
 })
 
-export const setStudentHideFilter = filter => ({
-    type : STUDENT_HIDE_FILTER,
+export const setStudentCardHideFilter = filter => ({
+    type : SET_STUDENT_CARD_HIDE_FILTER,
+    payload : { filter }
+})
+
+export const setStudentListHideFilter = filter => ({
+    type : SET_STUDENT_LIST_HIDE_FILTER,
     payload : { filter }
 })
 
@@ -73,15 +85,15 @@ export const logoutUser = payload => ({
 export const updateTouchpoint = payload => ({
     type : UPDATE_TOUCHPOINT,
     payload : {
-        studentId : studentId,
-        touchpointData : touchpointData
+        studentId : payload.studentId,
+        touchpointData : payload.touchpointData
     }
 })
 
 export const updateCommits = payload => ({
     type : UPDATE_COMMITS,
     payload : {
-        studentId : studentId,
-        commitData : commitData
+        studentId : payload.studentId,
+        commitData : payload.commitData
     }
 })

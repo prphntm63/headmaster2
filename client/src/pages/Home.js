@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 
 
 class Home extends Component {
+  loginHandler = () => {
+    window.location.href = `${window.location.origin}/auth/github`;
+  }
+
   render() {
     return (
     <div className="App">
@@ -13,8 +17,18 @@ class Home extends Component {
             My List
         </button>
       </Link>
+      {/* <Link to={'./auth/github'}>
+        <button variant="raised">
+            Login
+        </button>
+      </Link> */}
+
+      <button onClick={this.loginHandler}>
+          Login With Github
+      </button>
+      
     </div>
     );
   }
 }
-export default Home;
+export default withRouter(Home);

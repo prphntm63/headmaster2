@@ -70,8 +70,6 @@ let cohorts = require('./routes/cohorts')
 let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
-app.use(express.static(path.join(__dirname, 'client/build')));
-
 // app.use('/dashboard', dashboard)
 // app.use('/', cohorts)
 // app.use('/students', students)
@@ -79,13 +77,18 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/api', api)
 
 app.get('/auth/github',
-    passport.authenticate('github'));
+    passport.authenticate('github'), function(req,res) {
+        console.log('Attempting to authenticate w/ github')
+    });
 
 app.get('/auth/github/callback', 
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
+        console.log('Authenticated with Github')
         res.redirect('/');
 });
+
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+'/client/build/index.html'));

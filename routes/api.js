@@ -3,6 +3,19 @@ const router = express.Router();
 const db = require('./../db.js');
 const github = require('./../github.js');
 
+router.get('/usercohorts', ensureAuthenticated, (req, res) => {
+    let userId = req.user.id
+
+    db.getAllDataByUser(userId)
+    .then(cohortDataJson => {
+        res.status(200).json(cohortListJson)
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500)
+    })
+})
+
 router.get('/cohorts', ensureAuthenticated, (req, res) => {
     let userId = req.user.id 
     
