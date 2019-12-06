@@ -64,22 +64,22 @@ export const setStudentListHideFilter = filter => ({
 
 export const updateCohorts = payload => ({
     type : UPDATE_COHORTS,
-    payload : { payload }
+    payload
 })
 
 export const updateUser = payload => ({
     type : UPDATE_USER,
-    payload : { payload }
+    payload
 })
 
 export const loginUser = payload => ({
     type : LOGIN_USER,
-    payload : { payload }
+    payload
 })
 
 export const logoutUser = payload => ({
     type : LOGOUT_USER,
-    payload : { payload }
+    payload
 })
 
 export const updateTouchpoint = payload => ({

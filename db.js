@@ -272,7 +272,7 @@ let db = {
         .from('Users')
         .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
         .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
-        .groupBy('Cohorts.id')
+        .select('Cohorts.*')
         .where({'LinkCohortsUsers.user' : userId})
         .then(cohortsList => {
             let cohortPromises = []
@@ -281,8 +281,9 @@ let db = {
                 let cohortPromise = knex
                 .from('LinkCohortsStudents')
                 .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
-                .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
-                .where({'LinkCohortsStudents.student' : cohort.id})
+                .select('Students.*')
+                // .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
+                .where({'LinkCohortsStudents.cohort' : cohort.id})
                 .then(students => {
                     let studentPromises = [];
 

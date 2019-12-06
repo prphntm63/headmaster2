@@ -7,19 +7,25 @@ import {
 } from "../actionTypes"
 
 const initialState = {
-    "id" : null,
-    "firstName" : null,
-    "lastName" : null,
-    "photoUrl" : null,
-    "github" : null,
-    "superuser" : null
+    accessToken: "",
+    ctime: "",
+    firstName: "",
+    github: "",
+    id: "",
+    lastName: "",
+    mtime: "",
+    photoUrl: "",
+    refreshToken: null,
+    superuser: null
 }
 
 export default function(state = initialState, action) {
+    
     let newState = {...state}
 
     switch (action.type) {
         case UPDATE_USER: {
+            console.log(action.payload)
             newState = action.payload
             return newState
         }

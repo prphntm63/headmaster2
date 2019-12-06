@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
+import Navbar from './../components/Navbar'
+import UserInfo from './../components/UserInfo'
+import Cohorts from './../components/Cohorts'
 
 
 class Home extends Component {
@@ -14,22 +17,21 @@ class Home extends Component {
   render() {
     return (
     <div className="App">
+      <Navbar />
       <h1>Project Home</h1>
-      {/* Link to List.js */}
+      <UserInfo />
+
       <Link to={'./list'}>
         <button variant="raised">
             My List
         </button>
       </Link>
-      {/* <Link to={'./auth/github'}>
-        <button variant="raised">
-            Login
-        </button>
-      </Link> */}
 
       <button onClick={this.loginHandler}>
           Login With Github
       </button>
+
+      <Cohorts />
       
     </div>
     );

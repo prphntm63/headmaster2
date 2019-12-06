@@ -13,7 +13,12 @@ router.get('/usercohorts', ensureAuthenticated, (req, res) => {
 
     db.getAllDataByUser(userId)
     .then(cohortDataJson => {
-        res.status(200).json(cohortListJson)
+        let sendData = {
+            user : req.user,
+            cohorts : cohortDataJson
+        }
+
+        res.status(200).json(sendData)
     })
     .catch(err => {
         console.log(err)
