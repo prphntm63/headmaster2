@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 // import { * } from './actionCreators'
 
 import Home from './pages/Home';
+import Cohort from './pages/Cohort';
 import NavbarComponent from './components/NavbarComponent';
 
 const userLogoutState = {
@@ -88,6 +89,7 @@ class App extends Component {
           <Route path='/auth/github' render={loginHandler} exact />
           <Route path='/auth/github/callback' render={handleAuthCallback} exact/>
           <Route path='/logout' render={this.handleLogout} exact />
+          <Route path='/*' component={Cohort}/>
         </Switch>
       </BrowserRouter>
     )

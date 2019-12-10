@@ -4,7 +4,7 @@ import {
     UPDATE_COMMITS,
 } from "../actionTypes"
 
-const initialState = {}
+const initialState = []
 
 export default function(state = initialState, action) {
     let newState = {...state}
