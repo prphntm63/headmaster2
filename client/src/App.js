@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import './App.css';
 import { updateCohorts, updateUser } from './redux/actions'
 
@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 // import { * } from './actionCreators'
 
 import Home from './pages/Home';
-import List from './pages/List';
+import NavbarComponent from './components/NavbarComponent';
 
 const userLogoutState = {
   accessToken: "",
@@ -81,20 +81,19 @@ class App extends Component {
     }
 
     const App = () => (
-      <div>
+      <BrowserRouter>
+        <NavbarComponent />
         <Switch>
           <Route exact path='/' component={Home}/>
-          <Route path='/list' component={List}/>
           <Route path='/auth/github' render={loginHandler} exact />
           <Route path='/auth/github/callback' render={handleAuthCallback} exact/>
           <Route path='/logout' render={this.handleLogout} exact />
         </Switch>
-      </div>
+      </BrowserRouter>
     )
+
     return (
-      <Switch>
-        <App/>
-      </Switch>
+      <App/>
     );
   }
 }
