@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 import { updateCohorts, updateUser } from './redux/actions'
 
@@ -89,7 +89,7 @@ class App extends Component {
           <Route path='/auth/github' render={loginHandler} exact />
           <Route path='/auth/github/callback' render={handleAuthCallback} exact/>
           <Route path='/logout' render={this.handleLogout} exact />
-          <Route path='/*' component={Cohort}/>
+          <Route path='/*'>{this.props.user.id ? <Cohort /> : <Redirect to="" />}</Route>
         </Switch>
       </BrowserRouter>
     )

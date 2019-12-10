@@ -12,15 +12,14 @@ const Cohort = ({ cohorts, user }) => {
     if (user.id && cohorts.length) {
         let currentCohortFilter = cohorts.filter(cohort => {return cohort.slug == pathName})
         currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
-    }
-    
+    }    
 
     return ( 
         <React.Fragment>
             {currentCohort && user.id ?
                 <React.Fragment>
                     <h2>{currentCohort.name}</h2>
-                    <div>{currentCohort.students.map(student => {return <StudentCard student={student}/>})}</div>
+                    <div>{currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id}/>})}</div>
 
                 </React.Fragment>
                 :
