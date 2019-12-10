@@ -61,7 +61,7 @@ app.use('/favicon.ico', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/');
+    res.redirect('http://localhost:3000/');
 })
 
 let dashboard = require('./routes/dashboard')

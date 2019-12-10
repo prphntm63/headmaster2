@@ -9,6 +9,19 @@ import { connect } from 'react-redux'
 import Home from './pages/Home';
 import List from './pages/List';
 
+const userLogoutState = {
+  accessToken: "",
+  ctime: "",
+  firstName: "",
+  github: "",
+  id: null,
+  lastName: "",
+  mtime: "",
+  photoUrl: "",
+  refreshToken: null,
+  superuser: null
+}
+
 class App extends Component {
   
   // Check for login state on initial load
@@ -45,6 +58,12 @@ class App extends Component {
     })
   }
 
+  handleLogout = () => {
+    window.location.href = `http://localhost:5000/logout`
+    this.props.dispatch(updateUser(userLogoutState))
+    console.log('Logout')
+  }
+
   render() {
     const handleAuthCallback = () => {
       let currentUrl = window.location.href
@@ -56,12 +75,19 @@ class App extends Component {
       return (<div></div>)
     }
 
+    const loginHandler = () => {
+      window.location.href = `http://localhost:5000/auth/github`;
+      console.log('Auth Call')
+    }
+
     const App = () => (
       <div>
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path='/list' component={List}/>
+          <Route path='/auth/github' render={loginHandler} exact />
           <Route path='/auth/github/callback' render={handleAuthCallback} exact/>
+          <Route path='/logout' render={this.handleLogout} exact />
         </Switch>
       </div>
     )
@@ -73,7 +99,10 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ cohorts: state.cohorts })
+const mapStateToProps = state => ({ 
+  cohorts: state.cohorts, 
+  user : state.user
+})
 
 // const mapDispatchToProps = {
 //   updateCohorts,

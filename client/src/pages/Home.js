@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
 import { Link, Redirect, withRouter } from 'react-router-dom';
-import Navbar from './../components/Navbar'
 import UserInfo from './../components/UserInfo'
 import Cohorts from './../components/Cohorts'
+import NavbarComponent from '../components/NavbarComponent';
 
 
 class Home extends Component {
-  loginHandler = () => {
-    window.location.href = `http://localhost:5000/auth/github`;
-    console.log('Auth Call')
-    // fetch('/auth/github', {
-    //   method : "POST"
-    // })
-  }
 
   render() {
     return (
     <div className="App">
-      <Navbar />
+      <NavbarComponent />
       <h1>Project Home</h1>
       <UserInfo />
 
@@ -27,9 +20,11 @@ class Home extends Component {
         </button>
       </Link>
 
-      <button onClick={this.loginHandler}>
-          Login With Github
-      </button>
+      <Link to={'./auth/github'}>
+        <button varieant="raised">
+            Login With Github
+        </button>
+      </Link>
 
       <Cohorts />
       

@@ -11,7 +11,7 @@ const initialState = {
     ctime: "",
     firstName: "",
     github: "",
-    id: "",
+    id: null,
     lastName: "",
     mtime: "",
     photoUrl: "",
