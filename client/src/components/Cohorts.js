@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import {Link} from 'react-router-dom';
 import {ListGroup, Button} from 'react-bootstrap';
+import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 
 const Cohorts = ({ cohorts, user }) => (
     <React.Fragment>
@@ -31,7 +32,8 @@ const Cohorts = ({ cohorts, user }) => (
                         </div>
                     </ListGroup.Item>
                     {cohorts.map(cohort => {return (
-                            <ListGroup.Item action href={'/'+cohort.slug} key={cohort.slug}>
+                        <LinkContainer to={'/'+cohort.slug} key={cohort.slug}>
+                            <ListGroup.Item action >
                                 <div className="row" >
                                     <div className="col-sm-7">{cohort.name}</div>
                                     <div className="col-sm-3">{cohort.startDate}</div>
@@ -39,6 +41,7 @@ const Cohorts = ({ cohorts, user }) => (
                                     <div className="col-sm-1">{cohort.students.length}</div>
                                 </div>
                             </ListGroup.Item>
+                        </LinkContainer>
                         )}
                     )}
                 </ListGroup>)
