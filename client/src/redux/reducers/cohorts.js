@@ -7,7 +7,7 @@ import {
 const initialState = []
 
 export default function(state = initialState, action) {
-    let newState = {...state}
+    let newState = [...state]
 
     switch (action.type) {
         case UPDATE_COHORTS: {

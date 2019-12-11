@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
+import {Navbar, Nav, NavDropdown, Form, Button, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap'
 import { connect } from "react-redux";
 
 import StudentCard from "./../components/StudentCard"
+import SortBar from "./../components/SortBar"
+
 
 const Cohort = ({ cohorts, user }) => {
 
@@ -18,7 +20,7 @@ const Cohort = ({ cohorts, user }) => {
         <React.Fragment>
             {currentCohort && user.id ?
                 <React.Fragment>
-                    <h2>{currentCohort.name}</h2>
+                    <SortBar currentCohort={currentCohort} />
                     <div className="d-flex flex-row flex-wrap student-cards">
                         {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id}/>})}
                     </div>

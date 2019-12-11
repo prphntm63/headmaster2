@@ -24,6 +24,9 @@ import {
     SET_COHORT_HIDE_FILTER,
     SET_STUDENT_CARD_HIDE_FILTER,
     SET_STUDENT_LIST_HIDE_FILTER,
+    SET_COHORT_SORT_DIRECTION,
+    SET_STUDENT_CARD_SORT_DIRECTION,
+    SET_STUDENT_LIST_SORT_DIRECTION,
     UPDATE_COHORTS,
     UPDATE_USER,
     LOGIN_USER,
@@ -34,32 +37,47 @@ import {
 
 export const setCohortSortFilter = filter => ({
     type : SET_COHORT_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setCohortSortDirection = direction => ({
+    type : SET_COHORT_SORT_DIRECTION,
+    direction
 })
 
 export const setStudentCardSortFilter = filter => ({
     type : SET_STUDENT_CARD_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setStudentCardSortDirection = direction => ({
+    type : SET_STUDENT_CARD_SORT_DIRECTION,
+    direction
 })
 
 export const setStudentListSortFilter = filter => ({
     type : SET_STUDENT_LIST_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setStudentListSortDirection = direction => ({
+    type : SET_STUDENT_LIST_SORT_DIRECTION,
+    direction
 })
 
 export const setCohortHideFilter = filter => ({
     type : SET_COHORT_HIDE_FILTER,
-    payload : { filter }
+    filter : SET_STUDENT_CARD_HIDE_FILTER
 })
 
 export const setStudentCardHideFilter = filter => ({
     type : SET_STUDENT_CARD_HIDE_FILTER,
-    payload : { filter }
+    filter : filter
 })
 
 export const setStudentListHideFilter = filter => ({
     type : SET_STUDENT_LIST_HIDE_FILTER,
-    payload : { filter }
+    filter : filter
 })
 
 export const updateCohorts = payload => ({
