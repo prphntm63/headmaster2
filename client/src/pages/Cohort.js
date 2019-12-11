@@ -19,8 +19,9 @@ const Cohort = ({ cohorts, user }) => {
             {currentCohort && user.id ?
                 <React.Fragment>
                     <h2>{currentCohort.name}</h2>
-                    <div>{currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id}/>})}</div>
-
+                    <div className="d-flex flex-row flex-wrap student-cards">
+                        {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id}/>})}
+                    </div>
                 </React.Fragment>
                 :
                 <h2>Nothing here...</h2>

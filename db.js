@@ -281,7 +281,7 @@ let db = {
                 let cohortPromise = knex
                 .from('LinkCohortsStudents')
                 .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
-                .select('Students.*')
+                .select('Students.*', 'LinkCohortsStudents.enrolledStatus')
                 // .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
                 .where({'LinkCohortsStudents.cohort' : cohort.id})
                 .then(students => {
