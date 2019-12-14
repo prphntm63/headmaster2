@@ -10,24 +10,24 @@ class SortBar extends Component {
 
     handleStudentCardSortChange = (value) => {
         console.log(value)
-
         if (value === 'up' || value === 'down') {
             this.props.setStudentCardSortDirection(value.toUpperCase())
         } else {
             this.props.setStudentCardSortFilter(value.toUpperCase())
         }
-        console.log(this.props.views.studentCardSortFilter)
-        console.log(this.props.views.studentCardSortDirection)
+    }
+
+    handleStudentCardHideChange = (value) => {
+        this.props.setStudentCardHideFilter(value.toUpperCase())
     }
 
     render() {
-        console.log('HELLLO', this.props)
         return (
         <React.Fragment>
             <div className="d-flex flex-row justify-content-between mx-2">
                 <h2>{this.props.currentCohort.name}</h2>
                 <div className="sort-controls">
-        <h6>Sort: {this.props.views.studentCardSortFilter}</h6>
+                    <h6>Sort:</h6>
                     <Form.Control as="select" value={this.props.views.studentCardSortFilter} onChange={evt => this.handleStudentCardSortChange(evt.target.value)}>
                         <option text="Name" value="firstName">Name</option>
                         <option text="Last Name" value="lastName"> Last Name</option>
@@ -37,9 +37,17 @@ class SortBar extends Component {
                         <option text="Last Touchpoint" value="timeSinceTouchpoint"> Last Touchpoint</option>
                     </Form.Control>
                     <ButtonToolbar>
-                        <ToggleButtonGroup type="radio" name="sortUpDown" value={this.props.views.setStudentCardSortDirection} onChange={this.handleStudentCardSortChange}>
+                        <ToggleButtonGroup type="radio" name="sortUpDownCard" value={this.props.views.studentCardSortDirection} onChange={this.handleStudentCardSortChange}>
                             <ToggleButton value={'up'}>Up</ToggleButton>
                             <ToggleButton value={'down'}>Down</ToggleButton>
+                        </ToggleButtonGroup>
+                    </ButtonToolbar>
+                    <h6>Show:</h6>
+                    <ButtonToolbar>
+                        <ToggleButtonGroup type="radio" name="hideStudentCard" value={this.props.views.studentCardHideFilter} onChange={this.handleStudentCardHideChange}>
+                            <ToggleButton value={'active'}>Active</ToggleButton>
+                            <ToggleButton value={'inactive'}>Inactive</ToggleButton>
+                            <ToggleButton value={'all'}>All</ToggleButton>
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                 </div>

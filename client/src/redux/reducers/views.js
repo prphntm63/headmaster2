@@ -71,9 +71,9 @@ export default function(state = initialState, action) {
         }
         case SET_STUDENT_LIST_SORT_FILTER: {
             if (STUDENT_LIST_SORT_FILTERS[action.filter]) {
-                newState.cohortSortFilter = STUDENT_LIST_SORT_FILTERS[action.filter];
+                newState.studentListSortFilter = STUDENT_LIST_SORT_FILTERS[action.filter];
             } else {
-                newState.cohortSortFilter = STUDENT_LIST_SORT_FILTERS.NAME
+                newState.studentListSortFilter = STUDENT_LIST_SORT_FILTERS.NAME
             }
             return newState
         }
@@ -87,25 +87,25 @@ export default function(state = initialState, action) {
         }
         case SET_COHORT_HIDE_FILTER: {
             if (COHORT_HIDE_FILTERS[action.filter]) {
-                newState.cohortSortFilter = COHORT_HIDE_FILTERS[action.filter];
+                newState.cohortHideFilter = COHORT_HIDE_FILTERS[action.filter];
             } else {
-                newState.cohortSortFilter = COHORT_HIDE_FILTERS.ACTIVE
+                newState.cohortHideFilter = COHORT_HIDE_FILTERS.ACTIVE
             }
             return newState
         }
         case SET_STUDENT_LIST_HIDE_FILTER: {
             if (STUDENT_LIST_HIDE_FILTERS[action.filter]) {
-                newState.studentListSortFilter = STUDENT_LIST_HIDE_FILTERS[action.filter];
+                newState.studentListHideFilter = STUDENT_LIST_HIDE_FILTERS[action.filter];
             } else {
-                newState.cohortSortFilter = STUDENT_LIST_HIDE_FILTERS.ACTIVE
+                newState.studentListHideFilter = STUDENT_LIST_HIDE_FILTERS.ACTIVE
             }
             return newState
         }
         case SET_STUDENT_CARD_HIDE_FILTER: {
             if (STUDENT_CARD_HIDE_FILTERS[action.filter]) {
-                newState.studentCardSortFilter = STUDENT_CARD_HIDE_FILTERS[action.filter];
+                newState.studentCardHideFilter = STUDENT_CARD_HIDE_FILTERS[action.filter];
             } else {
-                newState.studentCardSortFilter = STUDENT_CARD_HIDE_FILTERS.ACTIVE
+                newState.studentCardHideFilter = STUDENT_CARD_HIDE_FILTERS.ACTIVE
             }
             return newState
         }
@@ -118,7 +118,6 @@ export default function(state = initialState, action) {
         }
         case SET_STUDENT_CARD_SORT_DIRECTION: {
             if (STUDENT_CARD_SORT_DIRECTIONS[action.direction]) {
-                console.log(action)
                 newState.studentCardSortDirection = STUDENT_CARD_SORT_DIRECTIONS[action.direction]
             } else {
                 newState.studentCardSortDirection = STUDENT_CARD_SORT_DIRECTIONS.UP

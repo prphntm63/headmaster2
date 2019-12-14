@@ -5,20 +5,20 @@ export const COHORT_SORT_FILTERS = {
 }
   
 export const STUDENT_CARD_SORT_FILTERS = {
-    NAME: "firstName",
+    FIRSTNAME: "firstName",
     LASTNAME: "lastName",
-    STATUS: "stoplightStatus",
-    TOUCHPOINT: "timeSinceTouchpoint",
-    COMMIT: "timeSinceCommit",
+    STOPLIGHTSTATUS: "stoplightStatus",
+    TIMESINCETOUCHPOINT: "timeSinceTouchpoint",
+    TIMESINCECOMMIT: "timeSinceCommit",
     GITHUB: "github"
 }
 
 export const STUDENT_LIST_SORT_FILTERS = {
-    NAME: "firstName",
+    FIRSTNAME: "firstName",
     LASTNAME: "lastName",
-    STATUS: "stoplightStatus",
-    TOUCHPOINT: "timeSinceTouchpoint",
-    COMMIT: "timeSinceCommit",
+    STOPLIGHTSTATUS: "stoplightStatus",
+    TIMESINCETOUCHPOINT: "timeSinceTouchpoint",
+    TIMESINCECOMMIT: "timeSinceCommit",
     GITHUB: "github"
 }
 

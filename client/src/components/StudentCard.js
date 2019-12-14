@@ -7,7 +7,7 @@ const StudentCardHeader = ({student, currentStoplightStatus}) => (
     <LinkContainer to={"/students/"+student.github} exact>
         <Card.Header className="d-flex flex-row linkstyle">
             <div>
-                <img className="student-photo" src={student.photoUrl ? student.photoUrl : '/public/images/noPhoto.png'} alt="student photo"/>
+                <img className="student-photo" src={student.photoUrl ? student.photoUrl : '/images/noPhoto.png'} alt="student photo"/>
             </div>
             <div className="w-100">
                 <div className="d-flex flex-row justify-content-between stoplight-status-div">
@@ -28,6 +28,10 @@ const StudentCardHeader = ({student, currentStoplightStatus}) => (
                                 )
                         }
                     })()}
+                </div>
+                <div className="d-flex flex-row">
+                    <img src='/images/GitHub-Mark.png' style={{height:"25px"}} />
+                    <a href={"https://github.com/"+student.github}>{student.github}</a>
                 </div>
             </div>
         </Card.Header>
@@ -188,7 +192,6 @@ function getMostRecentTouchpoint(touchpointArray) {
 
 function parseCommits(commits) {
     if (!commits.length) return null
-    console.log(commits)
 
     let today = new Date()
     let dayOfWeek = today.getDay()
