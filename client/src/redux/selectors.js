@@ -111,7 +111,7 @@ function getMostRecentCtimeElement(dbArray) {
 
 function mapStoplightStatusToInteger(touchpoints) {
     let mostRecentTouchpoint = getMostRecentCtimeElement(touchpoints)
-    let stoplightStatus = mostRecentTouchpoint.stoplightStatus
+    let stoplightStatus = mostRecentTouchpoint ? mostRecentTouchpoint.stoplightStatus : null
 
     switch (stoplightStatus) {
         case "green" : {return 1}

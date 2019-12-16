@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Navbar, Nav, NavDropdown, Form, Button, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap'
+import {Tabs, Tab} from 'react-bootstrap'
 import { connect } from "react-redux";
 import { getCohortByVisibilityFilter } from './../redux/selectors'
 
@@ -23,10 +23,16 @@ class Cohort extends Component {
             <React.Fragment>
                 {currentCohort && this.props.user.id ?
                     <React.Fragment>
-                        <SortBar currentCohort={currentCohort} />
-                        <div className="d-flex flex-row flex-wrap student-cards">
-                            {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={this.props.views}/>})}
-                        </div>
+                        <Tabs>
+                            <Tab eventKey="studentCards" title="Dashboard">
+                                <SortBar currentCohort={currentCohort} />
+                                <div className="d-flex flex-row flex-wrap student-cards">
+                                    {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={this.props.views}/>})}
+                                </div>
+                            </Tab>
+                            <Tab eventKey="studentList" title="Students"></Tab>
+                            <Tab eventKey="cohortSettings" title="Settings"></Tab>
+                        </Tabs>
                     </React.Fragment>
                     :
                     <h2>Nothing here...</h2>

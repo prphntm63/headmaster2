@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Card } from "react-bootstrap";
+import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 const StudentCardHeader = ({student, currentStoplightStatus}) => (
@@ -60,7 +60,7 @@ const StudentCardBodyTouchpoint = ({student, currentTouchpoint}) => (
         : 
         <div></div>
         }
-        {currentTouchpoint ? (<div className="blockquote-footer touchpoint-date">{timeSince(currentTouchpoint.ctime) + ' ago by ' + currentTouchpoint.user} </div>) : <div></div>}
+        {currentTouchpoint ? (<div className="blockquote-footer touchpoint-date">{timeSince(currentTouchpoint.ctime) + ' ago by ' + currentTouchpoint.userFirstName + ' ' + currentTouchpoint.userLastName} </div>) : <div></div>}
     </div>
 )
 
@@ -75,48 +75,41 @@ const StudentCardBodyCommits = ({student}) => (
     </div>
 )
 
+const GraphSquare = ({commitDay, idx}) => (
+    <React.Fragment>
+        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
+        {commitDay.commits.length ? 
+            (<OverlayTrigger key="" placement="bottom" overlay={
+                <Tooltip>
+                    <table>
+                        <tbody>
+                            <tr><td align="right">Commits:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.commits.length}</td></tr>
+                            <tr><td align="right">Lines:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.total}</td></tr>
+                            <tr><td align="right">Repos:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.repos ? commitDay.repos.length : 0}</td></tr>
+                        </tbody>
+                    </table>
+                </Tooltip>
+            }>
+                <div className={`graph-item ${ 
+                    commitDay.commits.length < 4 ?
+                    ['no', 'sm', 'md', 'lg', 'xl'][commitDay.commits.length]
+                    : 
+                    'xl'
+                    }-commits`}></div>
+            </OverlayTrigger>)
+        :
+            (<div className={`graph-item no-commits`} />)
+        }
+    </React.Fragment>
+)
+
 const GithubGraph = ({student}) => (
     <div className="graph-container">
         {['','','M','','W','','F',''].map(headerDay => {
             return (<div className="graph-item graph-item-header">{headerDay}</div>)})
         }
         {parseCommits(student.commits).commits.map((commitDay, idx) => {
-            if (!commitDay.commits.length) {
-                return (
-                    <React.Fragment>
-                        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-                        <div className="graph-item no-commits"></div>
-                    </React.Fragment>
-                )
-            } else if (commitDay.commits.length < 2) {
-                return (
-                    <React.Fragment>
-                        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-                        <div className="graph-item sm-commits"></div>
-                    </React.Fragment>
-                )
-            } else if (commitDay.commits.length < 3) {
-                return (
-                    <React.Fragment>
-                        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-                        <div className="graph-item md-commits"></div>
-                    </React.Fragment>
-                )
-            } else if (commitDay.commits.length < 3) {
-                return (
-                    <React.Fragment>
-                        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-                        <div className="graph-item lg-commits"></div>
-                    </React.Fragment>
-                )
-            } else {
-                return (
-                    <React.Fragment>
-                        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-                        <div className="graph-item xl-commits"></div>
-                    </React.Fragment>
-                )
-            }
+            return (<GraphSquare commitDay={commitDay} idx={idx} />)
         })}
     </div>
 )

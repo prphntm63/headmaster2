@@ -291,7 +291,8 @@ let db = {
                         let studentPromise = new Promise((resolve, reject) => {
                             let touchpointsPromse = knex
                             .from('Touchpoints')
-                            .select('*')
+                            .innerJoin('Users', 'Touchpoints.user', '=', 'Users.id')
+                            .select('Touchpoints.*', 'Users.firstName as userFirstName', 'Users.lastName as userLastName')
                             .where({'Touchpoints.student' : student.id})
                             
                             let commitsPromise = knex
