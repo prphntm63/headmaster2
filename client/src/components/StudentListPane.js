@@ -109,18 +109,23 @@ const StudentListPaneBody = ({currentCohort}) => (
 class StudentListPane extends React.Component {
 
     render() {
+        const updatedCohorts = getCohortsListByVisibilityFilter(this.props.cohorts, this.props.views)
+        const pathName = window.location.pathname.replace(/\W/g, '')
+        const currentCohortFilter = updatedCohorts.length ? updatedCohorts.filter(cohort => {return cohort.slug == pathName}) : []
+        const currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
+
         return (<div>
-            {this.props.currentCohort ? 
+            {currentCohort ? 
                 (<React.Fragment>
                     
                     <div className="container-lg">
                         <div className="d-flex flex-row">
-                            <h2>{this.props.currentCohort.name}</h2>
+                            <h2>{currentCohort.name}</h2>
                             <Button variant="primary" value="addStudent" onClick={addStudent} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button>
                         </div>
                         <ListGroup>
                             <StudentListPaneHeader {...this.props} />
-                            <StudentListPaneBody currentCohort={this.props.currentCohort} />
+                            <StudentListPaneBody currentCohort={currentCohort} />
                         </ListGroup>
                     </div>
                 </React.Fragment>)
@@ -151,26 +156,19 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => { 
     const views = state.views
-
-    const cohorts = getCohortsByVisibilityFilter(state)
-
-    const pathName = window.location.pathname.replace(/\W/g, '')
-    const currentCohortFilter = cohorts.length ? cohorts.filter(cohort => {return cohort.slug == pathName}) : []
-    const currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
-
-    console.log(currentCohort)
+    const cohorts = state.cohorts
     
-    return {views, currentCohort}
+    return {views, cohorts}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentListPane);
 
-const getCohortsByVisibilityFilter = (store) => {
+const getCohortsListByVisibilityFilter = (cohortsProp, views) => {
 
-    let sortFunction = sortCohortFilter(store.views.studentListSortFilter, store.views.studentListSortDirection)
-    let filterFunction = hideCohortFilter(store.views.studentListHideFilter)
+    let sortFunction = sortCohortFilter(views.studentListSortFilter, views.studentListSortDirection)
+    let filterFunction = hideCohortFilter(views.studentListHideFilter)
 
-    let cohorts = [...store.cohorts];
+    let cohorts = [...cohortsProp];
     let newCohorts = []
     cohorts.forEach(currentCohort => {
         currentCohort.students.sort(sortFunction).filter(filterFunction)
