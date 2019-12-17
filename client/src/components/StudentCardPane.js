@@ -104,7 +104,7 @@ function hideCohortFilter(hideFilter) {
 
 function getMostRecentCtime(dbArray) {
     let mostRecentEntry = getMostRecentCtimeElement(dbArray)
-    return new Date(mostRecentEntry.ctime).getTime()
+    return mostRecentEntry ? new Date(mostRecentEntry.ctime).getTime() : 0
 }
 
 function getMostRecentCtimeElement(dbArray) {

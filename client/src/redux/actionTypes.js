@@ -14,6 +14,8 @@ export const SET_STUDENT_LIST_HIDE_FILTER = "STUDENT_LIST_HIDE_FILTER"
 // Update Actions 
 // (we will make this such that it does one giant API pull/refresh from DB)
 export const UPDATE_COHORTS = "UPDATE_COHORTS"
+export const UPDATE_STUDENT = "UPDATE_STUDENT"
+export const ADD_STUDENT = "ADD_STUDENT"
 
 // User Actions
 export const UPDATE_USER = "UPDATE_USER"

@@ -92,10 +92,10 @@ const StudentListPaneBody = ({currentCohort}) => (
             <LinkContainer to={"/students/" + student.github}>
                 <ListGroup.Item action>
                     <Row>
-                        <Col xs={1}><StoplightStatusIndicator stoplightStatus={currentTouchpoint.stoplightStatus} /></Col>
+                        <Col xs={1}><StoplightStatusIndicator stoplightStatus={currentTouchpoint ? currentTouchpoint.stoplightStatus : null} /></Col>
                         <Col xs={5}>{student.firstName + ' ' + student.lastName}</Col>
-                        <Col xs={2}>{timeSince(currentTouchpoint.ctime)}</Col>
-                        <Col xs={2}>{timeSince(currentCommit.ctime)}</Col>
+                        <Col xs={2}>{currentTouchpoint ? timeSince(currentTouchpoint.ctime) : ''}</Col>
+                        <Col xs={2}>{currentCommit ? timeSince(currentCommit.ctime) : ''}</Col>
                         <Col xs={1}>{student.enrolledStatus ? 'Y' : 'N'}</Col>
                         <Col xs={1}>
                             <Button variant="danger" value={student.id} onClick={deleteStudent}>X</Button>
@@ -124,7 +124,7 @@ class StudentListPane extends React.Component {
                         <div className="d-flex flex-row">
                             <h2>{currentCohort.name}</h2>
                             {/* <Button variant="primary" value="addStudent" onClick={addStudent} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button> */}
-                            <AddStudentModal />
+                            <AddStudentModal cohort={currentCohort}/>
                         </div>
                         <ListGroup>
                             <StudentListPaneHeader {...this.props} />
@@ -232,7 +232,7 @@ function hideCohortFilter(hideFilter) {
 
 function getMostRecentCtime(dbArray) {
     let mostRecentEntry = getMostRecentCtimeElement(dbArray)
-    return new Date(mostRecentEntry.ctime).getTime()
+    return mostRecentEntry ? new Date(mostRecentEntry.ctime).getTime() : 0
 }
 
 function getMostRecentCtimeElement(dbArray) {

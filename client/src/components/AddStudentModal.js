@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
+import {connect} from 'react-redux'
+
+import { addStudent } from './../redux/actions'
 
 class AddStudentModal extends React.Component {
     constructor(props) {
@@ -10,7 +13,12 @@ class AddStudentModal extends React.Component {
             lastnameInput : '',
             photoUrl : '',
             modalShow : false,
-            githubLookupTimeout : null
+            githubLookupTimeout : null,
+            errors : {
+                githubInput : null,
+                firstnameInput : null,
+                lastnameInput : null
+            }
         }
     }
 
@@ -25,12 +33,48 @@ class AddStudentModal extends React.Component {
 
     }
 
-    handleGithubApiCall = (username) => {
+    handleGithubApiCall = () => {
         console.log('ToDo : github API call')
+        if (this.state.githubLookupTimeout) {window.clearTimeout(this.state.githubLookupTimeout)}
+
+        fetch('https://api.github.com/users/'+this.state.githubInput)
+        .then(response => {
+            return response.json()
+        })
+        .then(responseJSON => {
+            console.log(responseJSON)
+            if(!responseJSON.login) {
+                this.setState({
+                    firstnameInput : '',
+                    lastnameInput : '',
+                    photoUrl : '',
+                    errors : {
+                        ...this.state.errors,
+                        githubInput : `${this.state.githubInput} is not a valid Github username`
+                    }
+                })
+            } else {
+                this.setState({
+                    errors : {
+                        ...this.state.errors,
+                        githubInput : false
+                    }
+                })
+            }
+
+            if (responseJSON.avatar_url) {
+                this.setState({photoUrl : responseJSON.avatar_url})
+            }
+
+            if (responseJSON.name) {
+                this.setState({
+                    firstnameInput : responseJSON.name.split(' ').slice(0,1)[0],
+                    lastnameInput : responseJSON.name.split(' ').slice(1).join(' ')
+                })
+            }
+        })
+
         this.setState({
-            firstnameInput : 'firstname',
-            lastnameInput : 'lastname',
-            photoUrl : 'http://s3.amazonaws.com/37assets/svn/765-default-avatar.png',
             githubLookupTimeout : null
         })
     }
@@ -53,7 +97,62 @@ class AddStudentModal extends React.Component {
 
     handleAddStudent = () => {
         console.log('Todo: add student - ', this.state.githubInput, this.state.firstnameInput, this.state.lastnameInput, this.state.photoUrl)
-        this.handleClose()
+        
+        fetch('/api/students', {
+            method: 'POST',
+            body: JSON.stringify({
+                cohort : this.props.cohort.id,
+                firstName : this.state.firstnameInput,
+                lastName : this.state.lastnameInput,
+                github : this.state.githubInput,
+                photoUrl : this.state.photoUrl,
+                enrolledStatus : true 
+            }),
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.status === 200) {
+                console.log('success')
+                return response.json()
+            } else {
+                console.log('ERRORRRORRR - ', response)
+            }
+        })
+        .then(responseJSON => {
+            // studentId, firstName, lastName, github, photoUrl
+            this.props.addStudent({
+                cohortId : this.props.cohort.id,
+                student : {
+                    id: responseJSON.studentId,
+                    ctime: new Date(),
+                    mtime: new Date(),
+                    firstName: responseJSON.firstName,
+                    lastName: responseJSON.lastName,
+                    github: responseJSON.github,
+                    photoUrl: responseJSON.photoUrl,
+                    enrolledStatus: true,
+                    touchpoints: [],
+                    commits: []
+                }
+            })
+            this.handleClose()
+        })
+        .catch(err => {
+            if (err.status === 400) {
+                err.json()
+                .then(responseJson => {
+                    console.log(responseJson)
+                    window.alert(`Student failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
+                })
+            } else {
+                console.log('error adding student - ', err)
+                window.alert('Server error')
+            }   
+        })
+        
+        // this.handleClose()
     }
 
     render() {
@@ -74,7 +173,15 @@ class AddStudentModal extends React.Component {
                                 </Col>
                                 <Form.Group as={Col} controlId="inputGithub">
                                     <Form.Label>Github Profile</Form.Label>
-                                    <Form.Control type="input" placeholder="Github Username" onChange={this.handleGithubInput} onBlur={this.handleGithubApiCall}></Form.Control>
+                                    <Form.Control 
+                                        type="input" 
+                                        placeholder="Github Username" 
+                                        value={this.state.githubInput} 
+                                        onChange={this.handleGithubInput} 
+                                        onBlur={this.handleGithubApiCall}
+                                        isValid={this.state.errors.githubInput !== null}
+                                        isInvalid={this.state.errors.githubInput}></Form.Control>
+                                    <Form.Control.Feedback type="invalid">{this.state.errors.githubInput ? this.state.errors.githubInput : ''}</Form.Control.Feedback>
                                 </Form.Group>
                                 <Col className="pt-3">
                                     <small>Just the username, not the whole URL</small>
@@ -83,11 +190,23 @@ class AddStudentModal extends React.Component {
                             <Row className="my-2">
                                 <Form.Group as={Col} controlId="inputFirstName">
                                     <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="input" placeholder="First Name" onChange={(evt) => {this.setState({firstnameInput : evt.target.value})}}></Form.Control>
+                                    <Form.Control 
+                                        type="input" 
+                                        placeholder="First Name" 
+                                        value={this.state.firstnameInput} 
+                                        onChange={(evt) => {this.setState({firstnameInput : evt.target.value})}}
+                                        isValid={this.state.errors.firstnameInput !== null}
+                                        isInvalid={this.state.errors.firstnameInput}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="inputLastName">
                                     <Form.Label>First Name</Form.Label>
-                                    <Form.Control type="input" placeholder="Last Name" onChange={(evt) => {this.setState({lastnameInput : evt.target.value})}}></Form.Control>
+                                    <Form.Control 
+                                        type="input" 
+                                        placeholder="Last Name" 
+                                        value={this.state.lastnameInput} 
+                                        onChange={(evt) => {this.setState({lastnameInput : evt.target.value})}}
+                                        isValid={this.state.errors.lastnameInput !== null}
+                                        isInvalid={this.state.errors.lastnameInput}></Form.Control>
                                 </Form.Group>
                             </Row>
                         </Form>
@@ -106,4 +225,8 @@ class AddStudentModal extends React.Component {
     }
 }
 
-export default AddStudentModal
+const mapDispatchToProps = {
+    addStudent
+}
+
+export default connect(null, mapDispatchToProps)(AddStudentModal)
