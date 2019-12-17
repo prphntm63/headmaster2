@@ -31,7 +31,7 @@ import {
     UPDATE_USER,
     LOGIN_USER,
     LOGOUT_USER,
-    UPDATE_TOUCHPOINT,
+    ADD_TOUCHPOINT,
     UPDATE_COMMITS,
     UPDATE_STUDENT,
     ADD_STUDENT
@@ -102,8 +102,8 @@ export const logoutUser = payload => ({
     payload
 })
 
-export const updateTouchpoint = payload => ({
-    type : UPDATE_TOUCHPOINT,
+export const addTouchpoint = payload => ({
+    type : ADD_TOUCHPOINT,
     payload : {
         studentId : payload.studentId,
         touchpointData : payload.touchpointData

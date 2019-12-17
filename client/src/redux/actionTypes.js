@@ -23,7 +23,7 @@ export const LOGIN_USER = "LOGIN_USER"
 export const LOGOUT_USER = "LOGOUT_USER"
 
 // Touchpoint Actions
-export const UPDATE_TOUCHPOINT = "UPDATE_TOUCHPOINT"
+export const ADD_TOUCHPOINT = "ADD_TOUCHPOINT"
 
 // Commit Actions
 export const UPDATE_COMMITS = "UPDATE_COMMITS"

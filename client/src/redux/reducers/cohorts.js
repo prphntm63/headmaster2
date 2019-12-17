@@ -1,6 +1,6 @@
 import {
     UPDATE_COHORTS,
-    UPDATE_TOUCHPOINT,
+    ADD_TOUCHPOINT,
     UPDATE_COMMITS,
     UPDATE_STUDENT,
     ADD_STUDENT
@@ -16,6 +16,7 @@ export default function(state = initialState, action) {
             newState = action.payload
             return newState
         }
+        
         case UPDATE_STUDENT: {
             let newStudent = action.student
             let newCohorts = []
@@ -26,6 +27,7 @@ export default function(state = initialState, action) {
                 if (studentIndex >= 0) {
                     let newCohort = {...cohort}
                     newCohort.students[studentIndex] = newStudent
+                    newCohorts.push(newCohort)
                 } else {
                     newCohorts.push(cohort)
                 }
@@ -33,11 +35,31 @@ export default function(state = initialState, action) {
 
             return newCohorts
         }
+        
         case ADD_STUDENT: {
             let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
             newState[cohortIndex].students.push(action.student)
             return newState
         }
+
+        case ADD_TOUCHPOINT: {
+            let newCohorts = []
+
+            newState.cohorts.forEach(cohort => {
+                let targetStudentIndex = cohort.students.findIndex(student => {return student.id === action.studentId})
+
+                if (targetStudentIndex) {
+                    let newCohort = {...cohort}
+                    newCohort.students[targetStudentIndex].touchpoints.push(action.touchpointData)
+                    newCohorts.push(newCohort)
+                } else {
+                    newCohorts.push(cohort)
+                }
+            })
+
+            return newCohorts
+        }
+
         default: {
             return newState
         }

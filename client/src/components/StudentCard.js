@@ -5,6 +5,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import StoplightStatusIndicator from './StoplightStatusIndicator';
 import TouchpointTag from './TouchpointTag';
 import GithubGraph from './GithubGraph'
+import AddTouchpointModal from "./AddTouchpointModal"
 
 const StudentCardHeader = ({student, currentStoplightStatus}) => (
     <LinkContainer to={"/students/"+student.github} exact>
@@ -66,9 +67,10 @@ const StudentCardFooter = ({student}) => (
                 <a href>Details</a>
             </LinkContainer>
         </div>
-        <div className="d-flex justify-content-center py-2 add-touchpoint-button">
+        <AddTouchpointModal studentId={student.id} isStudentCard={true} />
+        {/* <div className="d-flex justify-content-center py-2 add-touchpoint-button">
             <a href='#'>Add Touchpoint</a>
-        </div>
+        </div> */}
     </Card.Footer>
 )
 
