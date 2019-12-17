@@ -1,36 +1,30 @@
 import React, { Component } from 'react';
 import {Tabs, Tab} from 'react-bootstrap'
 import { connect } from "react-redux";
-import { getCohortByVisibilityFilter } from './../redux/selectors'
 
-import StudentCard from "./../components/StudentCard"
-import SortBar from "./../components/SortBar"
+import StudentCardPane from "./../components/StudentCardPane"
+import StudentListPane from "./../components/StudentListPane"
 
-
-class Cohort extends Component {
+class Cohort extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pathName : window.location.pathname.replace(/\W/g, '')
+            currentTab : "studentCards"
         }
     }
 
     render() {
-        let currentCohortFilter = this.props.cohorts.length ? this.props.cohorts.filter(cohort => {return cohort.slug == this.state.pathName}) : []
-        let currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
-
         return ( 
             <React.Fragment>
-                {currentCohort && this.props.user.id ?
+                {this.props.user.id ?
                     <React.Fragment>
-                        <Tabs>
+                        <Tabs activeKey={this.state.currentTab} onSelect={tab => this.setState({currentTab : tab})}>
                             <Tab eventKey="studentCards" title="Dashboard">
-                                <SortBar currentCohort={currentCohort} />
-                                <div className="d-flex flex-row flex-wrap student-cards">
-                                    {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={this.props.views}/>})}
-                                </div>
+                                <StudentCardPane />
                             </Tab>
-                            <Tab eventKey="studentList" title="Students"></Tab>
+                            <Tab eventKey="studentList" title="Students">
+                                <StudentListPane />
+                            </Tab>
                             <Tab eventKey="cohortSettings" title="Settings"></Tab>
                         </Tabs>
                     </React.Fragment>
@@ -42,18 +36,8 @@ class Cohort extends Component {
     }
 }
 
-const mapStateToProps = state => { 
-    // cohorts: state.cohorts,
-    const user = state.user
-    const views = state.views
-    const cohorts = getCohortByVisibilityFilter(
-        state, 
-        views.studentCardSortFilter, 
-        views.studentCardSortDirection, 
-        views.studentCardHideFilter
-        )
-    
-    return {user, views, cohorts}
-}
+const mapStateToProps = (state) => (
+    {user : state.user}
+)
 
 export default connect(mapStateToProps)(Cohort);

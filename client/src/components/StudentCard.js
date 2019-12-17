@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import StoplightStatusIndicator from './StoplightStatusIndicator';
+import TouchpointTag from './TouchpointTag';
+import GithubGraph from './GithubGraph'
 
 const StudentCardHeader = ({student, currentStoplightStatus}) => (
     <LinkContainer to={"/students/"+student.github} exact>
@@ -12,22 +15,7 @@ const StudentCardHeader = ({student, currentStoplightStatus}) => (
             <div className="w-100">
                 <div className="d-flex flex-row justify-content-between stoplight-status-div">
                     <h4 className="mx-2 student-name text-truncate">{student.firstName + ' ' + student.lastName}</h4>
-                    {(() => {
-                        switch (currentStoplightStatus) {
-                            case 'green': return (
-                                <span className="badge badge-pill badge-success"><i className="material-icons pt-1 stoplight-badge">done</i></span>
-                                )
-                            case 'yellow': return (
-                                <span className="badge badge-pill badge-warning"><i className="material-icons pt-1 stoplight-badge">help_outline</i></span>
-                                )
-                            case 'red': return (
-                                <span className="badge badge-pill badge-danger"><i className="material-icons pt-1">warning</i></span>
-                                )
-                            default: return (
-                                <span className="badge badge-pill badge-secondary"><i className="material-icons pt-1">warning</i></span>
-                                )
-                        }
-                    })()}
+                    <StoplightStatusIndicator stoplightStatus={currentStoplightStatus} />
                 </div>
                 <div className="d-flex flex-row">
                     <img src='/images/GitHub-Mark.png' style={{height:"25px"}} />
@@ -51,11 +39,7 @@ const StudentCardBodyTouchpoint = ({student, currentTouchpoint}) => (
         {currentTouchpoint && currentTouchpoint.comment ? (<div className="student-touchpoint-comment"><small>{currentTouchpoint.comment}</small></div>) : <div></div>}
         {currentTouchpoint && currentTouchpoint.tags ? 
             currentTouchpoint.tags.map(tag => {
-                switch (tag.status) {
-                    case 'green': return (<span className="badge badge-success mr-auto my-1">{tag.text}</span>)
-                    case 'yellow': return (<span className="badge badge-warning mr-auto my-1">{tag.text}</span>)
-                    case 'red': return (<span className="badge badge-danger mr-auto my-1">{tag.text}</span>)
-                }
+                return (<TouchpointTag tagStatus={tag.status} tagText={tag.text} />)
             })
         : 
         <div></div>
@@ -72,45 +56,6 @@ const StudentCardBodyCommits = ({student}) => (
         :
             (<div></div>)
         }
-    </div>
-)
-
-const GraphSquare = ({commitDay, idx}) => (
-    <React.Fragment>
-        {idx%7 === 0 ? <div className="graph-item graph-item-header">{'#' + (Math.floor(idx/7)+1)}</div> : ''}
-        {commitDay.commits.length ? 
-            (<OverlayTrigger key="" placement="bottom" overlay={
-                <Tooltip>
-                    <table>
-                        <tbody>
-                            <tr><td align="right">Commits:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.commits.length}</td></tr>
-                            <tr><td align="right">Lines:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.total}</td></tr>
-                            <tr><td align="right">Repos:</td><td align="left" style={{'padding-left':'5px'}}>{commitDay.repos ? commitDay.repos.length : 0}</td></tr>
-                        </tbody>
-                    </table>
-                </Tooltip>
-            }>
-                <div className={`graph-item ${ 
-                    commitDay.commits.length < 4 ?
-                    ['no', 'sm', 'md', 'lg', 'xl'][commitDay.commits.length]
-                    : 
-                    'xl'
-                    }-commits`}></div>
-            </OverlayTrigger>)
-        :
-            (<div className={`graph-item no-commits`} />)
-        }
-    </React.Fragment>
-)
-
-const GithubGraph = ({student}) => (
-    <div className="graph-container">
-        {['','','M','','W','','F',''].map(headerDay => {
-            return (<div className="graph-item graph-item-header">{headerDay}</div>)})
-        }
-        {parseCommits(student.commits).commits.map((commitDay, idx) => {
-            return (<GraphSquare commitDay={commitDay} idx={idx} />)
-        })}
     </div>
 )
 
@@ -177,54 +122,3 @@ function timeSince(dateString) {
     return Math.floor(seconds) + " seconds";
 }
 
-function getMostRecentTouchpoint(touchpointArray) {
-    return touchpointArray.sort((a,b) => {
-        return new Date(b.ctime).getTime() - new Date(a.ctime).getTime() 
-    })[0]
-}
-
-function parseCommits(commits) {
-    if (!commits.length) return null
-
-    let today = new Date()
-    let dayOfWeek = today.getDay()
-    let commitsArray = []
-    let lastCommit = null
-
-    // Show 4 weeks max
-    for (let idx=(22+dayOfWeek); idx>0; idx--) {
-        let offset = 24*60*60*1000
-        let dayObject = {
-            commits : [],
-            repos : [],
-            date : null,
-            total : null,
-            add : null,
-            sub : null
-        }
-
-        commits.forEach(commit => {
-            commit.ctime = new Date(commit.ctime)
-            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - offset )) {
-                
-                dayObject.commits.push(commit)
-                if (!dayObject.repos.find(repo => {return repo === commit.repo} ) ) {
-                    dayObject.repos.push(commit.repo)
-                }
-                dayObject.date = commit.ctime.getDate()
-                dayObject.total += commit.total
-                dayObject.add += commit.added
-                dayObject.sub += commit.deleted
-
-                lastCommit = commit
-            }
-        })
-        commitsArray.push(dayObject)
-    }
-
-    return {
-        "commits" : commitsArray,
-        "lastCommit" : lastCommit ? timeSince(lastCommit.ctime) : null,
-        "commitCreated" : lastCommit ? lastCommit.ctime : null
-    }
-}

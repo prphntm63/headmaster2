@@ -115,6 +115,7 @@ export default function(state = initialState, action) {
             } else {
                 newState.cohortSortDirection = COHORT_SORT_DIRECTIONS.UP
             }
+            return newState
         }
         case SET_STUDENT_CARD_SORT_DIRECTION: {
             if (STUDENT_CARD_SORT_DIRECTIONS[action.direction]) {
@@ -122,6 +123,7 @@ export default function(state = initialState, action) {
             } else {
                 newState.studentCardSortDirection = STUDENT_CARD_SORT_DIRECTIONS.UP
             }
+            return newState
         }
         case SET_STUDENT_LIST_SORT_DIRECTION: {
             if (STUDENT_LIST_SORT_DIRECTIONS[action.direction]) {
@@ -129,6 +131,7 @@ export default function(state = initialState, action) {
             } else {
                 newState.studentListSortDirection = STUDENT_LIST_SORT_DIRECTIONS.UP
             }
+            return newState
         }
         default : {
             return newState;

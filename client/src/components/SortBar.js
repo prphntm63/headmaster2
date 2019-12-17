@@ -9,7 +9,7 @@ class SortBar extends Component {
     }
 
     handleStudentCardSortChange = (value) => {
-        console.log(value)
+        console.log('entry', value)
         if (value === 'up' || value === 'down') {
             this.props.setStudentCardSortDirection(value.toUpperCase())
         } else {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 import { updateCohorts, updateUser } from './redux/actions'
+import store from './redux/store'
 
 import { connect } from 'react-redux'
 // import { * } from './actionCreators'
@@ -25,6 +26,12 @@ const userLogoutState = {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user : null
+    }
+  }
   
   // Check for login state on initial load
   componentDidMount() {
@@ -46,14 +53,17 @@ class App extends Component {
       
       if (serverResponse.user) {
         console.log('Got User - ', serverResponse.user)
-        this.props.dispatch(updateUser(serverResponse.user))
+        store.dispatch(updateUser(serverResponse.user))
+        this.setState({
+          user : serverResponse.user
+        })
       } else (
         console.log('no user')
       )
 
       if (serverResponse.cohorts) {
         console.log(serverResponse.cohorts)
-        this.props.dispatch(updateCohorts(serverResponse.cohorts))
+        store.dispatch(updateCohorts(serverResponse.cohorts))
       } else {
         console.log('no cohorts')
       }
@@ -62,7 +72,10 @@ class App extends Component {
 
   handleLogout = () => {
     window.location.href = `http://localhost:5000/logout`
-    this.props.dispatch(updateUser(userLogoutState))
+    store.dispatch(updateUser(userLogoutState))
+    this.setState({
+      user : null
+    })
     console.log('Logout')
   }
 
@@ -90,8 +103,8 @@ class App extends Component {
           <Route path='/auth/github' render={loginHandler} exact />
           <Route path='/auth/github/callback' render={handleAuthCallback} exact/>
           <Route path='/logout' render={this.handleLogout} exact />
-          <Route path='/students/*'>{this.props.user.id ? <Student /> : <Redirect to="" />}</Route>
-          <Route path='/*'>{this.props.user.id ? <Cohort /> : <Redirect to="" />}</Route>
+          <Route path='/students/*'>{this.state.user ? <Student /> : <Redirect to="" />}</Route>
+          <Route path='/*'>{this.state.user ? <Cohort /> : <Redirect to="" />}</Route>
         </Switch>
       </BrowserRouter>
     )
@@ -102,17 +115,18 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ 
-  cohorts: state.cohorts, 
-  user : state.user
-})
+// const mapStateToProps = state => ({ 
+//   user : state.user
+// })
 
 // const mapDispatchToProps = {
 //   updateCohorts,
 //   updateUser
 // }
 
-export default connect(mapStateToProps)(App)
+// export default connect(mapStateToProps)(App)
+
+export default App
 
 // export default App;
 // export default connect(

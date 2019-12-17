@@ -1,48 +1,49 @@
-import {
-    COHORT_SORT_FILTERS,
-    COHORT_HIDE_FILTERS,
-    STUDENT_LIST_SORT_FILTERS,
-    STUDENT_LIST_HIDE_FILTERS,
-    STUDENT_CARD_SORT_FILTERS,
-    STUDENT_CARD_HIDE_FILTERS,
-    COHORT_SORT_DIRECTIONS,
-    STUDENT_CARD_SORT_DIRECTIONS,
-    STUDENT_LIST_SORT_DIRECTIONS
-} from "constants"
+import React, { PureComponent } from 'react';
+import { connect } from "react-redux";
+import { getCohortCardsByVisibilityFilter } from './../redux/selectors'
 
-export const getCohortCardsByVisibilityFilter = (store) => {
-    console.log('cards', store.views.studentCardSortFilter, store.views.studentCardSortDirection)
+import StudentCard from "./StudentCard"
+import SortBar from "./SortBar"
 
+const StudentCardPane = ({views, currentCohort}) => (
+    <div>
+        {currentCohort.id ? 
+            (<React.Fragment>
+                <SortBar currentCohort={currentCohort} />
+                <div className="d-flex flex-row flex-wrap student-cards" >
+                    {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={views}/>})}
+                </div>
+            </React.Fragment>)
+        :
+            (<div></div>)
+        }
+    </div>
+)
+
+const mapStateToProps = state => { 
+    const views = state.views
+
+    let cohorts = getCohortsByVisibilityFilter(state)
+
+    const pathName = window.location.pathname.replace(/\W/g, '')
+    let currentCohortFilter = cohorts.length ? cohorts.filter(cohort => {return cohort.slug == pathName}) : []
+    let currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
+    
+    return {views, currentCohort}
+}
+
+export default connect(mapStateToProps)(StudentCardPane);
+
+const getCohortsByVisibilityFilter = (store) => {
     let sortFunction = sortCohortFilter(store.views.studentCardSortFilter, store.views.studentCardSortDirection)
     let filterFunction = hideCohortFilter(store.views.studentCardHideFilter)
 
     let cohorts = [...store.cohorts];
-    console.log(cohorts[0].students)
     let newCohorts = []
     cohorts.forEach(currentCohort => {
         currentCohort.students.sort(sortFunction).filter(filterFunction)
         newCohorts.push(currentCohort)
     })
-    console.log(newCohorts[0].students)
-    return newCohorts
-};
-
-export const getCohortListsByVisibilityFilter = (store) => {
-    console.log('list', store.views.studentListSortFilter, store.views.studentListSortDirection)
-
-    let sortFunction = sortCohortFilter(store.views.studentListSortFilter, store.views.studentListSortDirection)
-    let filterFunction = hideCohortFilter(store.views.studentListHideFilter)
-
-    let cohorts = [...store.cohorts];
-    console.log(cohorts[0].students)
-    let newCohorts = []
-    cohorts.forEach(currentCohort => {
-        currentCohort.students.sort(sortFunction).filter(filterFunction)
-        newCohorts.push(currentCohort)
-    })
-
-    console.log(newCohorts[0].students)
-    console.log('_______________________________________________________________________________________________')
     return newCohorts
 };
 

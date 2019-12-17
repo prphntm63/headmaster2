@@ -67,17 +67,17 @@ export const setStudentListSortDirection = direction => ({
 
 export const setCohortHideFilter = filter => ({
     type : SET_COHORT_HIDE_FILTER,
-    filter : SET_STUDENT_CARD_HIDE_FILTER
+    filter
 })
 
 export const setStudentCardHideFilter = filter => ({
     type : SET_STUDENT_CARD_HIDE_FILTER,
-    filter : filter
+    filter
 })
 
 export const setStudentListHideFilter = filter => ({
     type : SET_STUDENT_LIST_HIDE_FILTER,
-    filter : filter
+    filter
 })
 
 export const updateCohorts = payload => ({
