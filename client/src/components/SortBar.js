@@ -9,7 +9,6 @@ class SortBar extends Component {
     }
 
     handleStudentCardSortChange = (value) => {
-        console.log('entry', value)
         if (value === 'up' || value === 'down') {
             this.props.setStudentCardSortDirection(value.toUpperCase())
         } else {
@@ -38,16 +37,16 @@ class SortBar extends Component {
                     </Form.Control>
                     <ButtonToolbar>
                         <ToggleButtonGroup type="radio" name="sortUpDownCard" value={this.props.views.studentCardSortDirection} onChange={this.handleStudentCardSortChange}>
-                            <ToggleButton value={'up'}>Up</ToggleButton>
-                            <ToggleButton value={'down'}>Down</ToggleButton>
+                            <ToggleButton value={'up'} variant="light">Up</ToggleButton>
+                            <ToggleButton value={'down'} variant="light">Down</ToggleButton>
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                     <h6>Show:</h6>
                     <ButtonToolbar>
                         <ToggleButtonGroup type="radio" name="hideStudentCard" value={this.props.views.studentCardHideFilter} onChange={this.handleStudentCardHideChange}>
-                            <ToggleButton value={'active'}>Active</ToggleButton>
-                            <ToggleButton value={'inactive'}>Inactive</ToggleButton>
-                            <ToggleButton value={'all'}>All</ToggleButton>
+                            <ToggleButton value={'active'} variant="light">Active</ToggleButton>
+                            <ToggleButton value={'inactive'} variant="light">Inactive</ToggleButton>
+                            <ToggleButton value={'all'} variant="light">All</ToggleButton>
                         </ToggleButtonGroup>
                     </ButtonToolbar>
                 </div>

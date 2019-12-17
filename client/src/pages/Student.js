@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
-import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
+import React from 'react';
 import { connect } from "react-redux";
-
-import StudentCard from "./../components/StudentCard"
 
 const Student = ({ cohorts, user }) => {
     let pathName = window.location.pathname.split(/[/ ]+/).pop()

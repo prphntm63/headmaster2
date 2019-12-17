@@ -23,7 +23,7 @@ const Cohorts = ({ cohorts, user }) => (
         <div className="container">
             {cohorts && cohorts.length ? 
                 (<ListGroup>
-                    <ListGroup.Item as="li" active disabled key="header">
+                    <ListGroup.Item as="li" key="header" variant="secondary">
                         <div className="row" >
                             <div className="col-sm-7">Cohort</div>
                             <div className="col-sm-3">Start Date</div>

@@ -35,7 +35,6 @@ class App extends Component {
   
   // Check for login state on initial load
   componentDidMount() {
-    console.log('component mounted')
 
     fetch('/api/usercohorts', {
       method : 'GET'
@@ -52,7 +51,6 @@ class App extends Component {
       if (!serverResponse) return null
       
       if (serverResponse.user) {
-        console.log('Got User - ', serverResponse.user)
         store.dispatch(updateUser(serverResponse.user))
         this.setState({
           user : serverResponse.user
@@ -62,7 +60,6 @@ class App extends Component {
       )
 
       if (serverResponse.cohorts) {
-        console.log(serverResponse.cohorts)
         store.dispatch(updateCohorts(serverResponse.cohorts))
       } else {
         console.log('no cohorts')

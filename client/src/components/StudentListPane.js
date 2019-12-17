@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 // import { getCohortListsByVisibilityFilter } from './../redux/selectors'
@@ -7,6 +7,7 @@ import { setStudentListHideFilter, setStudentListSortFilter, setStudentListSortD
 import { ListGroup, Row, Col, Badge, Button } from 'react-bootstrap';
 
 import StoplightStatusIndicator from './StoplightStatusIndicator'
+import AddStudentModal from './AddStudentModal'
 
 class StudentListPaneHeader extends React.Component {
 
@@ -82,6 +83,7 @@ const StudentListPaneBody = ({currentCohort}) => (
             const currentTouchpoint = student.touchpoints.sort((a,b) => {
                 return new Date(b.ctime).getTime() - new Date(a.ctime).getTime() 
             })[0]
+
             const currentCommit = student.commits.sort((a,b) => {
                 return new Date(b.ctime).getTime() - new Date(a.ctime).getTime() 
             })[0]
@@ -90,7 +92,7 @@ const StudentListPaneBody = ({currentCohort}) => (
             <LinkContainer to={"/students/" + student.github}>
                 <ListGroup.Item action>
                     <Row>
-                        <Col xs={1}><StoplightStatusIndicator status={student.stoplightStatus} /></Col>
+                        <Col xs={1}><StoplightStatusIndicator stoplightStatus={currentTouchpoint.stoplightStatus} /></Col>
                         <Col xs={5}>{student.firstName + ' ' + student.lastName}</Col>
                         <Col xs={2}>{timeSince(currentTouchpoint.ctime)}</Col>
                         <Col xs={2}>{timeSince(currentCommit.ctime)}</Col>
@@ -111,7 +113,7 @@ class StudentListPane extends React.Component {
     render() {
         const updatedCohorts = getCohortsListByVisibilityFilter(this.props.cohorts, this.props.views)
         const pathName = window.location.pathname.replace(/\W/g, '')
-        const currentCohortFilter = updatedCohorts.length ? updatedCohorts.filter(cohort => {return cohort.slug == pathName}) : []
+        const currentCohortFilter = updatedCohorts.length ? updatedCohorts.filter(cohort => {return cohort.slug === pathName}) : []
         const currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
 
         return (<div>
@@ -121,7 +123,8 @@ class StudentListPane extends React.Component {
                     <div className="container-lg">
                         <div className="d-flex flex-row">
                             <h2>{currentCohort.name}</h2>
-                            <Button variant="primary" value="addStudent" onClick={addStudent} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button>
+                            {/* <Button variant="primary" value="addStudent" onClick={addStudent} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button> */}
+                            <AddStudentModal />
                         </div>
                         <ListGroup>
                             <StudentListPaneHeader {...this.props} />
@@ -134,11 +137,6 @@ class StudentListPane extends React.Component {
             }
         </div>)
     }
-}
-
-const addStudent = (evt) => {
-    evt.preventDefault()
-    console.log('Todo: add student modal')
 }
 
 const deleteStudent = (evt) => {
