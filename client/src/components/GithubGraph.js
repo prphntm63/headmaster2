@@ -31,16 +31,16 @@ const GraphSquare = ({commitDay, idx}) => (
 
 export default ({student}) => (
     <div className="graph-container">
-        {['','','M','','W','','F',''].map(headerDay => {
-            return (<div className="graph-item graph-item-header">{headerDay}</div>)})
+        {['','','M','','W','','F',''].map((headerDay, idx) => {
+            return (<div className="graph-item graph-item-header" key={headerDay + idx}>{headerDay}</div>)})
         }
-        {parseCommits(student.commits).commits.map((commitDay, idx) => {
-            return (<GraphSquare commitDay={commitDay} idx={idx} />)
+        {parseCommits(student.commits, student).commits.map((commitDay, idx) => {
+            return (<GraphSquare commitDay={commitDay} idx={idx} key={idx} />)
         })}
     </div>
 )
 
-function parseCommits(commits) {
+function parseCommits(commits, student) {
     if (!commits.length) return null
 
     let today = new Date()
@@ -49,7 +49,9 @@ function parseCommits(commits) {
     let lastCommit = null
 
     // Show 4 weeks max
-    for (let idx=(22+dayOfWeek); idx>0; idx--) {
+    for (let idx=(21+dayOfWeek); idx>=0; idx--) {
+        let timeZone = new Date().getTimezoneOffset()
+        let timeOffset = Number(timeZone*60*1000)
         let offset = 24*60*60*1000
         let dayObject = {
             commits : [],
@@ -62,7 +64,10 @@ function parseCommits(commits) {
 
         commits.forEach(commit => {
             commit.ctime = new Date(commit.ctime)
-            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) ) && (commit.ctime.getTime() > today.getTime() - (idx*offset) - offset )) {
+
+            if ((commit.ctime.getTime() < today.getTime() - (idx*offset) + timeOffset ) && 
+                (commit.ctime.getTime() > today.getTime() - (idx*offset) - offset + timeOffset
+            )) {
                 
                 dayObject.commits.push(commit)
                 if (!dayObject.repos.find(repo => {return repo === commit.repo} ) ) {
@@ -78,6 +83,7 @@ function parseCommits(commits) {
         })
         commitsArray.push(dayObject)
     }
+
 
     return {
         "commits" : commitsArray,

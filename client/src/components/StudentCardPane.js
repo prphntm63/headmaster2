@@ -11,7 +11,7 @@ const StudentCardPane = ({views, currentCohort}) => (
             (<React.Fragment>
                 <SortBar currentCohort={currentCohort} />
                 <div className="d-flex flex-row flex-wrap student-cards" >
-                    {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={views}/>})}
+                    {currentCohort.students.map(student => {return <StudentCard studentId={student.id} cohortId={currentCohort.id} views={views} key={student.id}/>})}
                 </div>
             </React.Fragment>)
         :

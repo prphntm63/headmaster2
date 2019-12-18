@@ -124,7 +124,7 @@ class AddTouchpointModal extends React.Component {
             <React.Fragment>
                 {this.props.isStudentCard ?
                     (<div className="d-flex justify-content-center py-2 add-touchpoint-button">
-                        <a role="button" onClick={this.handleOpen}>Add Touchpoint</a>
+                        <a href='#' onClick={this.handleOpen}>Add Touchpoint</a>
                     </div>)
                 :
                     (<Button variant="primary" value="addTouchpoint" onClick={this.handleOpen} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button>)
