@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Badge, Modal, Form, Button, Row, Col, InputGroup, ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
+import { Dropdown, DropdownButton, Badge, Modal, Form, Button, Row, Col, InputGroup, ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import {connect} from 'react-redux'
 
 import { addTouchpoint } from './../redux/actions'
@@ -31,13 +31,14 @@ class AddTouchpointModal extends React.Component {
             return studentData.json()
         })
         .then(studentJson => {
+            if (!studentJson) return
+
             this.setState({
                 currentTags : studentJson.tags,
                 stoplightStatusEntry : studentJson.stoplightStatus,
                 modalShow : true
             })
         })
-        .then(console.log(this.state))
     }
 
     handleClose = () => {
@@ -61,11 +62,60 @@ class AddTouchpointModal extends React.Component {
 
     handleAddTouchpoint = () => {
         let studentId = this.props.studentId
-        console.log('Add touchpoint here!')
+
+        fetch('/api/touchpoints', {
+            method : 'POST',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify({
+                'ctime' : new Date(),
+                'student' : this.props.studentId,
+                'stoplightStatus' : this.state.stoplightStatusEntry,
+                'tags' : JSON.stringify(this.state.currentTags),
+                'comment' : this.state.commentEntry
+            })
+        })
+        .then(returnData => {
+            return returnData.json()
+        })
+        .then(returnJSON => {
+            console.log(returnJSON)
+            this.props.addTouchpoint({
+                studentId : returnJSON.student,
+                touchpointData : {
+                    id:returnJSON.id,
+                    ctime: returnJSON.ctime,
+                    student: returnJSON.student,
+                    stoplightStatus: returnJSON.stoplightStatus,
+                    comment: returnJSON.comment,
+                    user: this.props.user.id,
+                    userFirstName: this.props.user.firstName,
+                    userLastName: this.props.user.lastName,
+                    tags: returnJSON.tags
+                }
+            })
+            this.handleClose()
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
-    removeTag = (evt) => {
-        console.log('removed ', evt.target)
+    handleAddTag = () => {
+        this.setState({
+            currentTags : this.state.currentTags ? [...this.state.currentTags, {...this.state.tagEntry}] : [{...this.state.tagEntry}],
+            tagEntry: {
+                text : '',
+                status : 'green'
+            },
+        })
+    }
+
+    removeTag = (tagText) => {
+        this.setState({
+            currentTags: this.state.currentTags.filter(tag => {return tag.text != tagText})
+        })
     }
 
     render() {
@@ -74,7 +124,7 @@ class AddTouchpointModal extends React.Component {
             <React.Fragment>
                 {this.props.isStudentCard ?
                     (<div className="d-flex justify-content-center py-2 add-touchpoint-button">
-                        <a href onClick={this.handleOpen}>Add Touchpoint</a>
+                        <a role="button" onClick={this.handleOpen}>Add Touchpoint</a>
                     </div>)
                 :
                     (<Button variant="primary" value="addTouchpoint" onClick={this.handleOpen} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button>)
@@ -101,32 +151,39 @@ class AddTouchpointModal extends React.Component {
                                 <Form.Group as={Col} sm={8} controlId="inputGithub">
                                     <Form.Label>Github Profile</Form.Label>
                                     <InputGroup>
-                                        <ButtonToolbar as={InputGroup.Prepend}>
-                                            <ToggleButtonGroup className="stoplightStatus" type="radio" name="stoplightButtons" value={this.state.tagEntry.status} onChange={state => {this.setState({tagEntry : {...this.state.tagEntry, state:state}})}}>
-                                                <ToggleButton value={'green'} variant="success"><i className="material-icons pt-1">done</i></ToggleButton>
-                                                <ToggleButton value={'yellow'} variant="warning"><i className="material-icons pt-1">help_outline</i></ToggleButton>
-                                                <ToggleButton value={'red'} variant="danger"><i className="material-icons pt-1">warning</i></ToggleButton>
-                                            </ToggleButtonGroup>
-                                        </ButtonToolbar>
+                                        <DropdownButton
+                                            as={InputGroup.Prepend}
+                                            variant={'outline-' + getBadgeClassFromStatus(this.state.tagEntry.status)}
+                                            title={this.state.tagEntry.status}
+                                            // title = {getBadgeGlyphFromStatus(this.state.tagEntry.status)} 
+                                        >
+                                            <Dropdown.Item eventKey="green" onSelect={state => {this.setState({tagEntry : {...this.state.tagEntry, status:state}})}}>Green</Dropdown.Item>
+                                            <Dropdown.Item eventKey="yellow" onSelect={state => {this.setState({tagEntry : {...this.state.tagEntry, status:state}})}}>Yellow</Dropdown.Item>
+                                            <Dropdown.Item eventKey="red" onSelect={state => {this.setState({tagEntry : {...this.state.tagEntry, status:state}})}}>Red</Dropdown.Item>
+                                        </DropdownButton>
                                         <Form.Control 
                                             type="input" 
                                             placeholder="Add Tag" 
                                             value={this.state.tagEntry.text} 
-                                            onChange={value => {this.setState({tagEntry : {...this.state.tagEntry, text:value}})}} 
+                                            onChange={evt => {this.setState({tagEntry : {...this.state.tagEntry, text:evt.target.value}})}} 
                                             isValid={this.state.errors.tagEntry !== null}
                                             isInvalid={this.state.errors.tagEntry}></Form.Control>
                                         <InputGroup.Append>
-                                            <Button variant="outline-secondary">＋</Button>
+                                            <Button size="sm" variant="outline-secondary" onClick={this.handleAddTag}>＋</Button>
                                         </InputGroup.Append>
                                     </InputGroup>
-                                    {this.state.currentTags.map(tag => {
-                                        return (<Badge variant={getBadgeClassFromStatus(tag.status)} className="mr-auto my-1">
+                                    {this.state.currentTags ? 
+                                    this.state.currentTags.map(tag => {
+                                        return (<Badge key={tag.text} id={tag.text} variant={getBadgeClassFromStatus(tag.status)} className="mr-auto my-1">
                                             {tag.text}
-                                            <span className="delete-tag linkstyle" onclick={this.removeTag}>
+                                            <span className="delete-tag linkstyle" onClick={(evt) => {this.removeTag(evt.target.parentNode.parentNode.getAttribute("id"))}}>
                                                 <i className="material-icons">cancel</i>
                                             </span>
                                         </Badge>)
-                                    })}
+                                    })
+                                    :
+                                    (<div></div>)
+                                    }
                                     <Form.Control.Feedback type="invalid">{this.state.errors.tagEntry ? this.state.errors.tagEntry : ''}</Form.Control.Feedback>
                                 </Form.Group>
                             </Row>
@@ -166,18 +223,31 @@ export default connect(null, mapDispatchToProps)(AddTouchpointModal)
 
 function getBadgeClassFromStatus(status) {
     let badgeClass = ''
-            switch (status) {
-                case 'green':
-                    badgeClass = 'success'
-                    break;
-                case 'yellow':
-                    badgeClass = 'warning'
-                    break;
-                case 'red':
-                    badgeClass = 'danger'
-                    break;
-                default:
-                    badgeClass = 'success'
-            }
+    switch (status) {
+        case 'green':
+            badgeClass = 'success'
+            break;
+        case 'yellow':
+            badgeClass = 'warning'
+            break;
+        case 'red':
+            badgeClass = 'danger'
+            break;
+        default:
+            badgeClass = 'success'
+    }
     return badgeClass
+}
+
+function getBadgeGlyphFromStatus(status) {
+    switch (status) {
+        case 'green':
+            return (<i className="material-icons">done</i>)
+        case 'yellow':
+            return (<i className="material-icons">help_outline</i>)
+        case 'red':
+            return (<i className="material-icons">warning</i>)
+        default:
+            return(<i></i>)
+    }
 }

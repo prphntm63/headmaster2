@@ -45,12 +45,11 @@ export default function(state = initialState, action) {
         case ADD_TOUCHPOINT: {
             let newCohorts = []
 
-            newState.cohorts.forEach(cohort => {
-                let targetStudentIndex = cohort.students.findIndex(student => {return student.id === action.studentId})
-
-                if (targetStudentIndex) {
+            newState.forEach(cohort => {
+                let targetStudentIndex = cohort.students.findIndex(student => {return student.id === action.payload.studentId})
+                if (targetStudentIndex >= 0) {
                     let newCohort = {...cohort}
-                    newCohort.students[targetStudentIndex].touchpoints.push(action.touchpointData)
+                    newCohort.students[targetStudentIndex].touchpoints.push(action.payload.touchpointData)
                     newCohorts.push(newCohort)
                 } else {
                     newCohorts.push(cohort)

@@ -89,7 +89,7 @@ const StudentListPaneBody = ({currentCohort}) => (
             })[0]
             
             return (
-            <LinkContainer to={"/students/" + student.github}>
+            <LinkContainer to={"/students/" + student.github} key={student.id}>
                 <ListGroup.Item action>
                     <Row>
                         <Col xs={1}><StoplightStatusIndicator stoplightStatus={currentTouchpoint ? currentTouchpoint.stoplightStatus : null} /></Col>

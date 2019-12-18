@@ -40,7 +40,7 @@ const StudentCardBodyTouchpoint = ({student, currentTouchpoint}) => (
         {currentTouchpoint && currentTouchpoint.comment ? (<div className="student-touchpoint-comment"><small>{currentTouchpoint.comment}</small></div>) : <div></div>}
         {currentTouchpoint && currentTouchpoint.tags ? 
             currentTouchpoint.tags.map(tag => {
-                return (<TouchpointTag tagStatus={tag.status} tagText={tag.text} />)
+                return (<TouchpointTag tagStatus={tag.status} tagText={tag.text} key={tag.text}/>)
             })
         : 
         <div></div>
@@ -60,21 +60,21 @@ const StudentCardBodyCommits = ({student}) => (
     </div>
 )
 
-const StudentCardFooter = ({student}) => (
+const StudentCardFooter = ({student, user}) => (
     <Card.Footer className="d-flex flex-row student-card-footer p-0">
         <div className="d-flex justify-content-center py-2">
             <LinkContainer to={"/students/" + student.github}>
                 <a href>Details</a>
             </LinkContainer>
         </div>
-        <AddTouchpointModal studentId={student.id} isStudentCard={true} />
+        <AddTouchpointModal user={user} studentId={student.id} isStudentCard={true} />
         {/* <div className="d-flex justify-content-center py-2 add-touchpoint-button">
             <a href='#'>Add Touchpoint</a>
         </div> */}
     </Card.Footer>
 )
 
-const StudentCard = ({ cohorts, studentId, cohortId }) => {
+const StudentCard = ({ cohorts, studentId, cohortId, user }) => {
     const student = cohorts.filter(cohort => {return cohort.id === cohortId})[0].students.filter(student => {return student.id === studentId})[0]
     const currentTouchpoint = student.touchpoints.sort((a,b) => {
         return new Date(b.ctime).getTime() - new Date(a.ctime).getTime() 
@@ -84,13 +84,15 @@ const StudentCard = ({ cohorts, studentId, cohortId }) => {
         <Card className={student.enrolledStatus ? 'student-card' : 'student-card student-card-inactive'}>
             <StudentCardHeader student={student} currentStoplightStatus = {currentTouchpoint ? currentTouchpoint.stoplightStatus : null} />
             <StudentCardBody student={student} currentTouchpoint={currentTouchpoint} />
-            <StudentCardFooter student={student} />
+            <StudentCardFooter student={student} user={user} />
         </Card>
     )
 }
 
-const mapStateToProps = state => ({ 
+const mapStateToProps = (state) => ({ 
+    user : state.user,
     cohorts: state.cohorts
+    
 })
 
 export default connect(mapStateToProps)(StudentCard);
