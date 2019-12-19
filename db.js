@@ -73,12 +73,23 @@ let db = {
         })
     },
 
-    createUser : function(userId) {
-
+    createUser : function(userParams) {
+        return knex
+        .insert(userParams)
+        .into('Users')
+        .then(users => {
+            return users.length ? users[0] : null
+        })
     },
 
-    updateUser : function(userId, params) {
-
+    updateUser : function(userId, userParams) {
+        return knex('Users')
+        .returning('*')
+        .where({'id' : userId})
+        .update(userParams)
+        .then(users => {
+            return users.length ? users[0] : null
+        })
     },
 
     authenticateUser : function(accessToken, refreshToken, profile, cb) {
@@ -267,13 +278,29 @@ let db = {
 
     // ***** COHORT METHODS *****
 
-    getAllDataByUser : function(userId) {
-        return knex
-        .from('Users')
-        .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
-        .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
-        .select('Cohorts.*')
-        .where({'LinkCohortsUsers.user' : userId})
+    getAllDataByUser : function(userId, superadmin) {
+        let dbPromise = new Promise((resolve, reject) => {
+            if (superadmin === 'superadmin') {
+                knex
+                .from('Cohorts')
+                .select('*')
+                .then(cohortsList => {
+                    resolve(cohortsList)
+                })
+            } else {
+                knex
+                .from('Users')
+                .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
+                .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+                .select('Cohorts.*')
+                .where({'LinkCohortsUsers.user' : userId})
+                .then(cohortsList => {
+                    resolve(cohortsList)
+                })
+            }
+        })
+        
+        return dbPromise
         .then(cohortsList => {
             let cohortPromises = []
 

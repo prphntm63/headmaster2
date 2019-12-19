@@ -9,7 +9,9 @@
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "initialize": "npx knex migrate:latest",
-    "initializeData": "npx knex migrate:latest && npx knex seed:run"
+    "initializeData": "npx knex migrate:latest && npx knex seed:run",
+    "postinstall": "cd client && npm install",
+    "addSuperUser" : "node addSuperUser.js"
   },
   "author": "",
   "license": "ISC",

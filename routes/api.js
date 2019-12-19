@@ -9,9 +9,9 @@ router.get('/test', (req, res) => {
 })
 
 router.get('/usercohorts', ensureAuthenticated, (req, res) => {
-    let userId = req.user.id
+    let user = req.user
 
-    db.getAllDataByUser(userId)
+    db.getAllDataByUser(user.id, user.superuser)
     .then(cohortDataJson => {
         let sendData = {
             user : req.user,
@@ -27,16 +27,27 @@ router.get('/usercohorts', ensureAuthenticated, (req, res) => {
 })
 
 router.get('/cohorts', ensureAuthenticated, (req, res) => {
-    let userId = req.user.id 
-    
-    db.getCohortsByUser(userId)
-    .then(cohortListJson => {
-        res.status(200).json(cohortListJson)
+    let user = req.user
+
+    if (user.superadmin === "superadmin") {
+        db.getCohortsList()
+        .then(cohortListJson => {
+            res.status(200).json(cohortListJson)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
     })
-    .catch(err => {
-        console.log(err)
-        res.status(500)
-    })
+    } else {
+        db.getCohortsByUser(user.id)
+        .then(cohortListJson => {
+            res.status(200).json(cohortListJson)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+        })
+    }
 })
 
 router.get('/cohorts/:cohortId', ensureAuthenticated, (req, res) => {
