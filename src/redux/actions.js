@@ -24,66 +24,86 @@ import {
     SET_COHORT_HIDE_FILTER,
     SET_STUDENT_CARD_HIDE_FILTER,
     SET_STUDENT_LIST_HIDE_FILTER,
+    SET_COHORT_SORT_DIRECTION,
+    SET_STUDENT_CARD_SORT_DIRECTION,
+    SET_STUDENT_LIST_SORT_DIRECTION,
     UPDATE_COHORTS,
     UPDATE_USER,
     LOGIN_USER,
     LOGOUT_USER,
-    UPDATE_TOUCHPOINT,
-    UPDATE_COMMITS
+    ADD_TOUCHPOINT,
+    UPDATE_COMMITS,
+    UPDATE_STUDENT,
+    ADD_STUDENT
 } from "./actionTypes";
 
 export const setCohortSortFilter = filter => ({
     type : SET_COHORT_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setCohortSortDirection = direction => ({
+    type : SET_COHORT_SORT_DIRECTION,
+    direction
 })
 
 export const setStudentCardSortFilter = filter => ({
     type : SET_STUDENT_CARD_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setStudentCardSortDirection = direction => ({
+    type : SET_STUDENT_CARD_SORT_DIRECTION,
+    direction
 })
 
 export const setStudentListSortFilter = filter => ({
     type : SET_STUDENT_LIST_SORT_FILTER,
-    payload : { filter }
+    filter
+})
+
+export const setStudentListSortDirection = direction => ({
+    type : SET_STUDENT_LIST_SORT_DIRECTION,
+    direction
 })
 
 export const setCohortHideFilter = filter => ({
     type : SET_COHORT_HIDE_FILTER,
-    payload : { filter }
+    filter
 })
 
 export const setStudentCardHideFilter = filter => ({
     type : SET_STUDENT_CARD_HIDE_FILTER,
-    payload : { filter }
+    filter
 })
 
 export const setStudentListHideFilter = filter => ({
     type : SET_STUDENT_LIST_HIDE_FILTER,
-    payload : { filter }
+    filter
 })
 
 export const updateCohorts = payload => ({
     type : UPDATE_COHORTS,
-    payload : { payload }
+    payload
 })
 
 export const updateUser = payload => ({
     type : UPDATE_USER,
-    payload : { payload }
+    payload
 })
 
 export const loginUser = payload => ({
     type : LOGIN_USER,
-    payload : { payload }
+    payload
 })
 
 export const logoutUser = payload => ({
     type : LOGOUT_USER,
-    payload : { payload }
+    payload
 })
 
-export const updateTouchpoint = payload => ({
-    type : UPDATE_TOUCHPOINT,
+export const addTouchpoint = payload => ({
+    type : ADD_TOUCHPOINT,
     payload : {
         studentId : payload.studentId,
         touchpointData : payload.touchpointData
@@ -96,4 +116,15 @@ export const updateCommits = payload => ({
         studentId : payload.studentId,
         commitData : payload.commitData
     }
+})
+
+export const updateStudent = student => ({
+    type : UPDATE_STUDENT,
+    student
+})
+
+export const addStudent = payload => ({
+    type : ADD_STUDENT,
+    cohortId : payload.cohortId,
+    student : payload.student
 })

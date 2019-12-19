@@ -1,85 +1,68 @@
-# Headmaster II
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Headmaster II is a full stack application catered toward managing students in a software development learning environment. Instructors are able to track student activity through [Github](https://github.com) commit data and keep tabs on individuals and their specific learning challenges through a timeline of feedback touchpoints.
+## Available Scripts
 
-## Installation
+In the project directory, you can run:
 
-1. Ensure [PostgreSQL](https://www.postgresql.org/) has been installed on your machine
+### `npm start`
 
-2. (Optional) Run the following commands in the PostgreSQL shell to create the `headmaster2` database and `testUser` role.
- 
-* `CREATE DATABASE headmaster2`
-* `CREATE USER testUser WITH PASSWORD 'password'`
-* `GRANT ALL PRIVILEGES ON DATABASE headmaster2 to testUser`
- 
-3. Clone the repository and run `npm install` in the root directory to install dependencies for server.
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-4. Install Knex globally by running `npm install knex -g`
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-5. If using different database credentials from 2 (default), modify `knexfile.js` to properly include your PostgreSQL connection settings
+### `npm test`
 
-6. Use the start script `npm run initalize` to initialize a blank database 
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-7. If desired, use `npm run seedRandom` to initialize a database with random test data.
+### `npm run build`
 
-8. Add yourself as a superuser by running `npm run addSuperUser --github={your_github_username} --role=superadmin`. Other roles are also available - simply replace `--role=superadmin` with one of the following:
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-* `superadmin`: View and edit all cohorts, create new cohorts, create and edit students in any cohort, add touchpoints for any student
-* `admin` : View and edit user assigned cohorts, create new cohorts, create and edit students in user assigned cohorts, add touchpoints for user assigned students
-* `user` : View user assigned cohorts, edit students in user assigned cohorts, add touchpoints for user assigned students
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
 
-8. Deploy locally using `npm run dev` to start application in [nodemon](https://www.npmjs.com/package/nodemon) or `npm start` to run application using NodeJS.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Usage
+### `npm run eject`
 
-Headmaster is useful for tracking student activity and progress throughout a course.
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-### Login / Logout
-Users must have a valid github account and be added in the database with a defined role in order to log in. Once logged in, the user may log out by clicking the User Menu on the right side of the Menu bar and selecting `Logout`
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### Cohorts Page / Home Screen
-This view will show all of an instructor's assigned cohorts. If the instructor has an `admin` or `superadmin` role, it also allows creation of new cohorts.
+Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-### Cohort Page
-This page contains all cohort information and students.
-#### Dashboard Tab
-In this view, each card shows a concise summary of each student's information, current status, and activity. Users can quickly add touchpoints for multiple students from this view. Cards can be sorted or hidden by various criteria using the controls in the top right.
-#### Students Tab
-This view shows a list view of students. The list can be sorted by type by clicking on the headers. New students may be added by clickin the `+` icon in the upper right hand corner.
-#### Settings Tab
-In progress
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-### Students Page
-In progress
+## Learn More
 
-### Admin Page
-In progress
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## Main Architecture
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Server Side
-* [ExpressJS](https://expressjs.com/)
-* [KnexJS](http://knexjs.org/)
-* [Node-Postgres](https://node-postgres.com/)
-* [PostgreSQL](https://www.postgresql.org/)
+### Code Splitting
 
-### Client Side
-* [React](https://reactjs.org/)
-* [Redux](https://redux.js.org/)
-* [React-Bootstrap](https://react-bootstrap.github.io/)
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-## To Do / Future Development
+### Analyzing the Bundle Size
 
-* New features will be tracked on the project [Kanban Board](https://github.com/prphntm63/headmaster2/projects/1)
-* Bugs are tracked using the [Issue Tracker](https://github.com/prphntm63/headmaster2/issues)
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
-This project is currently a work in progress and many features have not yet been implemented. If a critical feature is missing or not functioning properly, please open an [issue](https://github.com/prphntm63/headmaster2/issues).
+### Making a Progressive Web App
 
-## License
-&copy; 2019
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+### Advanced Configuration
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `npm run build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
