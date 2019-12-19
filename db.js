@@ -73,12 +73,23 @@ let db = {
         })
     },
 
-    createUser : function(userId) {
-
+    createUser : function(userParams) {
+        return knex
+        .insert(userParams)
+        .into('Users')
+        .then(users => {
+            return users.length ? users[0] : null
+        })
     },
 
-    updateUser : function(userId, params) {
-
+    updateUser : function(userId, userParams) {
+        return knex('Users')
+        .returning('*')
+        .where({'id' : userId})
+        .update(userParams)
+        .then(users => {
+            return users.length ? users[0] : null
+        })
     },
 
     authenticateUser : function(accessToken, refreshToken, profile, cb) {
@@ -266,6 +277,81 @@ let db = {
     },
 
     // ***** COHORT METHODS *****
+
+    getAllDataByUser : function(userId, superadmin) {
+        let dbPromise = new Promise((resolve, reject) => {
+            if (superadmin === 'superadmin') {
+                knex
+                .from('Cohorts')
+                .select('*')
+                .then(cohortsList => {
+                    resolve(cohortsList)
+                })
+            } else {
+                knex
+                .from('Users')
+                .join('LinkCohortsUsers', 'Users.id', '=', 'LinkCohortsUsers.user')
+                .join('Cohorts', 'LinkCohortsUsers.cohort', '=', 'Cohorts.id')
+                .select('Cohorts.*')
+                .where({'LinkCohortsUsers.user' : userId})
+                .then(cohortsList => {
+                    resolve(cohortsList)
+                })
+            }
+        })
+        
+        return dbPromise
+        .then(cohortsList => {
+            let cohortPromises = []
+
+            cohortsList.forEach(cohort => {
+                let cohortPromise = knex
+                .from('LinkCohortsStudents')
+                .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+                .select('Students.*', 'LinkCohortsStudents.enrolledStatus')
+                // .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
+                .where({'LinkCohortsStudents.cohort' : cohort.id})
+                .then(students => {
+                    let studentPromises = [];
+
+                    students.forEach(student => {
+                        let studentPromise = new Promise((resolve, reject) => {
+                            let touchpointsPromse = knex
+                            .from('Touchpoints')
+                            .innerJoin('Users', 'Touchpoints.user', '=', 'Users.id')
+                            .select('Touchpoints.*', 'Users.firstName as userFirstName', 'Users.lastName as userLastName')
+                            .where({'Touchpoints.student' : student.id})
+                            
+                            let commitsPromise = knex
+                            .from('Commits')
+                            .select('*')
+                            .where({'Commits.student' : student.id})
+                            
+                            Promise.all([touchpointsPromse, commitsPromise])
+                            .then(([touchpoints, commits]) => {
+                                student.touchpoints = touchpoints
+                                student.commits = commits
+                                resolve(student)
+                            })
+                        })
+
+                        studentPromises.push(studentPromise)
+                    })
+                    return Promise.all(studentPromises)
+                    .then(students => {
+                        cohort.students = students
+                        return cohort
+                    })
+                })
+                cohortPromises.push(cohortPromise)
+            })
+            return Promise.all(cohortPromises)
+        })
+
+        // .join('LinkCohortsStudents', 'Cohorts.id', '=', 'LinkCohortsStudents.cohort')
+        // .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
+        // .select('Cohorts.id', 'Cohorts.name', 'Cohorts.startDate', 'Cohorts.slug')
+    },
 
     getCohortIdFromSlug : function(cohortSlug) {
         return knex

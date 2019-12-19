@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const db = require('./db.js');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
+const path = require('path')
 
 const app = express()
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '5000';
 
 passport.use(new GitHubStrategy(
     {
@@ -53,14 +54,14 @@ app.set('views', './public/views')
 
 // ***** Routes *****
 
-app.use('/public', express.static('public'));
+// app.use('/public', express.static('public'));
 app.use('/favicon.ico', (req, res) => {
     res.status(204)
 })
 
 app.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/');
+    res.redirect('http://localhost:3000/');
 })
 
 let dashboard = require('./routes/dashboard')
@@ -69,19 +70,34 @@ let cohorts = require('./routes/cohorts')
 let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
-app.use('/dashboard', dashboard)
-app.use('/', cohorts)
-app.use('/students', students)
-app.use('/instructors', instructors)
+// app.use('/dashboard', dashboard)
+// app.use('/', cohorts)
+// app.use('/students', students)
+// app.use('/instructors', instructors)
+
 app.use('/api', api)
+// app.get('/api/test', (req, res) => {
+//     res.status(200).json({"ok":"ok"})
+// })
 
 app.get('/auth/github',
-    passport.authenticate('github'));
+    passport.authenticate('github'), function(req,res) {
+        console.log('Attempting to authenticate w/ github')
+    });
 
 app.get('/auth/github/callback', 
     passport.authenticate('github', { failureRedirect: '/' }),
     function(req, res) {
-        res.redirect('/');
+        console.log('Authenticated with Github')
+        // res.sendFile(path.join(__dirname+'/client/build/index.html'));
+        // res.redirect('/');
+        res.redirect("http://localhost:3000/");
+});
+
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 app.listen(port, () => {

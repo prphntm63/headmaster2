@@ -211,7 +211,7 @@ module.exports = github;
 // console.log('starting')
 
 // // Test function
-// github.getUserCommits('m-spilman', 60*24*60*60*1000)
+// github.getUserCommits('gauraklein', 60*24*60*60*1000)
 // .then(commits => {
 //     console.log(commits)
 // })

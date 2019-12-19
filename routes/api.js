@@ -3,17 +3,51 @@ const router = express.Router();
 const db = require('./../db.js');
 const github = require('./../github.js');
 
-router.get('/cohorts', ensureAuthenticated, (req, res) => {
-    let userId = req.user.id 
-    
-    db.getCohortsByUser(userId)
-    .then(cohortListJson => {
-        res.status(200).json(cohortListJson)
+router.get('/test', (req, res) => {
+    console.log('got API test request')
+    res.status(200).json({"success" : true})
+})
+
+router.get('/usercohorts', ensureAuthenticated, (req, res) => {
+    let user = req.user
+
+    db.getAllDataByUser(user.id, user.superuser)
+    .then(cohortDataJson => {
+        let sendData = {
+            user : req.user,
+            cohorts : cohortDataJson
+        }
+
+        res.status(200).json(sendData)
     })
     .catch(err => {
         console.log(err)
         res.status(500)
     })
+})
+
+router.get('/cohorts', ensureAuthenticated, (req, res) => {
+    let user = req.user
+
+    if (user.superadmin === "superadmin") {
+        db.getCohortsList()
+        .then(cohortListJson => {
+            res.status(200).json(cohortListJson)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+    })
+    } else {
+        db.getCohortsByUser(user.id)
+        .then(cohortListJson => {
+            res.status(200).json(cohortListJson)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500)
+        })
+    }
 })
 
 router.get('/cohorts/:cohortId', ensureAuthenticated, (req, res) => {
@@ -212,7 +246,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     } else {
-        res.status(401)
+        res.status(401).json({"error" : "not authenticated"})
     }
 }
 
