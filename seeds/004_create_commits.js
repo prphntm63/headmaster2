@@ -1,6 +1,5 @@
 
 exports.seed = function(knex) {
-
   return generateCommits(knex)
   .then(commits => {
     return knex('Commits').insert( commits );

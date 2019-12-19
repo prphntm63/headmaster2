@@ -16,20 +16,22 @@ exports.seed = function(knex) {
   
 };
 
-function generateStudents(cohortIds) {
-  let numStudents = 10
-  let students = []
+// async function generateStudents(cohortIds) {
+//   let numStudents = 40
+//   let students = []
 
-  for (let idx=0; idx<numStudents; idx++) {
-    students.push(generateRandomStudent(null, cohortIds))
-  }
+//   for (let idx=0; idx<numStudents; idx++) {
+//     students.push(generateRandomStudent(null, cohortIds))
+//   }
 
-  return Promise.all(students);
-}
+//   return Promise.all(students);
+// }
 
-function generateRandomStudent(id, cohortIds) {
+function generateStudents() {
+  let numStudents = 50
+  
   let fetch = new Promise((resolve, reject) => {
-    https.get('https://randomuser.me/api/', res => {
+    https.get(`https://randomuser.me/api/?results=${numStudents}`, res => {
       res.setEncoding('utf8')
       let body = ''
       res.on('data', data=> {
@@ -43,23 +45,24 @@ function generateRandomStudent(id, cohortIds) {
   })
 
   return fetch
-  .then(responseJson => {
-    // let name = randomName()
-    let name = responseJson.results[0]
-    let student = {
-      firstName: name.name.first, 
-      lastName: name.name.last, 
-      github: name.login.username + Math.floor(Math.random() * 100), 
-      photoUrl : name.picture.large,
-    }
+  .then(responseJsonArray => {
+    let students = []
 
-    if (id) {
-      student.id = id
-    }
-    return student
+    responseJsonArray.results.forEach(responseJson => {
+      let student = {
+        firstName: responseJson.name.first, 
+        lastName: responseJson.name.last, 
+        github: responseJson.login.username, 
+        photoUrl : responseJson.picture.large,
+      }
+
+      // if (id) {
+      //   student.id = id
+      // }
+      students.push(student)
+    })
+    return students
   })
-
-  
 }
 
 // table.uuid('id').primary().defaultTo(knex.raw('CONCAT("student-", uuid_generate_v4())'))
