@@ -34,7 +34,8 @@ import {
     ADD_TOUCHPOINT,
     UPDATE_COMMITS,
     UPDATE_STUDENT,
-    ADD_STUDENT
+    ADD_STUDENT,
+    ADD_COHORT
 } from "./actionTypes";
 
 export const setCohortSortFilter = filter => ({
@@ -127,4 +128,9 @@ export const addStudent = payload => ({
     type : ADD_STUDENT,
     cohortId : payload.cohortId,
     student : payload.student
+})
+
+export const addCohort = payload => ({
+    type : ADD_COHORT,
+    cohort : payload
 })

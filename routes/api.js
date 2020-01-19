@@ -67,14 +67,14 @@ router.post('/cohorts', ensureAuthenticated, (req,res) => {
     let validationErrors = []
     let user = req.user.id
 
-    for (key in cohortInfo) {
-        if (!cohortInfo[key]) {
-            validationErrors.push({
-                "field" : key,
-                "error" : "Field value expected, none received"
-            })
-        }
-    }
+    // for (key in cohortInfo) {
+    //     if (!cohortInfo[key]) {
+    //         validationErrors.push({
+    //             "field" : key,
+    //             "error" : "Field value expected, none received"
+    //         })
+    //     }
+    // }
 
     if (validationErrors.length) {
         res.status(400).send(
@@ -82,17 +82,16 @@ router.post('/cohorts', ensureAuthenticated, (req,res) => {
         )
     } else {
         let params = {
-            "name" : cohortInfo.cohortName,
-            "startDate" : cohortInfo.startDate,
-            "slug" : cohortInfo.cohortSlug,
-            "graduated" : false,
+            "name" : cohortInfo.name,
+            "startDate" : new Date(cohortInfo.startDate),
+            "slug" : cohortInfo.slug,
+            "archived" : cohortInfo.graduated,
             "user" : user
         }
 
         db.addCohort(params)
         .then(cohortInfo => {
-            console.log(cohortInfo)
-            res.status(200).send({"errors" : false})
+            res.status(200).json(cohortInfo)
         })
         .catch(err => {
             console.log(err)
@@ -148,6 +147,7 @@ router.get('/students/:studentId', ensureAuthenticated, (req, res) => {
 
     db.getStudentByUser(userId, studentId)
     .then(studentListJson => {
+        console.log(studentListJson[0])
         res.status(200).json(studentListJson[0])
     })
     .catch(err => {

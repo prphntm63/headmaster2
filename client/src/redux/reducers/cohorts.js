@@ -3,7 +3,8 @@ import {
     ADD_TOUCHPOINT,
     UPDATE_COMMITS,
     UPDATE_STUDENT,
-    ADD_STUDENT
+    ADD_STUDENT,
+    ADD_COHORT
 } from "../actionTypes"
 
 const initialState = []
@@ -39,6 +40,14 @@ export default function(state = initialState, action) {
         case ADD_STUDENT: {
             let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
             newState[cohortIndex].students.push(action.student)
+            return newState
+        }
+
+        case ADD_COHORT: {
+            let newCohort = action.cohort
+            newCohort.students = []
+
+            newState.push(newCohort)
             return newState
         }
 

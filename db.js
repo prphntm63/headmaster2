@@ -172,21 +172,50 @@ let db = {
     getStudentByUser : function(userId, studentId) {
         if (!userId || !studentId) return null
 
-        return knex
-        .from('Students')
-        .leftJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")        
-        .join('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
-        .join('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
-        .join('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.cohort')
-        .select('tp.*', 'Students.*', 'Cohorts.id as cohortId', 'Cohorts.name as cohortName', 'Students.id as studentId')
-        .where({
-            'Students.id' : studentId,
-            'LinkCohortsUsers.user' : userId
+        return knex('Users')
+        .where('superuser', 'superadmin')
+        .andWhere('id', userId)
+        .select('*')
+        .then(users => {
+            if (!users.length) {
+                return knex
+                .from('Students')
+                .leftJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")        
+                .leftJoin('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
+                .leftJoin('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
+                .leftJoin('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.cohort')
+                .select('tp.*', 'Students.*', 'Cohorts.id as cohortId', 'Cohorts.name as cohortName', 'Students.id as studentId')
+                .where({
+                    'Students.id' : studentId,
+                })
+                .andWhere({
+                    'LinkCohortsUsers.user' : userId
+                })
+                .then(student => {
+                    return student
+                })
+                .catch(err => {
+                    console.log('error getStudentByUser - ', err)
+                })
+            } else {
+                return knex
+                .from('Students')
+                .leftJoin('Touchpoints AS tp', knex.raw('(SELECT MAX(ctime) FROM "Touchpoints" WHERE "Touchpoints".student="Students".id)'), '=', "tp.ctime")        
+                .leftJoin('LinkCohortsStudents', 'Students.id', '=', 'LinkCohortsStudents.student')
+                .leftJoin('Cohorts', 'LinkCohortsStudents.cohort', '=', 'Cohorts.id')
+                .leftJoin('LinkCohortsUsers', 'Cohorts.id', '=', 'LinkCohortsUsers.cohort')
+                .select('tp.*', 'Students.*', 'Cohorts.id as cohortId', 'Cohorts.name as cohortName', 'Students.id as studentId')
+                .where({
+                    'Students.id' : studentId,
+                })
+                .then(student => {
+                    return student
+                })
+                .catch(err => {
+                    console.log('error getStudentByUser - ', err)
+                })
+            }
         })
-        .catch(err => {
-            console.log('error getStudentByUser - ', err)
-        })
-        
     },
 
     // getStudentList : function() {
