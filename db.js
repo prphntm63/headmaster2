@@ -261,6 +261,7 @@ let db = {
             .then(linkStudentCohortDataRows => {
                 let linkStudentCohortData = linkStudentCohortDataRows[0]
                 studentData.cohort = linkStudentCohortData.cohort
+                console.log(studentData)
                 return studentData
             })
         })

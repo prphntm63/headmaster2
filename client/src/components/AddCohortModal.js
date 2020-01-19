@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 import {connect} from 'react-redux'
 
-// import DatePicker from "react-bootstrap-date-picker"
 import { addCohort } from './../redux/actions'
 
 class AddCohortModal extends React.Component {
@@ -61,8 +60,6 @@ class AddCohortModal extends React.Component {
             }
         })
         .then(newCohortResponse => {
-            console.log(newCohortResponse)
-            // studentId, firstName, lastName, github, photoUrl
             this.props.addCohort(newCohortResponse)
             this.handleClose()
         })
@@ -70,7 +67,6 @@ class AddCohortModal extends React.Component {
             if (err.status === 400) {
                 err.json()
                 .then(responseJson => {
-                    console.log(responseJson)
                     window.alert(`Cohort failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
                 })
             } else {
@@ -126,7 +122,6 @@ class AddCohortModal extends React.Component {
                                         onChange={(evt) => {this.setState({dateInput : evt.target.value})}}
                                         isValid={this.state.errors.dateInput !== null}
                                         isInvalid={this.state.errors.dateInput}></Form.Control>
-                                    {/* <DatePicker id="example-datepicker" value={this.state.dateInput} onChange={(value, formattedValue) => {this.setState({dateInput : value})}} /> */}
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="inputLastName">
                                     <Form.Label>Slug</Form.Label>
@@ -135,8 +130,8 @@ class AddCohortModal extends React.Component {
                                         type='checkbox'
                                         id='cohort-graduated'
                                         label='Graduated'
-                                        checked={this.state.graduated}
-                                        // onChange={this.setState({graduated : !this.state.graduated})}
+                                        defaultChecked={this.state.graduated}
+                                        onChange={() => {this.setState({graduated : !this.state.graduated})}}
                                     />
                                 </Form.Group>
                             </Row>

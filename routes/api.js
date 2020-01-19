@@ -67,6 +67,10 @@ router.post('/cohorts', ensureAuthenticated, (req,res) => {
     let validationErrors = []
     let user = req.user.id
 
+    if (user.superuser !== 'superadmin' && user.superuser !== 'admin') {
+        res.status(401).json({"errors" : "User permission not sufficent"})
+    }
+
     // for (key in cohortInfo) {
     //     if (!cohortInfo[key]) {
     //         validationErrors.push({

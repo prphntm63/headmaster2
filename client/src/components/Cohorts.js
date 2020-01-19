@@ -18,10 +18,13 @@ const Cohorts = ({ cohorts, user }) => (
             : 
             (
                 <div className="container-lg">
-                    <div className="d-flex flex-row">
-                        {/* <Button variant="primary" value="addStudent" onClick={addStudent} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button> */}
-                        <AddCohortModal />
-                    </div>
+                    {user.superuser === 'superadmin' || user.superuser === 'admin' ?
+                        (<div className="d-flex flex-row">
+                            <AddCohortModal />
+                        </div>)
+                        :
+                        (<></>)
+                    }
                     {cohorts && cohorts.length ? 
                         (<ListGroup>
                             <ListGroup.Item as="li" key="header" variant="secondary">

@@ -125,7 +125,7 @@ class AddStudentModal extends React.Component {
             this.props.addStudent({
                 cohortId : this.props.cohort.id,
                 student : {
-                    id: responseJSON.studentId,
+                    id: responseJSON.id,
                     ctime: new Date(),
                     mtime: new Date(),
                     firstName: responseJSON.firstName,

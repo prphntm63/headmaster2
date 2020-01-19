@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import StudentCardPane from "./../components/StudentCardPane"
 import StudentListPane from "./../components/StudentListPane"
+import InstructorsPane from "./../components/InstructorsPane"
+import SettingsPane from "./../components/SettingsPane"
 
 class Cohort extends React.Component {
     constructor(props) {
@@ -25,7 +27,12 @@ class Cohort extends React.Component {
                             <Tab eventKey="studentList" title="Students">
                                 <StudentListPane />
                             </Tab>
-                            <Tab eventKey="cohortSettings" title="Settings"></Tab>
+                            <Tab eventKey="instructorList" title="Instructors">
+                                <InstructorsPane />
+                            </Tab>
+                            <Tab eventKey="cohortSettings" title="Settings">
+                                <SettingsPane />
+                            </Tab>
                         </Tabs>
                     </React.Fragment>
                     :
