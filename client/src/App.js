@@ -68,7 +68,7 @@ class App extends Component {
   }
 
   handleLogout = () => {
-    window.location.href = `http://localhost:5000/logout`
+    window.location.href = `/logout`
     store.dispatch(updateUser(userLogoutState))
     this.setState({
       user : null
@@ -82,13 +82,13 @@ class App extends Component {
       let callbackCode = currentUrl.split("?")[1]
       console.log(callbackCode)
 
-      window.location.href = `http://localhost:5000/auth/github/callback?${callbackCode}`;
+      window.location.href = `/auth/github/callback?${callbackCode}`;
 
       return (<div></div>)
     }
 
     const loginHandler = () => {
-      window.location.href = `http://localhost:5000/auth/github`;
+      window.location.href = `/auth/github`;
       console.log('Auth Call')
     }
 
