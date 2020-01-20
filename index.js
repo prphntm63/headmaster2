@@ -2,12 +2,43 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const db = require('./db.js');
+const github = require('./github.js');
 const passport = require('passport');
 const GitHubStrategy = require('passport-github').Strategy;
 const path = require('path')
+const schedule = require('node-schedule')
 
 const app = express()
 const port = process.env.PORT || '5000';
+
+// ***** Get and update each users' commits once a day at 3 AM *****
+let fetchTime = 1*24*60*60*1000 // 1 day in milliseconds
+var scheduleRule = new schedule.RecurrenceRule()
+scheduleRule.hour = 3;
+var job = schedule.scheduleJob(scheduleRule, function() {
+    
+    db.getAllStudentIdAndGithub()
+    .then(studentIdAndGithub => {
+        studentIdAndGithub.forEach(studentIds => {
+            github.getUserCommits(studentIds.github, fetchTime)
+            .then(commitsOutArray => {
+                commitsOutArray.forEach(commit => {
+                    commit.student = studentIds.id
+                })
+
+                db.addCommits(commitsOutArray)
+                .then(() => {
+                    console.log(`Commits updated for student ${studentIds.github}`)
+                })
+            })
+            .catch(err => {
+                console.log('error getting github data for student - ', err)
+            })
+        })
+    })
+
+    
+})
 
 passport.use(new GitHubStrategy(
     {

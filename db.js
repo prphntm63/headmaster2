@@ -122,6 +122,24 @@ let db = {
     },
 
     // ***** STUDENT METHODS *****
+    getAllStudentIds : function() {
+        return knex
+        .table('Students')
+        .pluck('id')
+    },
+
+    getAllStudentGithubIds : function() {
+        return knex
+        .table('Students')
+        .pluck('github')
+    },
+
+    getAllStudentIdAndGithub : function() {
+        return knex
+        .from('Students')
+        .select('id', 'github')
+    },
+
     getStudentIdByGithub : function(studentGithub) {
         
         return knex
