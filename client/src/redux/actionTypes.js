@@ -17,6 +17,7 @@ export const UPDATE_COHORTS = "UPDATE_COHORTS"
 export const UPDATE_STUDENT = "UPDATE_STUDENT"
 export const ADD_STUDENT = "ADD_STUDENT"
 export const ADD_COHORT = "ADD_COHORT"
+export const ADD_INSTRUCTOR = "ADD_INSTRUCTOR"
 
 // User Actions
 export const UPDATE_USER = "UPDATE_USER"

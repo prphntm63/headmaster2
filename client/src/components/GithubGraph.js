@@ -30,7 +30,7 @@ const GraphSquare = ({commitDay, idx}) => (
 )
 
 export default ({student}) => (
-    <div className="graph-container">
+    <div className="graph-container" >
         {['','','M','','W','','F',''].map((headerDay, idx) => {
             return (<div className="graph-item graph-item-header" key={headerDay + idx}>{headerDay}</div>)})
         }

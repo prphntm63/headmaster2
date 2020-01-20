@@ -2,22 +2,24 @@ import React, { Component } from 'react';
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 import {connect} from 'react-redux'
 
-import { addStudent } from './../redux/actions'
+import { addInstructor } from './../redux/actions'
 
-class AddStudentModal extends React.Component {
+class AddInstructorModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             githubInput : '',
             firstnameInput : '',
             lastnameInput : '',
+            roleInput : null,
             photoUrl : '',
             modalShow : false,
             githubLookupTimeout : null,
             errors : {
                 githubInput : null,
                 firstnameInput : null,
-                lastnameInput : null
+                lastnameInput : null,
+                roleInput : null
             }
         }
     }
@@ -88,23 +90,30 @@ class AddStudentModal extends React.Component {
             githubInput : '',
             firstnameInput : '',
             lastnameInput : '',
+            roleInput : null,
             photoUrl : '',
-            modalShow : false
+            modalShow : false,
+            githubLookupTimeout : null,
+            errors : {
+                githubInput : null,
+                firstnameInput : null,
+                lastnameInput : null,
+                roleInput : null
+            }
         })
     }
 
-    handleAddStudent = () => {
-        console.log('Todo: add student - ', this.state.githubInput, this.state.firstnameInput, this.state.lastnameInput, this.state.photoUrl)
+    handleAddInstructor = () => {
         
-        fetch('/api/students', {
+        fetch('/api/instructors', {
             method: 'POST',
             body: JSON.stringify({
                 cohort : this.props.cohort.id,
                 firstName : this.state.firstnameInput,
                 lastName : this.state.lastnameInput,
                 github : this.state.githubInput,
-                photoUrl : this.state.photoUrl,
-                enrolledStatus : true 
+                role : this.state.roleInput,
+                photoUrl : this.state.photoUrl
             }),
             headers : {
                 'Content-Type' : 'application/json'
@@ -119,20 +128,9 @@ class AddStudentModal extends React.Component {
             }
         })
         .then(responseJSON => {
-            this.props.addStudent({
+            this.props.addInstructor({
                 cohortId : this.props.cohort.id,
-                student : {
-                    id: responseJSON.id,
-                    ctime: responseJSON.ctime,
-                    mtime: responseJSON.mtime,
-                    firstName: responseJSON.firstName,
-                    lastName: responseJSON.lastName,
-                    github: responseJSON.github,
-                    photoUrl: responseJSON.photoUrl,
-                    enrolledStatus: true,
-                    touchpoints: responseJSON.touchpoints ? responseJSON.touchpoints : [],
-                    commits: responseJSON.commits ? responseJSON.commits : []
-                }
+                instructor : responseJSON
             })
             this.handleClose()
         })
@@ -180,9 +178,21 @@ class AddStudentModal extends React.Component {
                                         isInvalid={this.state.errors.githubInput}></Form.Control>
                                     <Form.Control.Feedback type="invalid">{this.state.errors.githubInput ? this.state.errors.githubInput : ''}</Form.Control.Feedback>
                                 </Form.Group>
-                                <Col className="pt-3">
-                                    <small>Just the username, not the whole URL</small>
-                                </Col>
+                                <Form.Group as={Col} className="pt-3">
+                                    <Form.Label>Example select</Form.Label>
+                                    <Form.Control 
+                                        as="select"
+                                        value={this.state.roleInput}
+                                        onChange={(evt) => {this.setState({roleInput : evt.target.value})}}
+                                        isValid={this.state.errors.roleInput !== null}
+                                        isInvalid={this.state.errors.roleInput}
+                                    >
+                                        <option value={null} disabled>Select...</option>
+                                        <option value="ta">TA</option>
+                                        <option value="instructor">Instructor</option>
+                                        <option value="admin">Admin</option>
+                                    </Form.Control>
+                                </Form.Group>
                             </Row>
                             <Row className="my-2">
                                 <Form.Group as={Col} controlId="inputFirstName">
@@ -196,7 +206,7 @@ class AddStudentModal extends React.Component {
                                         isInvalid={this.state.errors.firstnameInput}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col} controlId="inputLastName">
-                                    <Form.Label>First Name</Form.Label>
+                                    <Form.Label>Last Name</Form.Label>
                                     <Form.Control 
                                         type="input" 
                                         placeholder="Last Name" 
@@ -212,7 +222,7 @@ class AddStudentModal extends React.Component {
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleAddStudent}>
+                        <Button variant="primary" onClick={this.handleAddInstructor}>
                             Save Changes
                         </Button>
                     </Modal.Footer>
@@ -223,7 +233,7 @@ class AddStudentModal extends React.Component {
 }
 
 const mapDispatchToProps = {
-    addStudent
+    addInstructor
 }
 
-export default connect(null, mapDispatchToProps)(AddStudentModal)
+export default connect(null, mapDispatchToProps)(AddInstructorModal)

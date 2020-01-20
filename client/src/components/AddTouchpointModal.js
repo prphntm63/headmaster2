@@ -42,6 +42,8 @@ class AddTouchpointModal extends React.Component {
                 modalShow : true
             })
         })
+
+        return false
     }
 
     handleClose = () => {
@@ -130,7 +132,7 @@ class AddTouchpointModal extends React.Component {
                         <a href='#' onClick={this.handleOpen}>Add Touchpoint</a>
                     </div>)
                 :
-                    (<Button variant="primary" value="addTouchpoint" onClick={this.handleOpen} className="ml-auto btn-lg px-2 py-0 mb-2">＋</Button>)
+                    (<Button variant="primary" value="addTouchpoint" onClick={this.handleOpen} className="ml-auto px-2 py-0 mb-2">Add Touchpoint</Button>)
                 }
 
                 <Modal show={this.state.modalShow}>

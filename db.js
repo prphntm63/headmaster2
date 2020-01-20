@@ -75,6 +75,7 @@ let db = {
 
     createUser : function(userParams) {
         return knex
+        .returning('*')
         .insert(userParams)
         .into('Users')
         .then(users => {
@@ -261,9 +262,21 @@ let db = {
             .then(linkStudentCohortDataRows => {
                 let linkStudentCohortData = linkStudentCohortDataRows[0]
                 studentData.cohort = linkStudentCohortData.cohort
-                console.log(studentData)
                 return studentData
             })
+        })
+    },
+
+    addStudentToCohort : function(studentId, cohortId) {
+        return knex
+        .returning('*')
+        .insert({
+            student : studentId,
+            cohort : cohortId,
+        })
+        .into('LinkCohortsStudents')
+        .then(linkStudentCohortDataRows => {
+            return linkStudentCohortDataRows[0]
         })
     },
 
@@ -335,6 +348,7 @@ let db = {
             let cohortPromises = []
 
             cohortsList.forEach(cohort => {
+
                 let cohortPromise = knex
                 .from('LinkCohortsStudents')
                 .join('Students', 'LinkCohortsStudents.student', '=', 'Students.id')
@@ -367,12 +381,26 @@ let db = {
 
                         studentPromises.push(studentPromise)
                     })
+
                     return Promise.all(studentPromises)
                     .then(students => {
                         cohort.students = students
                         return cohort
                     })
+                    .then(cohort => {
+                        return knex
+                        .from('LinkCohortsUsers')
+                        .join('Users', 'LinkCohortsUsers.user', '=', 'Users.id')
+                        .select('Users.*', 'LinkCohortsUsers.role as role')
+                        .where({'LinkCohortsUsers.cohort' : cohort.id})
+                        .groupBy('Users.id', 'LinkCohortsUsers.role')
+                        .then(instructors => {
+                            cohort.instructors = instructors
+                            return cohort
+                        })
+                    })
                 })
+
                 cohortPromises.push(cohortPromise)
             })
             return Promise.all(cohortPromises)
@@ -497,6 +525,22 @@ let db = {
         .catch(err => {
             console.log('DB error adding cohort - ', err)
         })
+    },
+
+    addUserToCohort(userId, cohortId, role) {
+
+        return knex
+        .returning('*')
+        .insert({
+            "cohort" : cohortId,
+            "user" : userId,
+            "role" : role
+        })
+        .into('LinkCohortsUsers')
+        .then(LinkCohortUsersDataRows => {
+            return LinkCohortUsersDataRows[0]
+        })
+
     },
 
     // ***** ASSIGNMENT METHODS *****

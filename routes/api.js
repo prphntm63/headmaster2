@@ -65,7 +65,7 @@ router.get('/cohorts/:cohortId', ensureAuthenticated, (req, res) => {
 router.post('/cohorts', ensureAuthenticated, (req,res) => {
     let cohortInfo = req.body
     let validationErrors = []
-    let user = req.user.id
+    let user = req.user
 
     if (user.superuser !== 'superadmin' && user.superuser !== 'admin') {
         res.status(401).json({"errors" : "User permission not sufficent"})
@@ -90,7 +90,7 @@ router.post('/cohorts', ensureAuthenticated, (req,res) => {
             "startDate" : new Date(cohortInfo.startDate),
             "slug" : cohortInfo.slug,
             "archived" : cohortInfo.graduated,
-            "user" : user
+            "user" : user.id
         }
 
         db.addCohort(params)
@@ -166,34 +166,75 @@ router.post('/students', ensureAuthenticated, (req, res) => {
 
     // Add validation methods
 
-    db.addStudent(studentParams)
-    .then(studentData => {
-        // Add method to ensure user is allowed to create students
+    db.getStudentIdByGithub(studentParams.github)
+    .then(studentId => {
+        if (studentId === null) {
+            db.addStudent(studentParams)
+            .then(studentData => {
+                // Add method to ensure user is allowed to create students
 
-        // Get github commit history for new student
-        let fetchTime = 90*24*60*60*1000 //milliseconds
-        github.getUserCommits(studentData.github, fetchTime)
-        .then(commitsOutArray => {
-            commitsOutArray.forEach(commit => {
-                commit.student = studentData.id
+                // Get github commit history for new student
+                let fetchTime = 90*24*60*60*1000 //milliseconds
+                github.getUserCommits(studentData.github, fetchTime)
+                .then(commitsOutArray => {
+                    commitsOutArray.forEach(commit => {
+                        commit.student = studentData.id
+                    })
+
+                    db.addCommits(commitsOutArray)
+                    .then(commitsAdded => {
+                        if (commitsAdded.length) {
+                            studentData.commits = commitsAdded
+                        }
+                        res.status(200).json(studentData)
+                    })
+                })
+                .catch(err => {
+                    console.log('error getting github data for student - ', err)
+                })
+            })
+            .catch(err => {
+                res.status(500)
+                console.log(err)
             })
 
-            db.addCommits(commitsOutArray)
-            .then(commitsAdded => {
-                if (commitsAdded.length) {
-                    studentData.commits = commitsAdded
-                }
-                res.status(200).json(studentData)
+        } else {
+            db.addStudentToCohort(studentId, studentParams.cohort)
+            .then(studentCohortData => {
+                let studentData = {...studentParams}
+
+                studentData.id = studentId
+                studentData.cohort = studentCohortData.cohort
+                studentData.enrolledStatus = studentCohortData.enrolledStatus
+                return studentData
             })
-        })
-        .catch(err => {
-            console.log('error getting github data for student - ', err)
-        })
+            .then(studentData => {
+                // Add method to ensure user is allowed to create students
+
+                // Get github commit history for new student
+                let fetchTime = 90*24*60*60*1000 //milliseconds
+                github.getUserCommits(studentData.github, fetchTime)
+                .then(commitsOutArray => {
+                    commitsOutArray.forEach(commit => {
+                        commit.student = studentData.id
+                    })
+
+                    db.addCommits(commitsOutArray)
+                    .then(commitsAdded => {
+                        if (commitsAdded.length) {
+                            studentData.commits = commitsAdded
+                        }
+                        res.status(200).json(studentData)
+                    })
+                })
+                .catch(err => {
+                    console.log('error getting github data for student - ', err)
+                })
+            })
+        }
     })
-    .catch(err => {
-        res.status(500)
-        console.log(err)
-    })
+
+    
 })
 
 router.post('/students/:studentId', ensureAuthenticated, (req, res) => {
@@ -244,6 +285,63 @@ router.get('/instructors', ensureAuthenticated, (req,res) => {
         res.status(500)
         console.log(err)
     })
+})
+
+router.post('/instructors', ensureAuthenticated, (req,res) => {
+    let userInfo = req.body
+    let validationErrors = []
+    let user = req.user.id
+
+    // Todo : add validation to ensure user is superadmin or admin/instructor in cohort
+
+    // Todo : serverside form validation
+
+    if (validationErrors.length) {
+        res.status(400).send(
+            {"errors" : validationErrors}
+        )
+    } else {
+        let userParams = {
+            "firstName" : userInfo.firstName,
+            "lastName" : userInfo.lastName,
+            "github" : userInfo.github,
+            "photoUrl" : userInfo.photoUrl,
+            "superuser" : 'user',
+        }
+
+        let cohortId = userInfo.cohort
+        let userCohortRole = userInfo.role
+
+        db.getUserIdFromGithub(userParams.github)
+        .then(userId => {
+            if (userId === null) {
+                return db.createUser(userParams)
+                .then(userInfo => {
+                    db.addUserToCohort(userInfo.id, cohortId, userCohortRole)
+                    .then(userCohortData => {
+                        userInfo.cohort = userCohortData.cohort
+                        userInfo.role = userCohortData.role
+                        res.status(200).json(userInfo)
+                    })
+                    
+                })
+                .catch(err => {
+                    console.log(err)
+                    res.status(500)
+                })
+            } else {
+                db.addUserToCohort(userId, cohortId, userCohortRole)
+                .then(userCohortData => {
+                    userParams.id = userId
+                    userParams.cohort = userCohortData.cohort
+                    userParams.role = userCohortData.role
+                    res.status(200).json(userParams)
+                })
+            }
+        })
+
+        
+    }
 })
 
 function ensureAuthenticated(req, res, next) {
