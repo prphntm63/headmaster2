@@ -2,7 +2,7 @@
 
 Headmaster II is a full stack application catered toward managing students in a software development learning environment. Instructors are able to track student activity through [Github](https://github.com) commit data and keep tabs on individuals and their specific learning challenges through a timeline of feedback touchpoints.
 
-## Installation
+## Installation - Local Development Setup
 
 1. Ensure [PostgreSQL](https://www.postgresql.org/) has been installed on your machine
 
@@ -28,7 +28,17 @@ Headmaster II is a full stack application catered toward managing students in a 
 * `admin` : View and edit user assigned cohorts, create new cohorts, create and edit students in user assigned cohorts, add touchpoints for user assigned students
 * `user` : View user assigned cohorts, edit students in user assigned cohorts, add touchpoints for user assigned students
 
-8. Deploy locally using `npm run dev` to start application in [nodemon](https://www.npmjs.com/package/nodemon) or `npm start` to run application using NodeJS.
+8. Register a new [Github OAuth App](https://github.com/settings/applications/new) to allow authentication on the domain `http://localhost:3000`. The callback will be `http://localhost:3000/auth/callback`.
+
+9. Fill out the relevant parameters in your .env file as per your Github App and other paremeters
+
+9. Deploy locally using `npm run dev` to start application in [nodemon](https://www.npmjs.com/package/nodemon) or `npm start` to run application using NodeJS.
+
+## Deployment
+
+Currently Headmaster II may be deployed directly to Heroku by creating a new Heroku project with the `Heroku Postgres` add on attached from the `heroku-deploy` branch. You will also need to create a new [Github OAuth App](https://github.com/settings/applications/new) with your deployed domain name.
+
+See the [instructions here](https://devcenter.heroku.com/articles/git) on how to deploy a Heroku app using the Heroku CLI.
 
 ## Usage
 
