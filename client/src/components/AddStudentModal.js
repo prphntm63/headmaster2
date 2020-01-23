@@ -94,8 +94,6 @@ class AddStudentModal extends React.Component {
     }
 
     handleAddStudent = () => {
-        console.log('Todo: add student - ', this.state.githubInput, this.state.firstnameInput, this.state.lastnameInput, this.state.photoUrl)
-        
         fetch('/api/students', {
             method: 'POST',
             body: JSON.stringify({

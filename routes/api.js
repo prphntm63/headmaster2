@@ -151,7 +151,6 @@ router.get('/students/:studentId', ensureAuthenticated, (req, res) => {
 
     db.getStudentByUser(userId, studentId)
     .then(studentListJson => {
-        console.log(studentListJson[0])
         res.status(200).json(studentListJson[0])
     })
     .catch(err => {

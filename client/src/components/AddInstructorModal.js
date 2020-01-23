@@ -142,7 +142,7 @@ class AddInstructorModal extends React.Component {
                     window.alert(`Student failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
                 })
             } else {
-                console.log('error adding student - ', err)
+                console.log('error adding instructor - ', err)
                 window.alert('Server error')
             }   
         })

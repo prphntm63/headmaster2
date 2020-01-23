@@ -26,7 +26,6 @@ class AddTouchpointModal extends React.Component {
     }
 
     handleOpen = () => {
-        console.log(this.props.studentId)
 
         fetch(`/api/students/${this.props.studentId}`)
         .then(studentData => {
@@ -84,7 +83,6 @@ class AddTouchpointModal extends React.Component {
             return returnData.json()
         })
         .then(returnJSON => {
-            console.log(returnJSON)
             this.props.addTouchpoint({
                 studentId : returnJSON.student,
                 touchpointData : {

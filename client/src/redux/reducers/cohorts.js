@@ -45,8 +45,9 @@ export default function(state = initialState, action) {
 
         case ADD_COHORT: {
             let newCohort = action.cohort
-            newCohort.students = []
-            newCohort.instructors = []
+
+            newCohort.students = newCohort.students || []
+            newCohort.instructors = newCohort.instructors || []
 
             newState.push(newCohort)
             return newState

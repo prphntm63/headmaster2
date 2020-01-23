@@ -40,8 +40,7 @@ export default ({student}) => (
     </div>
 )
 
-function parseCommits(commits, student) {
-    if (!commits.length) return null
+function parseCommits(commits) {
 
     let today = new Date()
     let dayOfWeek = today.getDay()

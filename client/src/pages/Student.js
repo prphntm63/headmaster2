@@ -88,9 +88,9 @@ const Student = ({ cohorts, user }) => {
                                         <td><StoplightStatusIndicator stoplightStatus={touchpoint.stoplightStatus} /></td>
                                         <td>{touchpoint.comment}</td>
                                         <td>
-                                            {touchpoint.tags.map(tag => {
+                                            {Array.isArray( touchpoint.tags ) ? touchpoint.tags.map(tag => {
                                                 return (<TouchpointTag tagStatus={tag.status} tagText={tag.text} key={tag.text}/>)
-                                            })}
+                                            }) : (<></>)}
                                         </td>
                                         <td>{timeSince(touchpoint.ctime)
                                             + ' ago by ' +

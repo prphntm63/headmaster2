@@ -532,12 +532,14 @@ let db = {
             .into('LinkCohortsUsers')
             .then(LinkCohortUsersDataRows => {
                 let LinkCohortUsersData = LinkCohortUsersDataRows[0]
-                cohortData.instructors = {
-                    "cohort": LinkCohortUsersData.cohort, 
-                    "user" : user, 
-                    "role" : LinkCohortUsersData.role
-                }
-                return cohortData
+                
+                return this.getUser(user)
+                .then(userData => {
+                    userData.role = LinkCohortUsersData.role
+                    cohortData.instructors = [{...userData}]
+
+                    return cohortData
+                })
             })
         })
         .catch(err => {
