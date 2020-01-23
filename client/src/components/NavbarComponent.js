@@ -20,7 +20,7 @@ const NavbarComponent = ({ user }) => (
                     <LinkContainer to="/auth/github">
                         <Nav.Link>
                             <div className="d-flex flex-row align-items-center linkstyle">
-                            <img className="mr-2" src="/images/GitHub-mark.png" style={{height:'30px', width:'30px'}} alt="github logo"/>
+                            <img className="mr-2" src="/images/GitHub-Mark.png" style={{height:'30px', width:'30px'}} alt="github logo"/>
                                 <p className="my-0 py-0"> Login with Github</p>
                             </div>
                         </Nav.Link>
