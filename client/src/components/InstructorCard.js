@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from "react-redux";
 import { Card, Badge } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 
 const InstructorCardHeader = ({instructor}) => (
     <Card.Header className="d-flex flex-row linkstyle">
         <div>
-            <img className="student-photo" src={instructor.photoUrl ? instructor.photoUrl : '/images/noPhoto.png'} alt="student photo"/>
+            <img className="student-photo" src={instructor.photoUrl ? instructor.photoUrl : '/images/noPhoto.png'} alt="instructor headshot"/>
         </div>
         <div className="w-100">
             <div className="d-flex flex-row stoplight-status-div">

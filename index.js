@@ -11,6 +11,10 @@ const schedule = require('node-schedule')
 const app = express()
 const port = process.env.PORT || '5000';
 
+if (process.env.NODE_ENV !== "production" ){
+    require('dotenv').config();
+}
+
 // ***** Get and update each users' commits once a day at 3 AM *****
 let fetchTime = 1*24*60*60*1000 // 1 day in milliseconds
 var scheduleRule = new schedule.RecurrenceRule()
@@ -42,9 +46,9 @@ var job = schedule.scheduleJob(scheduleRule, function() {
 
 passport.use(new GitHubStrategy(
     {
-        clientID: 'f557b8f71bf0a32f69d4',
-        clientSecret: 'e421378ff7af880612d7c11fd23778a6fbab90ed',
-        callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: `${process.env.ROOT_URL}/auth/github/callback`
     }, 
     db.authenticateUser
 ));
@@ -67,8 +71,8 @@ passport.deserializeUser(function(id, done) {
 // ***** Setup Express / Passport sessions *****
 
 app.use(session({ 
-    secret: "cats",
-    name : "headmaster2",
+    secret: process.env.PASSPORT_SECRET,
+    name : process.env.APP_NAME,
     proxy : true,
     resave : true,
     saveUninitialized : true
@@ -92,13 +96,13 @@ app.use('/favicon.ico', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('http://localhost:3000/');
+    res.redirect(process.env.ROOT_URL);
 })
 
-let dashboard = require('./routes/dashboard')
-let students = require('./routes/students')
-let cohorts = require('./routes/cohorts')
-let instructors = require('./routes/instructors')
+// let dashboard = require('./routes/dashboard')
+// let students = require('./routes/students')
+// let cohorts = require('./routes/cohorts')
+// let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
 // app.use('/dashboard', dashboard)
@@ -122,7 +126,7 @@ app.get('/auth/github/callback',
         console.log('Authenticated with Github')
         // res.sendFile(path.join(__dirname+'/client/build/index.html'));
         // res.redirect('/');
-        res.redirect("http://localhost:3000/");
+        res.redirect(process.env.ROOT_URL);
 });
 
 app.use(express.static(path.join(__dirname, 'client/build')));

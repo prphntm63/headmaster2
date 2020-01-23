@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import { Dropdown, DropdownButton, Badge, Modal, Form, Button, Row, Col, InputGroup, ButtonToolbar, ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import {connect} from 'react-redux'
 
@@ -26,7 +26,6 @@ class AddTouchpointModal extends React.Component {
     }
 
     handleOpen = () => {
-        console.log(this.props.studentId)
 
         fetch(`/api/students/${this.props.studentId}`)
         .then(studentData => {
@@ -66,7 +65,6 @@ class AddTouchpointModal extends React.Component {
     }
 
     handleAddTouchpoint = () => {
-        let studentId = this.props.studentId
 
         fetch('/api/touchpoints', {
             method : 'POST',
@@ -85,7 +83,6 @@ class AddTouchpointModal extends React.Component {
             return returnData.json()
         })
         .then(returnJSON => {
-            console.log(returnJSON)
             this.props.addTouchpoint({
                 studentId : returnJSON.student,
                 touchpointData : {
@@ -119,7 +116,7 @@ class AddTouchpointModal extends React.Component {
 
     removeTag = (tagText) => {
         this.setState({
-            currentTags: this.state.currentTags.filter(tag => {return tag.text != tagText})
+            currentTags: this.state.currentTags.filter(tag => {return tag.text !== tagText})
         })
     }
 
@@ -129,7 +126,7 @@ class AddTouchpointModal extends React.Component {
             <React.Fragment>
                 {this.props.isStudentCard ?
                     (<div className="d-flex justify-content-center py-2 add-touchpoint-button">
-                        <a href='#' onClick={this.handleOpen}>Add Touchpoint</a>
+                        <Button variant="link" onClick={this.handleOpen}>Add Touchpoint</Button>
                     </div>)
                 :
                     (<Button variant="primary" value="addTouchpoint" onClick={this.handleOpen} className="ml-auto px-2 py-0 mb-2">Add Touchpoint</Button>)
@@ -242,17 +239,4 @@ function getBadgeClassFromStatus(status) {
             badgeClass = 'success'
     }
     return badgeClass
-}
-
-function getBadgeGlyphFromStatus(status) {
-    switch (status) {
-        case 'green':
-            return (<i className="material-icons">done</i>)
-        case 'yellow':
-            return (<i className="material-icons">help_outline</i>)
-        case 'red':
-            return (<i className="material-icons">warning</i>)
-        default:
-            return(<i></i>)
-    }
 }

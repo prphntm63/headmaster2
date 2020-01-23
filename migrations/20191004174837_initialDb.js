@@ -1,80 +1,83 @@
 
 exports.up = function(knex) {
-    return knex.schema
-        // .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
-        .createTable('Cohorts', table => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            // table.increments('id').primary();
-            table.string('name')
-            table.string('slug')
-            table.date('startDate')
-            table.boolean('archived')
-        })
-        .createTable('Users', table => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            // table.increments('id').primary();
-            table.string('firstName');
-            table.string('lastName');
-            table.string('photoUrl');
-            table.string('github');
-            table.unique('github');
-            table.string('accessToken');
-            table.string('refreshToken');
-            table.enu('superuser', ['user', 'admin', 'superadmin']).defaultsTo('user')
-        })
-        .createTable('Students', (table) => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            // table.increments('id').primary();
-            table.string('firstName', 255).notNullable();
-            table.string('lastName', 255).notNullable();
-            table.string('github', 255);
-            table.unique('github');
-            table.string('photoUrl');
-        })
-        .createTable('Commits', table => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.uuid('student').references('id').inTable('Students').notNull();
-            table.string('sha')
-            table.string('message')
-            table.string('repo')
-            table.integer('total')
-            table.integer('added')
-            table.integer('deleted')
-            table.json('files')
-        })
-        .createTable('Touchpoints', table => {
-            table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            // table.increments('id').primary();
-            table.uuid('student').references('id').inTable('Students').notNull();
-            table.enu('stoplightStatus', ['red', 'yellow', 'green']);
-            table.json('tags')
-            table.string('comment')
-            table.uuid('user').references('id').inTable('Users').notNull()
-        })
-        .createTable('LinkCohortsStudents', (table) => {
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            table.uuid('cohort').references('id').inTable('Cohorts').notNull();
-            table.uuid('student').references('id').inTable('Students').notNull();
-            table.boolean('enrolledStatus').defaultTo(true);
-        })
-        .createTable('LinkCohortsUsers', table => {
-            table.timestamp('ctime').defaultTo(knex.fn.now())
-            table.timestamp('mtime').defaultTo(knex.fn.now())
-            // table.increments('id').primary();
-            table.uuid('user').references('id').inTable('Users').notNull();
-            table.uuid('cohort').references('id').inTable('Cohorts').notNull();
-            table.enu('role', ['admin', 'instructor', 'ta'])
-        })
+    return knex.raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
+    .then(() => {
+        return knex.schema
+            // .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";')
+            .createTable('Cohorts', table => {
+                table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                // table.increments('id').primary();
+                table.string('name')
+                table.string('slug')
+                table.date('startDate')
+                table.boolean('archived')
+            })
+            .createTable('Users', table => {
+                table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                // table.increments('id').primary();
+                table.string('firstName');
+                table.string('lastName');
+                table.string('photoUrl');
+                table.string('github');
+                table.unique('github');
+                table.string('accessToken');
+                table.string('refreshToken');
+                table.enu('superuser', ['user', 'admin', 'superadmin']).defaultsTo('user')
+            })
+            .createTable('Students', (table) => {
+                table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                // table.increments('id').primary();
+                table.string('firstName', 255).notNullable();
+                table.string('lastName', 255).notNullable();
+                table.string('github', 255);
+                table.unique('github');
+                table.string('photoUrl');
+            })
+            .createTable('Commits', table => {
+                table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.uuid('student').references('id').inTable('Students').notNull();
+                table.string('sha')
+                table.string('message')
+                table.string('repo')
+                table.integer('total')
+                table.integer('added')
+                table.integer('deleted')
+                table.json('files')
+            })
+            .createTable('Touchpoints', table => {
+                table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'))
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                // table.increments('id').primary();
+                table.uuid('student').references('id').inTable('Students').notNull();
+                table.enu('stoplightStatus', ['red', 'yellow', 'green']);
+                table.json('tags')
+                table.string('comment')
+                table.uuid('user').references('id').inTable('Users').notNull()
+            })
+            .createTable('LinkCohortsStudents', (table) => {
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                table.uuid('cohort').references('id').inTable('Cohorts').notNull();
+                table.uuid('student').references('id').inTable('Students').notNull();
+                table.boolean('enrolledStatus').defaultTo(true);
+            })
+            .createTable('LinkCohortsUsers', table => {
+                table.timestamp('ctime').defaultTo(knex.fn.now())
+                table.timestamp('mtime').defaultTo(knex.fn.now())
+                // table.increments('id').primary();
+                table.uuid('user').references('id').inTable('Users').notNull();
+                table.uuid('cohort').references('id').inTable('Cohorts').notNull();
+                table.enu('role', ['admin', 'instructor', 'ta'])
+            })
+    })
     
 };
 

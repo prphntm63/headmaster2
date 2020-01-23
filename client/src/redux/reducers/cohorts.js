@@ -1,7 +1,6 @@
 import {
     UPDATE_COHORTS,
     ADD_TOUCHPOINT,
-    UPDATE_COMMITS,
     UPDATE_STUDENT,
     ADD_STUDENT,
     ADD_COHORT,
@@ -46,7 +45,9 @@ export default function(state = initialState, action) {
 
         case ADD_COHORT: {
             let newCohort = action.cohort
-            newCohort.students = []
+
+            newCohort.students = newCohort.students || []
+            newCohort.instructors = newCohort.instructors || []
 
             newState.push(newCohort)
             return newState

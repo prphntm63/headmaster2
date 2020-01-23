@@ -1,15 +1,3 @@
-import {
-    COHORT_SORT_FILTERS,
-    COHORT_HIDE_FILTERS,
-    STUDENT_LIST_SORT_FILTERS,
-    STUDENT_LIST_HIDE_FILTERS,
-    STUDENT_CARD_SORT_FILTERS,
-    STUDENT_CARD_HIDE_FILTERS,
-    COHORT_SORT_DIRECTIONS,
-    STUDENT_CARD_SORT_DIRECTIONS,
-    STUDENT_LIST_SORT_DIRECTIONS
-} from "constants"
-
 export const getCohortCardsByVisibilityFilter = (store) => {
     console.log('cards', store.views.studentCardSortFilter, store.views.studentCardSortDirection)
 

@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import StoplightStatusIndicator from './StoplightStatusIndicator';
-import TouchpointTag from './TouchpointTag';
 import GithubGraph from './GithubGraph'
 import AddTouchpointModal from "./AddTouchpointModal"
+import StudentCardBodyTouchpoint from "./StudentCardBodyTouchpoint"
 
 const StudentCardHeader = ({student, currentStoplightStatus}) => (
     <LinkContainer to={"/students/"+student.github} exact>
         <Card.Header className="d-flex flex-row linkstyle">
             <div>
-                <img className="student-photo" src={student.photoUrl ? student.photoUrl : '/images/noPhoto.png'} alt="student photo"/>
+                <img className="student-photo" src={student.photoUrl ? student.photoUrl : '/images/noPhoto.png'} alt="student headshot"/>
             </div>
             <div className="w-100">
                 <div className="d-flex flex-row justify-content-between stoplight-status-div">
@@ -19,7 +19,7 @@ const StudentCardHeader = ({student, currentStoplightStatus}) => (
                     <StoplightStatusIndicator stoplightStatus={currentStoplightStatus} />
                 </div>
                 <div className="d-flex flex-row">
-                    <img src='/images/GitHub-Mark.png' style={{height:"25px"}} />
+                    <img src='/images/GitHub-Mark.png' style={{height:"25px"}} alt="github logo" />
                     <a href={"https://github.com/"+student.github}>{student.github}</a>
                 </div>
             </div>
@@ -29,24 +29,9 @@ const StudentCardHeader = ({student, currentStoplightStatus}) => (
 
 const StudentCardBody = ({student, currentTouchpoint}) => (
     <Card.Body className="d-flex flex-row student-info">
-        <StudentCardBodyTouchpoint student={student} currentTouchpoint={currentTouchpoint} />
+        <StudentCardBodyTouchpoint currentTouchpoint={currentTouchpoint} isStudentCard={true} />
         <StudentCardBodyCommits student={student} />
     </Card.Body>
-)
-
-const StudentCardBodyTouchpoint = ({student, currentTouchpoint}) => (
-    <div className="d-flex flex-column student-touchpoint">
-        <div className="student-touchpoint-title">Last Touchpoint</div>
-        {currentTouchpoint && currentTouchpoint.comment ? (<div className="student-touchpoint-comment"><small>{currentTouchpoint.comment}</small></div>) : <div></div>}
-        {currentTouchpoint && currentTouchpoint.tags ? 
-            currentTouchpoint.tags.map(tag => {
-                return (<TouchpointTag tagStatus={tag.status} tagText={tag.text} key={tag.text}/>)
-            })
-        : 
-        <div></div>
-        }
-        {currentTouchpoint ? (<div className="blockquote-footer touchpoint-date">{timeSince(currentTouchpoint.ctime) + ' ago by ' + currentTouchpoint.userFirstName + ' ' + currentTouchpoint.userLastName} </div>) : <div></div>}
-    </div>
 )
 
 const StudentCardBodyCommits = ({student}) => (
@@ -64,7 +49,7 @@ const StudentCardFooter = ({student, user}) => (
     <Card.Footer className="d-flex flex-row student-card-footer p-0">
         <div className="d-flex justify-content-center py-2">
             <LinkContainer to={"/students/" + student.github}>
-                <a href>Details</a>
+                <Button variant="link">Details</Button>
             </LinkContainer>
         </div>
         <AddTouchpointModal user={user} studentId={student.id} isStudentCard={true} />
@@ -96,33 +81,3 @@ const mapStateToProps = (state) => ({
 })
 
 export default connect(mapStateToProps)(StudentCard);
-
-function timeSince(dateString) {
-    let date = new Date(dateString)
-    if (!date) {
-        return ''
-    }
-    var seconds = Math.floor((new Date() - date) / 1000);
-    var interval = Math.floor(seconds / 31536000);
-    if (interval > 1) {
-        return interval + " years";
-    }
-    interval = Math.floor(seconds / 2592000);
-    if (interval > 1) {
-        return interval + " months";
-    }
-    interval = Math.floor(seconds / 86400);
-    if (interval > 1) {
-        return interval + " days";
-    }
-    interval = Math.floor(seconds / 3600);
-    if (interval > 1) {
-        return interval + " hours";
-    }
-    interval = Math.floor(seconds / 60);
-    if (interval > 1) {
-        return interval + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
-}
-

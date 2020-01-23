@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 import {connect} from 'react-redux'
 
@@ -142,7 +142,7 @@ class AddInstructorModal extends React.Component {
                     window.alert(`Student failed to add! \n${responseJson.errors.map(error => {return error.field + ': ' + error.error + '\n'}).join('')}`)
                 })
             } else {
-                console.log('error adding student - ', err)
+                console.log('error adding instructor - ', err)
                 window.alert('Server error')
             }   
         })
@@ -164,7 +164,7 @@ class AddInstructorModal extends React.Component {
                         <Form>
                             <Row className="my-2">
                                 <Col sm={2} className='ml-1 px-0'>
-                                    <img src={this.state.photoUrl ? this.state.photoUrl : '/images/noPhoto.png'} style={{width:'100%'}}/>
+                                    <img src={this.state.photoUrl ? this.state.photoUrl : '/images/noPhoto.png'} style={{width:'100%'}} alt="instructor headshot"/>
                                 </Col>
                                 <Form.Group as={Col} controlId="inputGithub">
                                     <Form.Label>Github Profile</Form.Label>

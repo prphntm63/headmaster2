@@ -25,7 +25,6 @@ export default function(state = initialState, action) {
 
     switch (action.type) {
         case UPDATE_USER: {
-            console.log(action.payload)
             newState = action.payload
             return newState
         }

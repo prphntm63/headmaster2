@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect, withRouter, Route } from 'react-router-dom';
+import {withRouter } from 'react-router-dom';
 import Cohorts from './../components/Cohorts'
 
 class Home extends Component {
