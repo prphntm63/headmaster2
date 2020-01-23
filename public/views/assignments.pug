@@ -1,9 +1,0 @@
-extends root
-
-block content
-    ul
-        each assignment in assignments
-            li #{assignment.title}
-    ul
-        each key in Object.keys(assignments[0])
-            li #{key}
