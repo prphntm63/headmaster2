@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import {Navbar, Nav, NavDropdown, Form, Button, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap'
+import {Form, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap'
 import { connect } from "react-redux";
 import { setStudentCardHideFilter, setStudentCardSortFilter, setStudentCardSortDirection} from "./../redux/actions"
 
 class SortBar extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     handleStudentCardSortChange = (value) => {
         if (value === 'up' || value === 'down') {

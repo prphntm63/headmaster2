@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
 import {Link} from 'react-router-dom';
 import {ListGroup, Button} from 'react-bootstrap';
-import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import AddCohortModal from './AddCohortModal'
 
 const Cohorts = ({ cohorts, user }) => (
@@ -36,7 +36,7 @@ const Cohorts = ({ cohorts, user }) => (
                                 </div>
                             </ListGroup.Item>
                             {cohorts.map(cohort => {return (
-                                <LinkContainer to={'/'+cohort.slug} key={cohort.slug}>
+                                <LinkContainer to={'/'+cohort.slug} key={cohort.id}>
                                     <ListGroup.Item action >
                                         <div className="row" >
                                             <div className="col-sm-7">{cohort.name}</div>

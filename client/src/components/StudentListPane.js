@@ -224,7 +224,7 @@ function hideCohortFilter(hideFilter) {
         case "inactive" : {
             return (student) => {return !student.enrolledStatus}
         }
-        case "default" : {
+        default : {
             return (student) => {return true}
         }
     }

@@ -1,6 +1,5 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from "react-redux";
-import { getCohortCardsByVisibilityFilter } from './../redux/selectors'
 
 import StudentCard from "./StudentCard"
 import SortBar from "./SortBar"
@@ -26,7 +25,7 @@ const mapStateToProps = state => {
     let cohorts = getCohortsByVisibilityFilter(state)
 
     const pathName = window.location.pathname.replace(/\W/g, '')
-    let currentCohortFilter = cohorts.length ? cohorts.filter(cohort => {return cohort.slug == pathName}) : []
+    let currentCohortFilter = cohorts.length ? cohorts.filter(cohort => {return cohort.slug === pathName}) : []
     let currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
     
     return {views, currentCohort}
@@ -96,7 +95,7 @@ function hideCohortFilter(hideFilter) {
         case "inactive" : {
             return (student) => {return !student.enrolledStatus}
         }
-        case "default" : {
+        default : {
             return (student) => {return true}
         }
     }

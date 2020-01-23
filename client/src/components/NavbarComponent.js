@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import { connect } from "react-redux";
@@ -21,7 +20,7 @@ const NavbarComponent = ({ user }) => (
                     <LinkContainer to="/auth/github">
                         <Nav.Link>
                             <div className="d-flex flex-row align-items-center linkstyle">
-                            <img className="mr-2" src="./images/GitHub-mark.png" style={{height:'30px', width:'30px'}} />
+                            <img className="mr-2" src="./images/GitHub-mark.png" style={{height:'30px', width:'30px'}} alt="github logo"/>
                                 <p className="my-0 py-0"> Login with Github</p>
                             </div>
                         </Nav.Link>
@@ -39,7 +38,7 @@ const NavbarComponent = ({ user }) => (
                 <Nav className="ml-auto">
                     <NavDropdown title=
                         {<React.Fragment>
-                            <img className="mr-2" src={user.photoUrl} style={{height:'30px', width:'30px', borderRadius:'50%'}} />
+                            <img className="mr-2" src={user.photoUrl} style={{height:'30px', width:'30px', borderRadius:'50%'}} alt="user profile"/>
                             {user.firstName}
                         </React.Fragment>}
                      id="basic-nav-dropdown">
