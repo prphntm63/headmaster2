@@ -112,7 +112,7 @@ class StudentListPane extends React.Component {
 
     render() {
         const updatedCohorts = getCohortsListByVisibilityFilter(this.props.cohorts, this.props.views)
-        const pathName = window.location.pathname.replace(/\W/g, '')
+        const pathName = window.location.pathname.replace(/\//g, "")
         const currentCohortFilter = updatedCohorts.length ? updatedCohorts.filter(cohort => {return cohort.slug === pathName}) : []
         const currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
 

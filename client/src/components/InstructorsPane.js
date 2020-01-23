@@ -32,7 +32,7 @@ const InstructorPane = ({currentCohort, user}) => {
 const mapStateToProps = state => { 
     const user = state.user
 
-    const pathName = window.location.pathname.replace(/\W/g, '')
+    const pathName = window.location.pathname.replace(/\//g, "")
     let currentCohortFilter = state.cohorts.length ? state.cohorts.filter(cohort => {return cohort.slug === pathName}) : []
     let currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
     

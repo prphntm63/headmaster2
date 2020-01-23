@@ -24,7 +24,7 @@ const mapStateToProps = state => {
 
     let cohorts = getCohortsByVisibilityFilter(state)
 
-    const pathName = window.location.pathname.replace(/\W/g, '')
+    const pathName = window.location.pathname.replace(/\//g, "")
     let currentCohortFilter = cohorts.length ? cohorts.filter(cohort => {return cohort.slug === pathName}) : []
     let currentCohort = currentCohortFilter.length ? currentCohortFilter[0] : null
     
