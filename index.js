@@ -48,7 +48,7 @@ passport.use(new GitHubStrategy(
     {
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: process.env.GITHUB_CALLBACK_URL
+        callbackURL: `${process.env.ROOT_URL}/auth/github/callback`
     }, 
     db.authenticateUser
 ));
@@ -72,7 +72,7 @@ passport.deserializeUser(function(id, done) {
 
 app.use(session({ 
     secret: process.env.PASSPORT_SECRET,
-    name : "headmaster2",
+    name : process.env.APP_NAME,
     proxy : true,
     resave : true,
     saveUninitialized : true
@@ -99,10 +99,10 @@ app.get('/logout', (req, res) => {
     res.redirect(process.env.ROOT_URL);
 })
 
-let dashboard = require('./routes/dashboard')
-let students = require('./routes/students')
-let cohorts = require('./routes/cohorts')
-let instructors = require('./routes/instructors')
+// let dashboard = require('./routes/dashboard')
+// let students = require('./routes/students')
+// let cohorts = require('./routes/cohorts')
+// let instructors = require('./routes/instructors')
 let api = require('./routes/api')
 
 // app.use('/dashboard', dashboard)

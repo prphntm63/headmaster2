@@ -4,13 +4,18 @@ import './App.css';
 import { updateCohorts, updateUser } from './redux/actions'
 import store from './redux/store'
 
-import { connect } from 'react-redux'
 // import { * } from './actionCreators'
 
 import Home from './pages/Home';
 import Cohort from './pages/Cohort';
 import Student from './pages/Student';
 import NavbarComponent from './components/NavbarComponent';
+
+let serverURL = ''
+
+if (process.env.NODE_ENV !== 'production') {
+  serverURL = `http://localhost:5000`
+}
 
 const userLogoutState = {
   accessToken: "",
@@ -68,7 +73,7 @@ class App extends Component {
   }
 
   handleLogout = () => {
-    window.location.href = `/logout`
+    window.location.href = `${serverURL}/logout`
     store.dispatch(updateUser(userLogoutState))
     this.setState({
       user : null
@@ -80,15 +85,14 @@ class App extends Component {
     const handleAuthCallback = () => {
       let currentUrl = window.location.href
       let callbackCode = currentUrl.split("?")[1]
-      console.log(callbackCode)
 
-      window.location.href = `/auth/github/callback?${callbackCode}`;
+      window.location.href = `${serverURL}/auth/github/callback?${callbackCode}`;
 
       return (<div></div>)
     }
 
     const loginHandler = () => {
-      window.location.href = `/auth/github`;
+      window.location.href = `${serverURL}/auth/github`;
       console.log('Auth Call')
     }
 
