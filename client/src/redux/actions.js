@@ -35,8 +35,10 @@ import {
     UPDATE_COMMITS,
     UPDATE_STUDENT,
     ADD_STUDENT,
+    REMOVE_STUDENT,
     ADD_COHORT,
-    ADD_INSTRUCTOR
+    ADD_INSTRUCTOR,
+    REMOVE_INSTRUCTOR
 } from "./actionTypes";
 
 export const setCohortSortFilter = filter => ({
@@ -131,6 +133,12 @@ export const addStudent = payload => ({
     student : payload.student
 })
 
+export const removeStudent = payload => ({
+    type : REMOVE_STUDENT,
+    cohortId : payload.cohortId,
+    studentId : payload.studentId
+})
+
 export const addCohort = payload => ({
     type : ADD_COHORT,
     cohort : payload
@@ -140,4 +148,10 @@ export const addInstructor = payload => ({
     type : ADD_INSTRUCTOR,
     cohortId : payload.cohortId,
     instructor : payload.instructor
+})
+
+export const removeInstructor = payload => ({
+    type : REMOVE_INSTRUCTOR,
+    cohortId : payload.cohortId,
+    instructorId : payload.instructorId
 })

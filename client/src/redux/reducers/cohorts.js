@@ -3,8 +3,10 @@ import {
     ADD_TOUCHPOINT,
     UPDATE_STUDENT,
     ADD_STUDENT,
+    REMOVE_STUDENT,
     ADD_COHORT,
-    ADD_INSTRUCTOR
+    ADD_INSTRUCTOR,
+    REMOVE_INSTRUCTOR
 } from "../actionTypes"
 
 const initialState = []
@@ -43,6 +45,13 @@ export default function(state = initialState, action) {
             return newState
         }
 
+        case REMOVE_STUDENT: {
+            let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
+           
+            newState[cohortIndex].students.filter(student => {return student.id !== action.studentId})
+            return newState
+        }
+
         case ADD_COHORT: {
             let newCohort = action.cohort
 
@@ -56,6 +65,13 @@ export default function(state = initialState, action) {
         case ADD_INSTRUCTOR: {
             let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
             newState[cohortIndex].instructors.push(action.instructor)
+            return newState
+        }
+
+        case REMOVE_INSTRUCTOR: {
+            let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
+           
+            newState[cohortIndex].instructors.filter(instructor => {return instructor.id !== action.instructorId})
             return newState
         }
 

@@ -304,10 +304,10 @@ let db = {
 
         return knex('LinkCohortsStudents')
         .where({
-            student : studentId,
-            cohort : cohortId
+            "student" : studentId,
+            "cohort" : cohortId
         })
-        .delete()
+        .del()
     },
 
     updateStudent : function(studentId, formData) {
@@ -642,12 +642,20 @@ let db = {
 
     // ************ COMMIT METHODS ***************
     addCommits(commitsArray) {
-        return knex
-        .returning('*')
-        .insert(commitsArray)
-        .into('Commits')
-        .catch(err => {
-            console.log('error adding commits array - ', err)
+        return knex('Commits')
+        .pluck('sha')
+        .then(shaArray => {
+            let filteredCommits = commitsArray.filter(commit => {return shaArray.findIndex(val => {return val === commit.sha}) < 0})
+            return filteredCommits
+        })
+        .then(filteredShaArray => {
+            return knex
+            .returning('*')
+            .insert(filteredShaArray)
+            .into('Commits')
+            .catch(err => {
+                console.log('error adding commits array - ', err)
+            })
         })
     },
 

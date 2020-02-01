@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { Card, Badge } from "react-bootstrap";
+import { Card, Badge, Button } from "react-bootstrap";
+
+import RemoveInstructorModal from './RemoveInstructorModal'
 
 const InstructorCardHeader = ({instructor}) => (
     <Card.Header className="d-flex flex-row linkstyle">
@@ -18,7 +20,8 @@ const InstructorCardHeader = ({instructor}) => (
     </Card.Header>
 )
 
-const InstructorCard = ({cohorts, cohortId, instructorId}) => {
+const InstructorCard = ({cohorts, currentCohort, instructorId}) => {
+    const cohortId = currentCohort.id
     const instructor = cohorts.filter(cohort => {return cohort.id === cohortId})[0].instructors.filter(instructor => {return instructor.id === instructorId})[0]
 
     return (
@@ -31,6 +34,10 @@ const InstructorCard = ({cohorts, cohortId, instructorId}) => {
                     <li>Add method to get all touchpoints for cohort</li>
                 </ul>
             </Card.Body>
+            <Card.Footer>
+                <Button variant="primary">Edit</Button>
+                <RemoveInstructorModal instructor={instructor} cohort={currentCohort} />
+            </Card.Footer>
         </Card>
     )
 }

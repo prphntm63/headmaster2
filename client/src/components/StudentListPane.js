@@ -8,6 +8,7 @@ import { ListGroup, Row, Col, Badge, Button } from 'react-bootstrap';
 
 import StoplightStatusIndicator from './StoplightStatusIndicator'
 import AddStudentModal from './AddStudentModal'
+import RemoveStudentModal from './RemoveStudentModal'
 
 class StudentListPaneHeader extends React.Component {
 
@@ -98,7 +99,8 @@ const StudentListPaneBody = ({currentCohort}) => (
                         <Col xs={2}>{currentCommit ? timeSince(currentCommit.ctime) : ''}</Col>
                         <Col xs={1}>{student.enrolledStatus ? 'Y' : 'N'}</Col>
                         <Col xs={1}>
-                            <Button variant="danger" value={student.id} onClick={deleteStudent}>X</Button>
+                            <RemoveStudentModal student={student} cohort={currentCohort} />
+                            {/* <Button variant="danger" value={student.id} onClick={deleteStudent}>X</Button> */}
                         </Col>
                     </Row>
                 </ListGroup.Item>

@@ -236,8 +236,9 @@ router.post('/students', ensureAuthenticated, (req, res) => {
 })
 
 router.delete('/students', ensureAuthenticated, (req, res) => {
-    let studentId = req.params.studentId
-    let cohortId = req.params.cohortId
+
+    let studentId = req.body.studentId
+    let cohortId = req.body.cohortId
     let userId = req.user.id
 
     db.removeStudentFromCohort(studentId, cohortId, userId)
@@ -361,8 +362,8 @@ router.post('/instructors', ensureAuthenticated, (req,res) => {
 })
 
 router.delete('/instructors', ensureAuthenticated, (req, res) => {
-    let instructorId = req.params.instructorId
-    let cohortId = req.params.cohortId
+    let instructorId = req.body.instructorId
+    let cohortId = req.body.cohortId
     let userId = req.user.id
 
     db.removeStudentFromCohort(instructorId, cohortId, userId)
