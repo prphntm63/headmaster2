@@ -47,7 +47,7 @@ class RemoveInstructorModal extends React.Component {
             }
         })
         .then(removeInstructorResponse => {
-            this.props.removeStudent({
+            this.props.removeInstructor({
                 cohortId : removeInstructorResponse.cohort,
                 instructorId : removeInstructorResponse.instructor
             })

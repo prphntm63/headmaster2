@@ -48,7 +48,9 @@ export default function(state = initialState, action) {
         case REMOVE_STUDENT: {
             let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
            
-            newState[cohortIndex].students.filter(student => {return student.id !== action.studentId})
+            let newCohortsStudents = newState[cohortIndex].students.filter(student => {return student.id !== action.studentId})
+            newState[cohortIndex].students = newCohortsStudents
+            
             return newState
         }
 
@@ -71,7 +73,9 @@ export default function(state = initialState, action) {
         case REMOVE_INSTRUCTOR: {
             let cohortIndex = newState.findIndex(cohort => {return cohort.id === action.cohortId})
            
-            newState[cohortIndex].instructors.filter(instructor => {return instructor.id !== action.instructorId})
+            let newCohortsInstructors = newState[cohortIndex].instructors.filter(instructor => {return instructor.id !== action.instructorId})
+            newState[cohortIndex].instructors = newCohortsInstructors
+            
             return newState
         }
 

@@ -581,8 +581,8 @@ let db = {
 
         return knex('LinkCohortsUsers')
         .where({
-            user : userId,
-            cohort : cohortId
+            'user' : userId,
+            'cohort' : cohortId
         })
         .delete()
     },
