@@ -298,6 +298,18 @@ let db = {
         })
     },
 
+    removeStudentFromCohort(studentId, cohortId, userId) {
+        //To do: add validation to ensure user is authenticated to perform operation
+        if (!userId) return
+
+        return knex('LinkCohortsStudents')
+        .where({
+            student : studentId,
+            cohort : cohortId
+        })
+        .delete()
+    },
+
     updateStudent : function(studentId, formData) {
         let cohort = formData.cohort
         let studentParams = {
@@ -561,6 +573,18 @@ let db = {
             return LinkCohortUsersDataRows[0]
         })
 
+    },
+
+    removeUserFromCohort(userId, cohortId, requestorId) {
+        //To do: add validation to ensure user is authenticated to perform operation
+        if (!requestorId) return
+
+        return knex('LinkCohortsUsers')
+        .where({
+            user : userId,
+            cohort : cohortId
+        })
+        .delete()
     },
 
     // ***** ASSIGNMENT METHODS *****
