@@ -19,7 +19,7 @@ const InstructorPane = ({currentCohort, user}) => {
             {currentCohort.id ? 
                 (<React.Fragment>
                     <div className="d-flex flex-row flex-wrap student-cards" >
-                        {currentCohort.instructors.map(instructor => {return <InstructorCard instructorId={instructor.id} cohortId={currentCohort.id} key={instructor.id}/>})}
+                        {currentCohort.instructors.map(instructor => {return <InstructorCard instructorId={instructor.id} currentCohort={currentCohort} key={instructor.id}/>})}
                     </div>
                 </React.Fragment>)
             :

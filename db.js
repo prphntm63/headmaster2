@@ -1,4 +1,4 @@
-const environment = process.env.ENVIRONMENT || 'development'
+const environment = process.env.NODE_ENV || 'development'
 const config = require('./knexfile.js')[environment];
 const knex = require('knex')(config)
 
@@ -298,6 +298,18 @@ let db = {
         })
     },
 
+    removeStudentFromCohort(studentId, cohortId, userId) {
+        //To do: add validation to ensure user is authenticated to perform operation
+        if (!userId) return
+
+        return knex('LinkCohortsStudents')
+        .where({
+            "student" : studentId,
+            "cohort" : cohortId
+        })
+        .del()
+    },
+
     updateStudent : function(studentId, formData) {
         let cohort = formData.cohort
         let studentParams = {
@@ -563,6 +575,18 @@ let db = {
 
     },
 
+    removeUserFromCohort(userId, cohortId, requestorId) {
+        //To do: add validation to ensure user is authenticated to perform operation
+        if (!requestorId) return
+
+        return knex('LinkCohortsUsers')
+        .where({
+            'user' : userId,
+            'cohort' : cohortId
+        })
+        .delete()
+    },
+
     // ***** ASSIGNMENT METHODS *****
 
     getTouchpoint(userId, touchpointId) {
@@ -618,12 +642,20 @@ let db = {
 
     // ************ COMMIT METHODS ***************
     addCommits(commitsArray) {
-        return knex
-        .returning('*')
-        .insert(commitsArray)
-        .into('Commits')
-        .catch(err => {
-            console.log('error adding commits array - ', err)
+        return knex('Commits')
+        .pluck('sha')
+        .then(shaArray => {
+            let filteredCommits = commitsArray.filter(commit => {return shaArray.findIndex(val => {return val === commit.sha}) < 0})
+            return filteredCommits
+        })
+        .then(filteredShaArray => {
+            return knex
+            .returning('*')
+            .insert(filteredShaArray)
+            .into('Commits')
+            .catch(err => {
+                console.log('error adding commits array - ', err)
+            })
         })
     },
 

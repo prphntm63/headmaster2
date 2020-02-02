@@ -232,8 +232,26 @@ router.post('/students', ensureAuthenticated, (req, res) => {
             })
         }
     })
-
     
+})
+
+router.delete('/students', ensureAuthenticated, (req, res) => {
+
+    let studentId = req.body.studentId
+    let cohortId = req.body.cohortId
+    let userId = req.user.id
+
+    db.removeStudentFromCohort(studentId, cohortId, userId)
+    .then(() => {
+        res.status(200).json({
+            student : studentId,
+            cohort : cohortId
+        })
+    })
+    .catch((err) => {
+        res.status(500)
+        console.log(err)
+    })
 })
 
 router.post('/students/:studentId', ensureAuthenticated, (req, res) => {
@@ -341,6 +359,25 @@ router.post('/instructors', ensureAuthenticated, (req,res) => {
 
         
     }
+})
+
+router.delete('/instructors', ensureAuthenticated, (req, res) => {
+
+    let instructorId = req.body.instructorId
+    let cohortId = req.body.cohortId
+    let userId = req.user.id
+
+    db.removeUserFromCohort(instructorId, cohortId, userId)
+    .then(() => {
+        res.status(200).json({
+            instructor : instructorId,
+            cohort : cohortId
+        })
+    })
+    .catch((err) => {
+        res.status(500)
+        console.log(err)
+    })
 })
 
 function ensureAuthenticated(req, res, next) {
